@@ -3,16 +3,6 @@
 
 const DEBOUNCE_TIME = 500;
 
-/*
-heardle offsets
-1s,
-+1s,
-+3s,
-+3s
-+4s,
-+4s,
-*/
-
 export const playSegment = (endSeconds: number) => {
   console.log(`Playing section ${endSeconds}`);
 

@@ -32,21 +32,28 @@ class App extends React.Component<{}, {
     won: false,
   };
 
-  playSegmentClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // const section = e.target.dataset.section;
-    const limit = parseInt(e.target.dataset.limit);
-    playSegment(limit);
+  // TODO: don't just add the same amount of time for each guess
+  /*
+    Heardle offsets:
+    1s, +1s, +3s, +3s +4s, +4s
+   */
+
+  playSegmentClick = () => {
+    playSegment(this.state.timeAllowed);
   };
 
   submitGuess = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const guess = this.state.guess.trim();
+    if (guess.length === 0) return;
 
     console.log(e);
     console.log(`title: ${Spicetify.Player.data.track.metadata.title}`);
     console.log(`artist_name: ${Spicetify.Player.data.track.metadata.artist_name}`);
     console.log(`album_artist_name: ${Spicetify.Player.data.track.metadata.album_artist_name}`);
 
-    const won = this.state.guess === Spicetify.Player.data.track.metadata.title;
+    const won = guess === Spicetify.Player.data.track.metadata.title;
 
     if (won) toggleNowPlaying(true);
 
@@ -54,7 +61,7 @@ class App extends React.Component<{}, {
     this.setState({
       guesses: [
         ...this.state.guesses,
-        this.state.guess,
+        guess,
       ],
       // Reset the guess
       guess: '',
@@ -74,19 +81,17 @@ class App extends React.Component<{}, {
         <h1 className={styles.title}>{'🎵 Spurdle!'}</h1>
         {this.state.won ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
 
-        {this.state.guesses.map((guess, i) => <GuessItem key={i} value={guess} />)}
+        <ul className={styles.guessList}>
+          {this.state.guesses.map((guess, i) => <GuessItem key={i} value={guess} />)}
+        </ul>
 
-        <button className={styles.button} data-limit={1} onClick={this.playSegmentClick}>{'Play 1s'}</button>
-        <button className={styles.button} data-limit={2} onClick={this.playSegmentClick}>{'Play 2s'}</button>
-        <button className={styles.button} data-limit={5} onClick={this.playSegmentClick}>{'Play 5s'}</button>
-        <button className={styles.button} data-limit={8} onClick={this.playSegmentClick}>{'Play 8s'}</button>
-        <button className={styles.button} data-limit={12} onClick={this.playSegmentClick}>{'Play 12s'}</button>
-        <button className={styles.button} data-limit={16} onClick={this.playSegmentClick}>{'Play 16s'}</button>
-        <button className={styles.button} data-limit={25} onClick={this.playSegmentClick}>{'Play 25s'}</button>
+        <p>Time: {this.state.timeAllowed}s</p>
+
+        <button className={styles.button} onClick={this.playSegmentClick}>{'Play'}</button>
 
         <form id='guessForm' onSubmit={this.submitGuess}>
-          <input type="text" className={styles.input} placeholder='Guess the song' value={this.state.guess} onChange={this.guessChange} />
-          <button type='submit' className={styles.button}>{'Guess'}</button>
+          <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} onChange={this.guessChange} />
+          <button type={'submit'} className={styles.button}>{'Guess'}</button>
         </form>
       </div>
     </>

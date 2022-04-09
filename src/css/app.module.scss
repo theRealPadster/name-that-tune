@@ -37,3 +37,9 @@
 .input {
 
 }
+
+.guessList {
+  &:empty {
+    display: none;
+  }
+}
