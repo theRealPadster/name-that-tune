@@ -1,19 +1,7 @@
 /// <reference path="../../spicetify-cli/globals.d.ts" />
 /// <reference path="../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
 
-// const SECTION_PERCENTS = [ 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ];
-// const SECTION_STARTS = [ 0, 1.1, 2, 4, 10, 15, 20, 30 ];
 const DEBOUNCE_TIME = 500;
-
-const SECTIONS = [
-  [ 0, 1 ],
-  [ 1, 2 ],
-  [ 2, 4 ],
-  [ 4, 10 ],
-  [ 10, 15 ],
-  [ 15, 20 ],
-  [ 20, 30 ],
-];
 
 /*
 heardle offsets
@@ -25,17 +13,16 @@ heardle offsets
 +4s,
 */
 
-export const playSection = (section: number) => {
-  console.log(`Playing section ${section}`);
-  if (section > SECTIONS.length) return;
+export const playSegment = (endSeconds: number) => {
+  console.log(`Playing section ${endSeconds}`);
 
   // Spicetify uses ms
-  let [ startPosition, endPosition ] = SECTIONS[section - 1];
-  Spicetify.showNotification(`Playing from ${startPosition}s to ${endPosition}s`);
-  startPosition *= 1000;
-  endPosition *= 1000;
+  const endMillis = endSeconds * 1000;
+  const songLengthMillis = Spicetify.Player.getDuration();
+  if (endMillis > songLengthMillis) return;
 
-  Spicetify.Player.seek(startPosition);
+  Spicetify.showNotification(`Playing from 0s to ${endSeconds}s`);
+  Spicetify.Player.seek(0);
   Spicetify.Player.play();
 
   let debouncing = 0;
@@ -48,9 +35,9 @@ export const playSection = (section: number) => {
       }
       return;
     }
-    const currentProgress = Spicetify.Player.getDuration() * Spicetify.Player.getProgressPercent();
-    console.log({currentProgress, startPosition, endPosition});
-    if (currentProgress > endPosition || currentProgress < startPosition) {
+    const currentProgress = songLengthMillis * Spicetify.Player.getProgressPercent();
+    console.log({ currentProgress, endMilliseconds: endMillis });
+    if (currentProgress > endMillis) {
       debouncing = event.timeStamp;
       Spicetify.Player.pause();
       console.log('stopping');
