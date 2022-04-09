@@ -1,0 +1,2 @@
+# spurdle
+Spicetify Heardle.app
