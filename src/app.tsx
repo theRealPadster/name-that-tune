@@ -81,18 +81,16 @@ class App extends React.Component<{}, {
         <h1 className={styles.title}>{'🎵 Spurdle!'}</h1>
         {this.state.won ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
 
-        <ul className={styles.guessList}>
-          {this.state.guesses.map((guess, i) => <GuessItem key={i} value={guess} />)}
-        </ul>
-
-        <p>Time: {this.state.timeAllowed}s</p>
-
-        <button className={styles.button} onClick={this.playSegmentClick}>{'Play'}</button>
+        <ol className={styles.guessList}>
+          {this.state.guesses.map((guess, i) => <GuessItem key={i} guess={guess} answer={Spicetify.Player.data.track.metadata.title} />)}
+        </ol>
 
         <form id='guessForm' onSubmit={this.submitGuess}>
           <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} onChange={this.guessChange} />
           <button type={'submit'} className={styles.button}>{'Guess'}</button>
         </form>
+
+        <button className={styles.button} onClick={this.playSegmentClick}>{`Play ${this.state.timeAllowed}s`}</button>
       </div>
     </>
   }

@@ -39,6 +39,8 @@
 }
 
 .guessList {
+  list-style-type: decimal;
+
   &:empty {
     display: none;
   }
