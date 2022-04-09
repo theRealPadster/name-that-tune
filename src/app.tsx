@@ -1,8 +1,9 @@
 /// <reference path="../../spicetify-cli/globals.d.ts" />
 /// <reference path="../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
 
-import styles from './css/app.module.scss'
-import React from 'react'
+import styles from './css/app.module.scss';
+// import './css/app.global.scss';
+import React from 'react';
 
 import { playSection } from './logic';
 
@@ -21,7 +22,7 @@ class App extends React.Component<{}, {count: number}> {
     });
   };
 
-  playSectionClick = (e) => {
+  playSectionClick = (e: React.MouseEvent<HTMLElement>) => {
     const section = e.target.dataset.section;
     playSection(section);
   };
@@ -29,7 +30,7 @@ class App extends React.Component<{}, {count: number}> {
   render() {
     return <>
       <div className={styles.container}>
-        <div className={styles.title}>{"My Custom App!"}</div>
+        <div className={styles.title}>{"🎵 Spurdle!"}</div>
         <button className={styles.button} onClick={this.onButtonClick}>{"Count up"}</button>
 
         <button className={styles.button} data-section={1} onClick={this.playSectionClick}>{"Play Section 1 (0-1)"}</button>
@@ -44,6 +45,6 @@ class App extends React.Component<{}, {count: number}> {
       </div>
     </>
   }
-}
+};
 
 export default App;

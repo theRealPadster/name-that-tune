@@ -25,7 +25,7 @@ heardle offsets
 +4s,
 */
 
-export const playSection = (section) => {
+export const playSection = (section: number) => {
   console.log(`Playing section ${section}`);
   if (section > SECTIONS.length) return;
 
@@ -39,7 +39,7 @@ export const playSection = (section) => {
   Spicetify.Player.play();
 
   let debouncing = 0;
-  const stopListener = (event) => {
+  const stopListener = (event: Event) => {
     if (debouncing) {
       console.log('debouncing');
       if (event.timeStamp - debouncing > DEBOUNCE_TIME) {
@@ -49,6 +49,7 @@ export const playSection = (section) => {
       return;
     }
     const currentProgress = Spicetify.Player.getDuration() * Spicetify.Player.getProgressPercent();
+    console.log({currentProgress, startPosition, endPosition});
     if (currentProgress > endPosition || currentProgress < startPosition) {
       debouncing = event.timeStamp;
       Spicetify.Player.pause();
