@@ -59,5 +59,5 @@ export const playSection = (section: number) => {
     }
   }
 
-  Spicetify.Player.addEventListener("onprogress", stopListener);
+  Spicetify.Player.addEventListener('onprogress', stopListener);
 };

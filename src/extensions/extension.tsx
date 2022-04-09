@@ -1,5 +1,5 @@
-/// <reference path="../../../spicetify-cli/globals.d.ts" />
-/// <reference path="../../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
+/// <reference path='../../../spicetify-cli/globals.d.ts' />
+/// <reference path='../../../spicetify-cli/jsHelper/spicetifyWrapper.js' />
 
 const toggleNowPlaying = (visible: boolean) => {
   // The left side chunk with the title, artist, album art, etc.
