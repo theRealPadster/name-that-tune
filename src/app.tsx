@@ -45,7 +45,7 @@ class App extends React.Component<{}, {
   submitGuess = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const guess = this.state.guess.trim();
+    const guess = this.state.guess.trim().toLowerCase();
     if (guess.length === 0) return;
 
     console.log(e);
@@ -53,7 +53,7 @@ class App extends React.Component<{}, {
     console.log(`artist_name: ${Spicetify.Player.data.track.metadata.artist_name}`);
     console.log(`album_artist_name: ${Spicetify.Player.data.track.metadata.album_artist_name}`);
 
-    const won = guess === Spicetify.Player.data.track.metadata.title;
+    const won = guess === Spicetify.Player.data.track.metadata.title.trim().toLowerCase();
 
     if (won) toggleNowPlaying(true);
 
