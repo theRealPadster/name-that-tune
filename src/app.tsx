@@ -5,7 +5,10 @@ import styles from './css/app.module.scss';
 // import './css/app.global.scss';
 import React from 'react';
 
-import { playSection } from './logic';
+import {
+  playSection,
+  toggleNowPlaying,
+} from './logic';
 
 class App extends React.Component<{}, { guess: string, won: boolean }> {
   state = {
@@ -29,6 +32,7 @@ class App extends React.Component<{}, { guess: string, won: boolean }> {
     console.log(`album_artist_name: ${Spicetify.Player.data.track.metadata.album_artist_name}`);
 
     if (this.state.guess === Spicetify.Player.data.track.metadata.title) {
+      toggleNowPlaying(true);
       this.setState({
         won: true,
       });
