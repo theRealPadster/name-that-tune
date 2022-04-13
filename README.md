@@ -11,7 +11,7 @@ TODO: add screenshot
   - [Planned Features](#planned-features)
 
 ## Installation
-Download the dist branch and extract it into a new "spurdle" folder. Copy that folder into the spicetify custom apps folder:
+Download the [dist branch](https://github.com/theRealPadster/spurdle/archive/refs/heads/dist.zip) and rename the folder "spurdle". Copy it into the spicetify custom apps folder:
 | **Platform**    | **Path**                               |
 |-----------------|----------------------------------------|
 | **Linux/macOS** | `~/.config/spicetify/CustomApps`       |
