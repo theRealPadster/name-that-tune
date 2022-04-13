@@ -1,0 +1,1 @@
+var spurdle=void(async()=>{for(;null==Spicetify||!Spicetify.showNotification;)await new Promise(i=>setTimeout(i,100));Spicetify.Platform.History.listen(i=>{console.log("History changed",i);i=-1!=i.pathname.indexOf("spurdle");{i=!i;const e=document.querySelector(".main-nowPlayingWidget-nowPlaying");return void(e&&(e.style.opacity=i?"1":"0"))}})})();
