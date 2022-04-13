@@ -11,9 +11,6 @@ TODO: add screenshot
   - [Planned Features](#planned-features)
 
 ## Installation
-Install via [spicetify-marketplace](https://github.com/spicetify/spicetify-marketplace)
-
-Or the manual way:  
 Download the dist branch and extract it into a new "spurdle" folder. Copy that folder into the spicetify custom apps folder:
 | **Platform**    | **Path**                               |
 |-----------------|----------------------------------------|
