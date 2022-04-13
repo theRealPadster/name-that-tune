@@ -1245,10 +1245,10 @@ source-map@^0.7.3, source-map@~0.7.2:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
   integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
 
-spicetify-creator@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/spicetify-creator/-/spicetify-creator-1.0.9.tgz#a4a2e3909e359041094d8f2322961805ba580a05"
-  integrity sha512-ElmZIHPj1HkyKRQRgq70Z/G6jWgHP27o+x7bGHfL25qN2UEhn+PhuSjpIRnb0qmtRC4AH8uquQAfIQHpG15Y3w==
+spicetify-creator@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/spicetify-creator/-/spicetify-creator-1.0.10.tgz#31ba19ca06da84f2c7b01977fc91675440adeaa2"
+  integrity sha512-nRsUy8ocd/Q7P3WxnMIydXKpk/b4Zh/jKQj0K8BJQMIkFosU1P60mGC6F1JjA1sWkJ1A29uLHZZ/RQXVeXuS+Q==
   dependencies:
     "@types/glob" "^7.2.0"
     "@types/minify" "^8.0.0"
