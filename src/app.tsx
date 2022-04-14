@@ -8,8 +8,9 @@ import React from 'react';
 import GuessItem from './components/GuessItem';
 
 import {
-  playSegment,
   toggleNowPlaying,
+  playSegment,
+  checkGuess,
 } from './logic';
 
 class App extends React.Component<{URIs?: string[]}, {
@@ -59,16 +60,7 @@ class App extends React.Component<{URIs?: string[]}, {
   submitGuess = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const rawGuess = this.state.guess;
-    const normalizedGuess = this.state.guess.trim().toLowerCase();
-    if (normalizedGuess.length === 0) return;
-
-    console.log(e);
-    console.log(`title: ${Spicetify.Player.data.track.metadata.title}`);
-    console.log(`artist_name: ${Spicetify.Player.data.track.metadata.artist_name}`);
-    console.log(`album_artist_name: ${Spicetify.Player.data.track.metadata.album_artist_name}`);
-
-    const won = normalizedGuess === Spicetify.Player.data.track.metadata.title.trim().toLowerCase();
+    const won = checkGuess(this.state.guess);
 
     if (won) toggleNowPlaying(true);
 
@@ -76,7 +68,7 @@ class App extends React.Component<{URIs?: string[]}, {
     this.setState({
       guesses: [
         ...this.state.guesses,
-        rawGuess,
+        this.state.guess,
       ],
       // Reset the guess
       guess: '',
