@@ -40,9 +40,20 @@ export const playSegment = (endSeconds: number) => {
 };
 
 export const toggleNowPlaying = (visible: boolean) => {
-  // The left side chunk with the title, artist, album art, etc.
-  const nowPlaying = document.querySelector('.main-nowPlayingWidget-nowPlaying');
-  if (nowPlaying) {
-    nowPlaying.style.opacity = visible ? '1' : '0';
+  // Hide items that give away information while playing
+  [ // The left side chunk with the title, artist, album art, etc.
+    document.querySelector('.main-nowPlayingWidget-nowPlaying'),
+    // Play/pause/next/previous/etc.
+    document.querySelector('.player-controls__buttons'),
+  ].forEach((item) => {
+    if (item) {
+      item.style.opacity = visible ? '1' : '0';
+    }
+  });
+
+  // Disable playback bar interaction while playing
+  const playbackBar = document.querySelector('.playback-bar');
+  if (playbackBar) {
+    playbackBar.style.pointerEvents = visible ? 'auto' : 'none';
   }
 }
