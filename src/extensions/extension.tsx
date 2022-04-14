@@ -19,32 +19,44 @@ import { toggleNowPlaying } from '../logic';
     toggleNowPlaying(!onApp);
   });
 
-  // TODO: what is URIs?
-  function sendToSpurdle(uris: string[]) {
-    Spicetify.showNotification(`Sending ${uris.length} tracks to Spurdle`);
-    console.log('Sending URIs:', uris);
+  function sendToSpurdle(URIs: string[]) {
+    Spicetify.showNotification(`Sending ${URIs.length} URIs to Spurdle`);
+    console.log('Sending URIs:', URIs);
+    // example artist: spotify:artist:5k979N1TnPncUyqlXlaRSv
+    // example playlist: spotify:playlist:37i9dQZF1DZ06evO38b2WA
+
+    URIs.forEach((uri) => {
+      const uriObj = Spicetify.URI.fromString(uri);
+      console.log('uriObj:', uriObj);
+    });
+
+    // TODO: If artist, add tracks from artist
+    // TODO: If album, add tracks from album
+    // TODO: If playlist, add tracks from playlist
+    // TODO: Other sources?
+
+    // Ooh, I can just use Spicetify.Player.playUri(uri) and it will work with whatever you send it!
 
     Spicetify.Platform.History.push({
       pathname: '/spurdle',
       state: {
-        data: {
-          uris,
-        },
+        props: { URIs },
       },
     });
   }
 
   // TODO: set this properly
-  function shouldDisplayContextMenu(uris: string[]) {
-    if (uris.length > 1) {
-      return false;
-    }
-    const uri = uris[0];
-    const uriObj = Spicetify.URI.fromString(uri);
-    if (uriObj.type === Spicetify.URI.Type.TRACK || uriObj.type === Spicetify.URI.Type.ARTIST) {
-      return true;
-    }
-    return false;
+  function shouldDisplayContextMenu(URIs: string[]) {
+    return true;
+    // if (URIs.length > 1) {
+    //   return false;
+    // }
+    // const uri = uris[0];
+    // const uriObj = Spicetify.URI.fromString(uri);
+    // if (uriObj.type === Spicetify.URI.Type.TRACK || uriObj.type === Spicetify.URI.Type.ARTIST) {
+    //   return true;
+    // }
+    // return false;
   }
 
   const contextMenuItem = new Spicetify.ContextMenu.Item(

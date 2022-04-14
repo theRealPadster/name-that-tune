@@ -12,7 +12,7 @@ import {
   toggleNowPlaying,
 } from './logic';
 
-class App extends React.Component<{}, {
+class App extends React.Component<{URIs?: string[]}, {
   stage: number,
   timeAllowed: number,
   guess: string,
@@ -31,6 +31,20 @@ class App extends React.Component<{}, {
     // If you've won
     won: false,
   };
+
+  componentDidMount() {
+    console.log('App mounted, URIs: ', this.props.URIs);
+    // TODO: is it possible to do anything with more than a single URI?
+    // Maybe Spicetify.addToQueue(uri)?
+
+    // If passed in URIs, use them
+    if (this.props.URIs) {
+      Spicetify.Player.playUri(this.props.URIs[0]);
+      // Because it will start playing automatically
+      Spicetify.Player.pause();
+      Spicetify.Player.seek(0);
+    }
+  }
 
   // TODO: don't just add the same amount of time for each guess
   /*

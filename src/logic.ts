@@ -4,8 +4,6 @@
 const DEBOUNCE_TIME = 500;
 
 export const playSegment = (endSeconds: number) => {
-  console.log(`Playing section ${endSeconds}`);
-
   // Spicetify uses ms
   const endMillis = endSeconds * 1000;
   const songLengthMillis = Spicetify.Player.getDuration();
