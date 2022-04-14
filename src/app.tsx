@@ -98,7 +98,7 @@ class App extends React.Component<{URIs?: string[]}, {
         {this.state.won ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
 
         <ol className={styles.guessList}>
-          {this.state.guesses.map((guess, i) => <GuessItem key={i} guess={guess} answer={Spicetify.Player.data.track.metadata.title} />)}
+          {this.state.guesses.map((guess, i) => <GuessItem key={i} index={i} guesses={this.state.guesses} won={this.state.won} />)}
         </ol>
 
         <form id='guessForm' onSubmit={this.submitGuess}>

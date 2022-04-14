@@ -1,9 +1,13 @@
 import React from 'react';
 
-const GuessItem = (props: {guess: string, answer: string}) => {
-  const correct = props.guess === props.answer;
+const GuessItem = (props: {
+  guesses: string[],
+  won: boolean,
+  index: number,
+}) => {
+  const correct = props.won && (props.index === props.guesses.length - 1);
   return (
-    <li>{correct ? '✔' : 'x'} {props.guess}</li>
+    <li>{correct ? '✔' : 'x'} {props.guesses[props.index]}</li>
   );
 };
 
