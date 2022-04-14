@@ -40,7 +40,7 @@ import { toggleNowPlaying } from '../logic';
     Spicetify.Platform.History.push({
       pathname: '/spurdle',
       state: {
-        props: { URIs },
+        URIs,
       },
     });
   }

@@ -33,14 +33,20 @@ class App extends React.Component<{URIs?: string[]}, {
     won: false,
   };
 
+  URIs?: string[];
+  constructor(props: any) {
+		super(props);
+		this.URIs = Spicetify.Platform.History.location.state.URIs;
+	}
+
   componentDidMount() {
-    console.log('App mounted, URIs: ', this.props.URIs);
+    console.log('App mounted, URIs: ', this.URIs);
     // TODO: is it possible to do anything with more than a single URI?
     // Maybe Spicetify.addToQueue(uri)?
 
     // If passed in URIs, use them
-    if (this.props.URIs) {
-      Spicetify.Player.playUri(this.props.URIs[0]);
+    if (this.URIs) {
+      Spicetify.Player.playUri(this.URIs[0]);
       // Because it will start playing automatically
       Spicetify.Player.pause();
       Spicetify.Player.seek(0);
