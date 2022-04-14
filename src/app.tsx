@@ -60,6 +60,9 @@ class App extends React.Component<{URIs?: string[]}, {
   submitGuess = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Don't allow empty guesses
+    if (this.state.guess.trim().length === 0) return;
+
     const won = checkGuess(this.state.guess);
 
     if (won) toggleNowPlaying(true);
