@@ -8,6 +8,7 @@ import React from 'react';
 import GuessItem from './components/GuessItem';
 
 import {
+  initialize,
   toggleNowPlaying,
   playSegment,
   checkGuess,
@@ -41,16 +42,7 @@ class App extends React.Component<{URIs?: string[]}, {
 
   componentDidMount() {
     console.log('App mounted, URIs: ', this.URIs);
-    // TODO: is it possible to do anything with more than a single URI?
-    // Maybe Spicetify.addToQueue(uri)?
-
-    // If passed in URIs, use them
-    if (this.URIs) {
-      Spicetify.Player.playUri(this.URIs[0]);
-      // Because it will start playing automatically
-      Spicetify.Player.pause();
-      Spicetify.Player.seek(0);
-    }
+    initialize(this.URIs);
   }
 
   // TODO: don't just add the same amount of time for each guess

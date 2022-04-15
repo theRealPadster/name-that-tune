@@ -1,6 +1,12 @@
 /// <reference path="../../spicetify-cli/globals.d.ts" />
 /// <reference path="../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
 
+import {
+  fetchAndPlay,
+  shuffle,
+  playList,
+} from './shuffle+';
+
 const DEBOUNCE_TIME = 500;
 
 export const toggleNowPlaying = (visible: boolean) => {
@@ -21,7 +27,6 @@ export const toggleNowPlaying = (visible: boolean) => {
     playbackBar.style.pointerEvents = visible ? 'auto' : 'none';
   }
 };
-
 
 export const playSegment = (endSeconds: number) => {
   // Spicetify uses ms
@@ -73,3 +78,26 @@ export const checkGuess = (guess: string) => {
 
   return normalizedGuess === normalizedAnswer;
 };
+
+export const initialize = (URIs?: string[]) => {
+  // If passed in URIs, use them
+  if (URIs) {
+    if (URIs.length === 1) {
+      fetchAndPlay(URIs[0]);
+      return;
+    }
+
+    playList(shuffle(URIs), null);
+
+    // Spicetify.Player.playUri(URIs[0]);
+    // Because it will start playing automatically
+    try {
+      Spicetify.Player.pause();
+    } catch (e) {
+      console.log('Error pausing player:', e);
+    }
+    // if (Spicetify.Player.isPlaying()) {
+    // }
+    Spicetify.Player.seek(0);
+  }
+}

@@ -11,6 +11,8 @@ import { toggleNowPlaying } from '../logic';
     await new Promise(resolve => setTimeout(resolve, 100));
   }
 
+  console.log('running spurdle extension');
+
   // Show/hide the now playing info on navigation
   Spicetify.Platform.History.listen((data) =>{
     console.log('History changed', data);
@@ -45,18 +47,23 @@ import { toggleNowPlaying } from '../logic';
     });
   }
 
-  // TODO: set this properly
   function shouldDisplayContextMenu(URIs: string[]) {
+    if (URIs.length === 1) {
+      const uriObj = Spicetify.URI.fromString(URIs[0]);
+      switch (uriObj.type) {
+        case Spicetify.URI.Type.SHOW:
+        case Spicetify.URI.Type.PLAYLIST:
+        case Spicetify.URI.Type.PLAYLIST_V2:
+        case Spicetify.URI.Type.FOLDER:
+        case Spicetify.URI.Type.ALBUM:
+        case Spicetify.URI.Type.COLLECTION:
+        case Spicetify.URI.Type.ARTIST:
+          return true;
+      }
+      return false;
+    }
+    // User selects multiple tracks in a list.
     return true;
-    // if (URIs.length > 1) {
-    //   return false;
-    // }
-    // const uri = uris[0];
-    // const uriObj = Spicetify.URI.fromString(uri);
-    // if (uriObj.type === Spicetify.URI.Type.TRACK || uriObj.type === Spicetify.URI.Type.ARTIST) {
-    //   return true;
-    // }
-    // return false;
   }
 
   const contextMenuItem = new Spicetify.ContextMenu.Item(
