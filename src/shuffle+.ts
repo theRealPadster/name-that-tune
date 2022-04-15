@@ -1,20 +1,8 @@
 /// <reference path="../../spicetify-cli/globals.d.ts" />
 /// <reference path="../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
 
-// TODO: does this work?
-let playerPlayOGFunc = async () => {
-  // if (!Spicetify.CosmosAsync || !Spicetify.Platform) {
-  if (!Spicetify.Platform) {
-    await setTimeout(() => {}, 1000);
-    return await playerPlayOGFunc();
-  }
-
-  return Spicetify.Platform.PlayerAPI.play.bind(Spicetify.Platform.PlayerAPI);
-};
-
 async function fetchListFromUri(uri: string): Promise<string[]> {
   const uriObj = Spicetify.URI.fromString(uri);
-
   switch (uriObj.type) {
     case Spicetify.URI.Type.SHOW:
       return await fetchShow(uriObj.getBase62Id());
@@ -37,7 +25,7 @@ async function fetchListFromUri(uri: string): Promise<string[]> {
       return [uri];
     case Spicetify.URI.Type.STATION:
     case Spicetify.URI.Type.RADIO:
-      playerPlayOGFunc(
+      Spicetify.Platform.PlayerAPI.play(
         { uri: uri },
         { featureVersion: Spicetify.Platform.PlayerAPI._defaultFeatureVersion }
       );
@@ -204,7 +192,7 @@ export async function playList(list: string[], context) {
   if (count === 0) {
     throw 'There is no available track to play';
   } else if (count === 1) {
-    playerPlayOGFunc(
+    Spicetify.Platform.PlayerAPI.play(
       { uri: list[0] },
       { featureVersion: Spicetify.Platform.PlayerAPI._defaultFeatureVersion }
     );
