@@ -35,7 +35,18 @@
 }
 
 .input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background-color: var(--spice-main);
+  color: var(--spice-text);
+  font-size: 14px;
+  border: 1px solid var(--spice-text);
+  border-radius: 2px;
 
+  &:focus {
+    border: 1px solid var(--spice-button);
+  }
 }
 
 .guessList {

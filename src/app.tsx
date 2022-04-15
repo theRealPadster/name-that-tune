@@ -95,10 +95,10 @@ class App extends React.Component<{URIs?: string[]}, {
 
         <form id='guessForm' onSubmit={this.submitGuess}>
           <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} onChange={this.guessChange} />
-          <button type={'submit'} className={styles.button}>{'Guess'}</button>
+          <button type={'submit'} className='main-buttons-button main-button-secondary'>{'Guess'}</button>
         </form>
 
-        <button className={styles.button} onClick={this.playSegmentClick}>{`Play ${this.state.timeAllowed}s`}</button>
+        <button className='main-buttons-button main-button-secondary' onClick={this.playSegmentClick}>{`Play ${this.state.timeAllowed}s`}</button>
       </div>
     </>
   }
