@@ -148,3 +148,6 @@ out
 
 # built files
 dist/
+
+# icon WIP files
+icons/
