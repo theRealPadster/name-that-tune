@@ -127,10 +127,10 @@ class App extends React.Component<{URIs?: string[]}, {
         {this.state.won ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
 
         <form id='guessForm' onSubmit={this.submitGuess}>
-          <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} onChange={this.guessChange} />
+          <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} disabled={this.state.won} onChange={this.guessChange} />
           <div className={styles.formButtonContainer}>
-            <button type={'submit'} className='main-buttons-button main-button-secondary'>{'Guess'}</button>
-            <button className='main-buttons-button main-button-secondary' onClick={this.skipGuess} >{'Skip'}</button>
+            <button type={'submit'} className='main-buttons-button main-button-secondary' disabled={this.state.won}>{'Guess'}</button>
+            <button className='main-buttons-button main-button-secondary' disabled={this.state.won} onClick={this.skipGuess} >{'Skip'}</button>
           </div>
         </form>
 
