@@ -3,7 +3,7 @@
 Spurdle is [Heardle.app](https://www.heardle.app) made for [Spicetify](https://spicetify.app). 
 This project is very early in development and in no way complete or fun to use. If you're impatient to play Heardle with your Spotify, feel free to contribute 😄
 
-TODO: add screenshot
+![Preview screenshot](docs/preview.png)
 
 ## Table of contents
   - [Installation](#installation)
