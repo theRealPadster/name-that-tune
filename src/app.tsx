@@ -114,8 +114,10 @@ class App extends React.Component<{URIs?: string[]}, {
 
         <form id='guessForm' onSubmit={this.submitGuess}>
           <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} onChange={this.guessChange} />
-          <button type={'submit'} className='main-buttons-button main-button-secondary'>{'Guess'}</button>
-          <button className='main-buttons-button main-button-secondary' onClick={this.skipGuess} >{'Skip'}</button>
+          <div className={styles.formButtonContainer}>
+            <button type={'submit'} className='main-buttons-button main-button-secondary'>{'Guess'}</button>
+            <button className='main-buttons-button main-button-secondary' onClick={this.skipGuess} >{'Skip'}</button>
+          </div>
         </form>
 
         <button className='main-buttons-button main-button-secondary' onClick={this.playSegmentClick}>{`Play ${this.state.timeAllowed}s`}</button>

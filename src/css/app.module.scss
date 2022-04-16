@@ -55,4 +55,20 @@
   &:empty {
     display: none;
   }
+
+  li {
+    color: var(--spice-notification-error);
+    &.correct {
+      color: var(--spice-button);
+    }
+  }
+}
+
+// Container for the guess/skip buttons
+.formButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // flex-direction: column;
+  gap: 20px;
 }
