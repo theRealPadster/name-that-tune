@@ -18,7 +18,7 @@ class App extends React.Component<{URIs?: string[]}, {
   stage: number,
   timeAllowed: number,
   guess: string,
-  guesses: string[],
+  guesses: (string | null)[],
   won: boolean ,
 }> {
   state = {
@@ -54,6 +54,25 @@ class App extends React.Component<{URIs?: string[]}, {
   playSegmentClick = () => {
     playSegment(this.state.timeAllowed);
   };
+
+  skipGuess = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    // Add the guess to the guess list in the state
+    this.setState({
+      guesses: [
+        ...this.state.guesses,
+        null,
+      ],
+      // Reset the guess
+      guess: '',
+      // Increment the stage
+      stage: this.state.stage + 1,
+      // Increment the time allowed
+      timeAllowed: this.state.timeAllowed + 1,
+      won: false,
+    });
+  }
 
   submitGuess = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -96,6 +115,7 @@ class App extends React.Component<{URIs?: string[]}, {
         <form id='guessForm' onSubmit={this.submitGuess}>
           <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} onChange={this.guessChange} />
           <button type={'submit'} className='main-buttons-button main-button-secondary'>{'Guess'}</button>
+          <button className='main-buttons-button main-button-secondary' onClick={this.skipGuess} >{'Skip'}</button>
         </form>
 
         <button className='main-buttons-button main-button-secondary' onClick={this.playSegmentClick}>{`Play ${this.state.timeAllowed}s`}</button>

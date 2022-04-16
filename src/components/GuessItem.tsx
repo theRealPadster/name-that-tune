@@ -6,8 +6,9 @@ const GuessItem = (props: {
   index: number,
 }) => {
   const correct = props.won && (props.index === props.guesses.length - 1);
+  console.log('GuessItem props:', props);
   return (
-    <li>{correct ? '✔' : 'x'} {props.guesses[props.index]}</li>
+    <li>{correct ? '✔' : 'x'} {props.guesses[props.index] || 'SKIPPED'}</li>
   );
 };
 
