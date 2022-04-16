@@ -38,14 +38,12 @@ spicetify apply
 ```
 
 ## Usage
-Open via the left-side navigation. Click "play" to hear the first second of the track. Making a guess adds one second of music playback. It will reveal the song when you get it right. 
-Right now it only works on the currently playing track, which is not ideal. I plan to add functionality to allow you to add songs from an artist, playlist, album, etc. 
+- Right-click on any artist, playlist, album, etc. 
+- Click "play" to hear the first second of the track.
+- Making a guess adds one second of music playback. It will reveal the song when you get it right. 
+- (If you open it via the left-side navigation, it will just use the song you are currently playing.)
 
 ## Planned Features
-- Source songs from playlist/album/etc
-- Source songs from artist
-- Source songs from genre
-- etc. 
 - Possible "random" mode that doesn't use the beginning of the song, but grabs random segments from it
 - Come up with a better name
 
