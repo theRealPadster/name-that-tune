@@ -134,7 +134,11 @@ class App extends React.Component<{URIs?: string[]}, {
           </div>
         </form>
 
-        <button className='main-buttons-button main-button-secondary' onClick={this.playClick}>{`Play ${this.state.timeAllowed}s`}</button>
+        { this.state.won
+          ? null
+          : <button className='main-buttons-button main-button-secondary' onClick={this.playClick}>{`Play ${this.state.timeAllowed}s`}</button>
+        }
+
         <button className='main-buttons-button main-button-secondary' onClick={this.nextSong}>{'Next song'}</button>
 
         <ol className={styles.guessList}>
