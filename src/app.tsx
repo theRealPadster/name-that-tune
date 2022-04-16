@@ -51,9 +51,11 @@ class App extends React.Component<{URIs?: string[]}, {
     1s, +1s, +3s, +3s +4s, +4s
    */
 
-  playSegmentClick = () => {
+  playClick = () => {
     playSegment(this.state.timeAllowed);
   };
+
+  guessChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ guess: e.target.value});
 
   skipGuess = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -100,17 +102,29 @@ class App extends React.Component<{URIs?: string[]}, {
     });
   }
 
-  guessChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ guess: e.target.value});
+  nextSong = () => {
+    toggleNowPlaying(false);
+    Spicetify.Player.next();
+    Spicetify.Player.seek(0);
+    Spicetify.Player.pause();
+
+    this.setState({
+      guesses: [],
+      // Reset the guess
+      guess: '',
+      // Increment the stage
+      stage: 0,
+      // Increment the time allowed
+      timeAllowed: 1,
+      won: false,
+    });
+  }
 
   render() {
     return <>
       <div className={styles.container}>
         <h1 className={styles.title}>{'🎵 Spurdle!'}</h1>
         {this.state.won ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
-
-        <ol className={styles.guessList}>
-          {this.state.guesses.map((guess, i) => <GuessItem key={i} index={i} guesses={this.state.guesses} won={this.state.won} />)}
-        </ol>
 
         <form id='guessForm' onSubmit={this.submitGuess}>
           <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} onChange={this.guessChange} />
@@ -120,7 +134,12 @@ class App extends React.Component<{URIs?: string[]}, {
           </div>
         </form>
 
-        <button className='main-buttons-button main-button-secondary' onClick={this.playSegmentClick}>{`Play ${this.state.timeAllowed}s`}</button>
+        <button className='main-buttons-button main-button-secondary' onClick={this.playClick}>{`Play ${this.state.timeAllowed}s`}</button>
+        <button className='main-buttons-button main-button-secondary' onClick={this.nextSong}>{'Next song'}</button>
+
+        <ol className={styles.guessList}>
+          {this.state.guesses.map((guess, i) => <GuessItem key={i} index={i} guesses={this.state.guesses} won={this.state.won} />)}
+        </ol>
       </div>
     </>
   }

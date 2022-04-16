@@ -34,7 +34,7 @@ export const playSegment = (endSeconds: number) => {
   const songLengthMillis = Spicetify.Player.getDuration();
   if (endMillis > songLengthMillis) return;
 
-  Spicetify.showNotification(`Playing from 0s to ${endSeconds}s`);
+  // Spicetify.showNotification(`Playing from 0s to ${endSeconds}s`);
   Spicetify.Player.seek(0);
   Spicetify.Player.play();
 
