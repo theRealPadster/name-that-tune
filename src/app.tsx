@@ -6,6 +6,7 @@ import styles from './css/app.module.scss';
 import React from 'react';
 
 import GuessItem from './components/GuessItem';
+import Button from './components/Button';
 
 import {
   initialize,
@@ -45,12 +46,6 @@ class App extends React.Component<{URIs?: string[]}, {
     initialize(this.URIs);
   }
 
-  // TODO: don't just add the same amount of time for each guess
-  /*
-    Heardle offsets:
-    1s, +1s, +3s, +3s +4s, +4s
-   */
-
   playClick = () => {
     playSegment(this.state.timeAllowed);
   };
@@ -59,6 +54,12 @@ class App extends React.Component<{URIs?: string[]}, {
 
   skipGuess = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    /*
+     * TODO: don't just add the same amount of time for each guess
+     * Heardle offsets:
+     * 1s, +1s, +3s, +3s +4s, +4s
+     */
 
     // Add the guess to the guess list in the state
     this.setState({
@@ -129,17 +130,17 @@ class App extends React.Component<{URIs?: string[]}, {
         <form id='guessForm' onSubmit={this.submitGuess}>
           <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} disabled={this.state.won} onChange={this.guessChange} />
           <div className={styles.formButtonContainer}>
-            <button type={'submit'} className='main-buttons-button main-button-secondary' disabled={this.state.won}>{'Guess'}</button>
-            <button className='main-buttons-button main-button-secondary' disabled={this.state.won} onClick={this.skipGuess} >{'Skip'}</button>
+            <Button onClick={this.submitGuess} disabled={this.state.won}>{'Guess'}</Button>
+            <Button onClick={this.skipGuess} disabled={this.state.won}>{'Skip'}</Button>
           </div>
         </form>
 
         { this.state.won
           ? null
-          : <button className='main-buttons-button main-button-secondary' onClick={this.playClick}>{`Play ${this.state.timeAllowed}s`}</button>
+          : <Button onClick={this.playClick}>{`Play ${this.state.timeAllowed}s`}</Button>
         }
 
-        <button className='main-buttons-button main-button-secondary' onClick={this.nextSong}>{'Next song'}</button>
+        <Button onClick={this.nextSong}>{'Next song'}</Button>
 
         <ol className={styles.guessList}>
           {this.state.guesses.map((guess, i) => <GuessItem key={i} index={i} guesses={this.state.guesses} won={this.state.won} />)}
