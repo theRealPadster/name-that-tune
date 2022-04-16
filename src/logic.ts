@@ -18,6 +18,7 @@ export const toggleNowPlaying = (visible: boolean) => {
   ].forEach((item) => {
     if (item) {
       item.style.opacity = visible ? '1' : '0';
+      item.style.pointerEvents = visible ? 'auto' : 'none';
     }
   });
 
