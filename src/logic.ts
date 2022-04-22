@@ -1,17 +1,14 @@
 /// <reference path="../../spicetify-cli/globals.d.ts" />
 /// <reference path="../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
 
-import {
-  fetchAndPlay,
-  shuffle,
-  playList,
-} from './shuffle+';
+import { fetchAndPlay, shuffle, playList } from './shuffle+';
 
 const DEBOUNCE_TIME = 500;
 
 export const toggleNowPlaying = (visible: boolean) => {
   // Hide items that give away information while playing
-  [ // The left side chunk with the title, artist, album art, etc.
+  [
+    // The left side chunk with the title, artist, album art, etc.
     document.querySelector('.main-nowPlayingWidget-nowPlaying'),
     // Play/pause/next/previous/etc.
     document.querySelector('.player-controls__buttons'),
@@ -49,7 +46,8 @@ export const playSegment = (endSeconds: number) => {
       }
       return;
     }
-    const currentProgress = songLengthMillis * Spicetify.Player.getProgressPercent();
+    const currentProgress =
+      songLengthMillis * Spicetify.Player.getProgressPercent();
     console.log({ currentProgress, endMilliseconds: endMillis });
     if (currentProgress > endMillis) {
       debouncing = event.timeStamp;
@@ -58,24 +56,33 @@ export const playSegment = (endSeconds: number) => {
       Spicetify.Player.removeEventListener('onprogress', stopListener);
       return;
     }
-  }
+  };
 
   Spicetify.Player.addEventListener('onprogress', stopListener);
 };
 
 // TODO: potentially tweak this (e.g. accept '&'/'and' or other things)
 const normalize = (str: string) => {
-  return str.trim().replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-}
+  return str
+    .trim()
+    .replace(/[^a-zA-Z0-9]/g, '')
+    .toLowerCase();
+};
 
 export const checkGuess = (guess: string) => {
-  console.log({guess});
+  console.log({ guess });
   console.log(`title: ${Spicetify.Player.data.track.metadata.title}`);
-  console.log(`artist_name: ${Spicetify.Player.data.track.metadata.artist_name}`);
-  console.log(`album_artist_name: ${Spicetify.Player.data.track.metadata.album_artist_name}`);
+  console.log(
+    `artist_name: ${Spicetify.Player.data.track.metadata.artist_name}`
+  );
+  console.log(
+    `album_artist_name: ${Spicetify.Player.data.track.metadata.album_artist_name}`
+  );
 
   const normalizedGuess = normalize(guess);
-  const normalizedAnswer = normalize(Spicetify.Player.data.track.metadata.title);
+  const normalizedAnswer = normalize(
+    Spicetify.Player.data.track.metadata.title
+  );
 
   return normalizedGuess === normalizedAnswer;
 };
@@ -101,4 +108,4 @@ export const initialize = (URIs?: string[]) => {
     // }
     Spicetify.Player.seek(0);
   }
-}
+};

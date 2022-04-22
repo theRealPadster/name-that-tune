@@ -3,9 +3,9 @@ import React from 'react';
 import styles from '../css/app.module.scss';
 
 const GuessItem = (props: {
-  guesses: string[],
-  won: boolean,
-  index: number,
+  guesses: string[];
+  won: boolean;
+  index: number;
 }) => {
   const correct = props.won && (props.index === props.guesses.length - 1);
   return (

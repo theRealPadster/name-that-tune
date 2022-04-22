@@ -4,17 +4,21 @@
 import { toggleNowPlaying } from '../logic';
 
 (async () => {
-  while (!(Spicetify?.Platform
-        && Spicetify?.ContextMenu
-        && Spicetify?.URI
-        && Spicetify?.showNotification)) {
-    await new Promise(resolve => setTimeout(resolve, 100));
+  while (
+    !(
+      Spicetify?.Platform &&
+      Spicetify?.ContextMenu &&
+      Spicetify?.URI &&
+      Spicetify?.showNotification
+    )
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   console.log('running spurdle extension');
 
   // Show/hide the now playing info on navigation
-  Spicetify.Platform.History.listen((data) =>{
+  Spicetify.Platform.History.listen((data) => {
     console.log('History changed', data);
 
     const onApp = data.pathname.indexOf('spurdle') != -1;
@@ -67,9 +71,9 @@ import { toggleNowPlaying } from '../logic';
   }
 
   const contextMenuItem = new Spicetify.ContextMenu.Item(
-      'Play Spurdle',
-      sendToSpurdle,
-      shouldDisplayContextMenu,
+    'Play Spurdle',
+    sendToSpurdle,
+    shouldDisplayContextMenu
   );
 
   contextMenuItem.register();
