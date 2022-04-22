@@ -15,12 +15,18 @@ import {
   checkGuess,
 } from './logic';
 
+enum GameState {
+  Playing,
+  Won,
+  Lost,
+};
+
 class App extends React.Component<{URIs?: string[]}, {
   stage: number,
   timeAllowed: number,
   guess: string,
   guesses: (string | null)[],
-  won: boolean ,
+  gameState: GameState,
 }> {
   state = {
     // What guess you're on
@@ -31,8 +37,7 @@ class App extends React.Component<{URIs?: string[]}, {
     guess: '',
     // Past guesses
     guesses: [],
-    // If you've won
-    won: false,
+    gameState: GameState.Playing,
   };
 
   URIs?: string[];
@@ -73,7 +78,6 @@ class App extends React.Component<{URIs?: string[]}, {
       stage: this.state.stage + 1,
       // Increment the time allowed
       timeAllowed: this.state.timeAllowed + 1,
-      won: false,
     });
   }
 
@@ -99,7 +103,17 @@ class App extends React.Component<{URIs?: string[]}, {
       stage: this.state.stage + 1,
       // Increment the time allowed
       timeAllowed: this.state.timeAllowed + 1,
-      won,
+      gameState: won ? GameState.Won : GameState.Playing,
+    });
+  }
+
+  giveUp = () => {
+    toggleNowPlaying(true);
+    // Spicetify.Player.seek(0);
+    // Spicetify.Player.pause();
+
+    this.setState({
+      gameState: GameState.Lost,
     });
   }
 
@@ -117,33 +131,35 @@ class App extends React.Component<{URIs?: string[]}, {
       stage: 0,
       // Increment the time allowed
       timeAllowed: 1,
-      won: false,
+      gameState: GameState.Playing,
     });
   }
 
   render() {
+    const won = this.state.gameState === GameState.Won;
+    const lost = this.state.gameState === GameState.Lost;
     return <>
       <div className={styles.container}>
         <h1 className={styles.title}>{'🎵 Spurdle!'}</h1>
-        {this.state.won ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
+        {won ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
 
         <form id='guessForm' onSubmit={this.submitGuess}>
           <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} disabled={this.state.won} onChange={this.guessChange} />
           <div className={styles.formButtonContainer}>
-            <Button onClick={this.submitGuess} disabled={this.state.won}>{'Guess'}</Button>
-            <Button onClick={this.skipGuess} disabled={this.state.won}>{'Skip'}</Button>
+            <Button onClick={this.submitGuess} disabled={won}>{'Guess'}</Button>
+            <Button onClick={this.skipGuess} disabled={won}>{'Skip'}</Button>
           </div>
         </form>
 
-        { this.state.won
+        { won
           ? null
           : <Button onClick={this.playClick}>{`Play ${this.state.timeAllowed}s`}</Button>
         }
 
-        <Button onClick={this.nextSong}>{'Next song'}</Button>
+        <Button onClick={lost ? this.nextSong : this.giveUp}>{lost ? 'Next song' : 'Give up'}</Button>
 
         <ol className={styles.guessList}>
-          {this.state.guesses.map((guess, i) => <GuessItem key={i} index={i} guesses={this.state.guesses} won={this.state.won} />)}
+          {this.state.guesses.map((guess, i) => <GuessItem key={i} index={i} guesses={this.state.guesses} won={won} />)}
         </ol>
       </div>
     </>
