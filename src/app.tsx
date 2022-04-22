@@ -136,30 +136,31 @@ class App extends React.Component<{URIs?: string[]}, {
   }
 
   render() {
-    const won = this.state.gameState === GameState.Won;
-    const lost = this.state.gameState === GameState.Lost;
+    const gameWon = this.state.gameState === GameState.Won;
+    const isPlaying = this.state.gameState === GameState.Playing;
+
     return <>
       <div className={styles.container}>
         <h1 className={styles.title}>{'🎵 Spurdle!'}</h1>
-        {won ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
+        {gameWon ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null }
 
         <form id='guessForm' onSubmit={this.submitGuess}>
-          <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} disabled={this.state.won} onChange={this.guessChange} />
+          <input type={'text'} className={styles.input} placeholder='Guess the song' value={this.state.guess} disabled={!isPlaying} onChange={this.guessChange} />
           <div className={styles.formButtonContainer}>
-            <Button onClick={this.submitGuess} disabled={won}>{'Guess'}</Button>
-            <Button onClick={this.skipGuess} disabled={won}>{'Skip'}</Button>
+            <Button onClick={this.submitGuess} disabled={!isPlaying}>{'Guess'}</Button>
+            <Button onClick={this.skipGuess} disabled={!isPlaying}>{'Skip'}</Button>
           </div>
         </form>
 
-        { won
-          ? null
-          : <Button onClick={this.playClick}>{`Play ${this.state.timeAllowed}s`}</Button>
+        { isPlaying
+          ? <Button onClick={this.playClick}>{`Play ${this.state.timeAllowed}s`}</Button>
+          : null
         }
 
-        <Button onClick={lost ? this.nextSong : this.giveUp}>{lost ? 'Next song' : 'Give up'}</Button>
+        <Button onClick={isPlaying ? this.giveUp : this.nextSong}>{isPlaying ? 'Give up' : 'Next song'}</Button>
 
         <ol className={styles.guessList}>
-          {this.state.guesses.map((guess, i) => <GuessItem key={i} index={i} guesses={this.state.guesses} won={won} />)}
+          {this.state.guesses.map((guess, i) => <GuessItem key={i} index={i} guesses={this.state.guesses} won={gameWon} />)}
         </ol>
       </div>
     </>
