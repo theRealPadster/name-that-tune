@@ -63,10 +63,18 @@ export const playSegment = (endSeconds: number) => {
 
 // TODO: potentially tweak this (e.g. accept '&'/'and' or other things)
 const normalize = (str: string) => {
-  return str
-    .trim()
-    .replace(/[^a-zA-Z0-9]/g, '')
-    .toLowerCase();
+  let cleaned = str.trim().toLowerCase();
+
+  // Remove anything within parentheses
+  cleaned = cleaned.replace(/\(.*\)/g, '')
+
+  // Remove special characters
+  // TODO: This strips out spaces in between words...
+  cleaned = cleaned.replace(/[^a-zA-Z0-9]/g, '')
+
+  // TODO: add any other logic?
+
+  return cleaned;
 };
 
 export const checkGuess = (guess: string) => {
