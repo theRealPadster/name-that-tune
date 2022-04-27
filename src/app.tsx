@@ -85,7 +85,11 @@ class App extends React.Component<
 
     const won = checkGuess(this.state.guess);
 
-    if (won) toggleNowPlaying(true);
+    if (won) {
+      Spicetify.Player.seek(0);
+      Spicetify.Player.play();
+      toggleNowPlaying(true);
+    }
 
     // Add the guess to the guess list in the state
     this.setState({
@@ -101,9 +105,9 @@ class App extends React.Component<
   };
 
   giveUp = () => {
+    Spicetify.Player.seek(0);
+    Spicetify.Player.play();
     toggleNowPlaying(true);
-    // Spicetify.Player.seek(0);
-    // Spicetify.Player.pause();
 
     this.setState({
       gameState: GameState.Lost,
