@@ -9,6 +9,7 @@ import GuessItem from './components/GuessItem';
 import Button from './components/Button';
 
 import { initialize, toggleNowPlaying, playSegment, checkGuess } from './logic';
+import AudioManager from './AudioManager';
 
 enum GameState {
   Playing,
@@ -39,18 +40,26 @@ class App extends React.Component<
   };
 
   URIs?: string[];
+  audioManager: AudioManager;
   constructor(props: any) {
     super(props);
     this.URIs = Spicetify.Platform.History.location.state.URIs;
+    this.audioManager = new AudioManager();
   }
 
   componentDidMount() {
     console.log('App mounted, URIs: ', this.URIs);
     initialize(this.URIs);
+    this.audioManager.listen();
+  }
+
+  componentWillUnmount() {
+    this.audioManager.unlisten();
   }
 
   playClick = () => {
-    playSegment(this.state.timeAllowed);
+    // playSegment(this.state.timeAllowed);
+    this.audioManager.play();
   };
 
   guessChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -64,6 +73,8 @@ class App extends React.Component<
      * Heardle offsets:
      * 1s, +1s, +3s, +3s +4s, +4s
      */
+
+    this.audioManager.setEnd(this.state.timeAllowed + 1);
 
     // Add the guess to the guess list in the state
     this.setState({
@@ -91,6 +102,8 @@ class App extends React.Component<
       toggleNowPlaying(true);
     }
 
+    this.audioManager.setEnd(this.state.timeAllowed + 1);
+
     // Add the guess to the guess list in the state
     this.setState({
       guesses: [...this.state.guesses, this.state.guess],
@@ -108,6 +121,7 @@ class App extends React.Component<
     Spicetify.Player.seek(0);
     Spicetify.Player.play();
     toggleNowPlaying(true);
+    this.audioManager.setEnd(0);
 
     this.setState({
       gameState: GameState.Lost,
@@ -119,6 +133,7 @@ class App extends React.Component<
     Spicetify.Player.next();
     Spicetify.Player.seek(0);
     Spicetify.Player.pause();
+    this.audioManager.setEnd(1);
 
     this.setState({
       guesses: [],
