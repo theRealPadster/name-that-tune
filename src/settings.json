@@ -1,6 +1,6 @@
 {
-  "displayName": "Spurdle",
-  "nameId": "spurdle",
+  "displayName": "Name That Tune",
+  "nameId": "name-that-tune",
   "icon": "css/icon.svg",
   "activeIcon": "css/icon.svg"
 }

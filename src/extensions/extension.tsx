@@ -15,18 +15,18 @@ import { toggleNowPlaying } from '../logic';
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
-  console.log('running spurdle extension');
+  console.log('running name-that-tune extension');
 
   // Show/hide the now playing info on navigation
   Spicetify.Platform.History.listen((data) => {
     console.log('History changed', data);
 
-    const onApp = data.pathname.indexOf('spurdle') != -1;
+    const onApp = data.pathname.indexOf('name-that-tune') != -1;
     toggleNowPlaying(!onApp);
   });
 
-  function sendToSpurdle(URIs: string[]) {
-    Spicetify.showNotification(`Sending ${URIs.length} URIs to Spurdle`);
+  function sendToApp(URIs: string[]) {
+    Spicetify.showNotification(`Sending ${URIs.length} URIs to Name That Tune`);
     console.log('Sending URIs:', URIs);
     // example artist: spotify:artist:5k979N1TnPncUyqlXlaRSv
     // example playlist: spotify:playlist:37i9dQZF1DZ06evO38b2WA
@@ -44,7 +44,7 @@ import { toggleNowPlaying } from '../logic';
     // Ooh, I can just use Spicetify.Player.playUri(uri) and it will work with whatever you send it!
 
     Spicetify.Platform.History.push({
-      pathname: '/spurdle',
+      pathname: '/name-that-tune',
       state: {
         URIs,
       },
@@ -71,9 +71,12 @@ import { toggleNowPlaying } from '../logic';
   }
 
   const contextMenuItem = new Spicetify.ContextMenu.Item(
-    'Play Spurdle',
-    sendToSpurdle,
-    shouldDisplayContextMenu
+    'Play Name That Tune',
+    sendToApp,
+    shouldDisplayContextMenu,
+    'gamepad',
+    // 'chevron-right',
+    // 'play',
   );
 
   contextMenuItem.register();

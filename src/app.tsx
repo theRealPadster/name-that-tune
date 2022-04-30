@@ -8,7 +8,7 @@ import React from 'react';
 import GuessItem from './components/GuessItem';
 import Button from './components/Button';
 
-import { initialize, toggleNowPlaying, playSegment, checkGuess } from './logic';
+import { initialize, toggleNowPlaying, checkGuess } from './logic';
 import AudioManager from './AudioManager';
 
 enum GameState {
@@ -153,7 +153,7 @@ class App extends React.Component<
     return (
       <>
         <div className={styles.container}>
-          <h1 className={styles.title}>{'🎵 Spurdle!'}</h1>
+          <h1 className={styles.title}>{'🎵 Name That Tune'}</h1>
           {gameWon ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null}
 
           <form onSubmit={this.submitGuess}>
