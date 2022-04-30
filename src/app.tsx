@@ -21,7 +21,6 @@ class App extends React.Component<
   { URIs?: string[] },
   {
     stage: number;
-    timeAllowed: number;
     guess: string;
     guesses: (string | null)[];
     gameState: GameState;
@@ -30,8 +29,6 @@ class App extends React.Component<
   state = {
     // What guess you're on
     stage: 0,
-    // How many seconds you're given
-    timeAllowed: 1,
     // The current guess
     guess: '',
     // Past guesses
@@ -43,6 +40,7 @@ class App extends React.Component<
   audioManager: AudioManager;
   constructor(props: any) {
     super(props);
+    //@ts-ignore
     this.URIs = Spicetify.Platform.History.location.state.URIs;
     this.audioManager = new AudioManager();
   }
@@ -57,6 +55,17 @@ class App extends React.Component<
     this.audioManager.unlisten();
   }
 
+  /*
+   * Don't just add the same amount of time for each guess
+   * Heardle offsets:
+   * 1s, +1s, +2s, +3s, +4s, +5s
+   * Which is this equation:
+   * s = 1 + 0.5x + 0.5x^2
+   */
+  timeAllowed = () => {
+    return (1 + 0.5 * (this.state.stage + this.state.stage ** 2));
+  }
+
   playClick = () => {
     // playSegment(this.state.timeAllowed);
     this.audioManager.play();
@@ -68,14 +77,6 @@ class App extends React.Component<
   skipGuess = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    /*
-     * TODO: don't just add the same amount of time for each guess
-     * Heardle offsets:
-     * 1s, +1s, +3s, +3s +4s, +4s
-     */
-
-    this.audioManager.setEnd(this.state.timeAllowed + 1);
-
     // Add the guess to the guess list in the state
     this.setState({
       guesses: [...this.state.guesses, null],
@@ -83,8 +84,8 @@ class App extends React.Component<
       guess: '',
       // Increment the stage
       stage: this.state.stage + 1,
-      // Increment the time allowed
-      timeAllowed: this.state.timeAllowed + 1,
+    }, () => {
+      this.audioManager.setEnd(this.timeAllowed());
     });
   };
 
@@ -102,8 +103,6 @@ class App extends React.Component<
       toggleNowPlaying(true);
     }
 
-    this.audioManager.setEnd(this.state.timeAllowed + 1);
-
     // Add the guess to the guess list in the state
     this.setState({
       guesses: [...this.state.guesses, this.state.guess],
@@ -111,9 +110,9 @@ class App extends React.Component<
       guess: '',
       // Increment the stage
       stage: this.state.stage + 1,
-      // Increment the time allowed
-      timeAllowed: this.state.timeAllowed + 1,
       gameState: won ? GameState.Won : GameState.Playing,
+    }, () => {
+      this.audioManager.setEnd(this.timeAllowed());
     });
   };
 
@@ -141,9 +140,9 @@ class App extends React.Component<
       guess: '',
       // Increment the stage
       stage: 0,
-      // Increment the time allowed
-      timeAllowed: 1,
       gameState: GameState.Playing,
+    }, () => {
+      this.audioManager.setEnd(this.timeAllowed());
     });
   };
 
@@ -179,7 +178,7 @@ class App extends React.Component<
           {isPlaying ? (
             <Button
               onClick={this.playClick}
-            >{`Play ${this.state.timeAllowed}s`}</Button>
+            >{`Play ${this.timeAllowed()}s`}</Button>
           ) : null}
 
           <Button onClick={isPlaying ? this.giveUp : this.nextSong}>
