@@ -8,9 +8,9 @@ export const toggleNowPlaying = (visible: boolean) => {
   // Hide items that give away information while playing
   [
     // The left side chunk with the title, artist, album art, etc.
-    document.querySelector('.main-nowPlayingWidget-nowPlaying'),
+    document.querySelector<HTMLElement>('.main-nowPlayingWidget-nowPlaying'),
     // Play/pause/next/previous/etc.
-    document.querySelector('.player-controls__buttons'),
+    document.querySelector<HTMLElement>('.player-controls__buttons'),
   ].forEach((item) => {
     if (item) {
       item.style.opacity = visible ? '1' : '0';
@@ -19,7 +19,7 @@ export const toggleNowPlaying = (visible: boolean) => {
   });
 
   // Disable playback bar interaction while playing
-  const playbackBar = document.querySelector('.playback-bar');
+  const playbackBar = document.querySelector<HTMLElement>('.playback-bar');
   if (playbackBar) {
     playbackBar.style.pointerEvents = visible ? 'auto' : 'none';
   }
