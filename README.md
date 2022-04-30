@@ -1,6 +1,6 @@
-# Spurdle
+# Name That Tune
 
-Spurdle is [Heardle.app](https://www.heardle.app) made for [Spicetify](https://spicetify.app). 
+Name That Tune is [Heardle.app](https://www.heardle.app) made for [Spicetify](https://spicetify.app). 
 This project is fairly early in development and is not complete/bug-free. If you have suggestions, free to contribute 😄
 
 ![Preview screenshot](docs/preview.png)
@@ -11,15 +11,15 @@ This project is fairly early in development and is not complete/bug-free. If you
   - [Planned Features](#planned-features)
 
 ## Installation
-Download the [dist branch](https://github.com/theRealPadster/spurdle/archive/refs/heads/dist.zip) and rename the folder "spurdle". Copy it into the spicetify custom apps folder:
+Download the [dist branch](https://github.com/theRealPadster/name-that-tune/archive/refs/heads/dist.zip) and rename the folder "name-that-tune". Copy it into the spicetify custom apps folder:
 | **Platform**    | **Path**                               |
 |-----------------|----------------------------------------|
 | **Linux/macOS** | `~/.config/spicetify/CustomApps`       |
 | **Windows**     | `%userprofile%/.spicetify/CustomApps/` |
 
-After putting the spurdle folder into the correct custom apps folder, run the following command to enable it:
+After putting the name-that-tune folder into the correct custom apps folder, run the following command to enable it:
 ```
-spicetify config custom_apps spurdle
+spicetify config custom_apps name-that-tune
 spicetify apply
 ```
 Note: Using the `config` command to add the custom app will always append the file name to the existing custom apps list. It does not replace the whole key's value.
@@ -29,7 +29,7 @@ Example:
 ```ini
 [AdditionalOptions]
 ...
-custom_apps = spicetify-marketplace|spurdle
+custom_apps = spicetify-marketplace|name-that-tune
 ```
 
 Then run:
