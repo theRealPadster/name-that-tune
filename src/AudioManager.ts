@@ -1,11 +1,25 @@
 export default class AudioManager {
   end: number;
+  debouncing: number;
+  DEBOUNCE_TIME = 300;
   listener: Function;
 
   constructor() {
     this.end = 1;
+    this.debouncing = 0;
     this.listener = (event: Event) => {
       if (!this.end) return;
+
+      if (this.debouncing) {
+        console.log('debouncing');
+        if (event.timeStamp - this.debouncing > this.DEBOUNCE_TIME) {
+          this.debouncing = 0;
+          console.log('reset debouncing');
+        }
+        return;
+      }
+
+      this.debouncing = event.timeStamp;
 
       // TODO: calculate and update song length etc on song change
       // Spicetify uses ms

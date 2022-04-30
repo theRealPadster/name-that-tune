@@ -3,9 +3,8 @@
 
 import { fetchAndPlay, shuffle, playList } from './shuffle+';
 
-const DEBOUNCE_TIME = 500;
-
 export const toggleNowPlaying = (visible: boolean) => {
+  // visible = true;
   // Hide items that give away information while playing
   [
     // The left side chunk with the title, artist, album art, etc.
@@ -26,51 +25,16 @@ export const toggleNowPlaying = (visible: boolean) => {
   }
 };
 
-export const playSegment = (endSeconds: number) => {
-  // Spicetify uses ms
-  const endMillis = endSeconds * 1000;
-  const songLengthMillis = Spicetify.Player.getDuration();
-  if (endMillis > songLengthMillis) return;
-
-  // Spicetify.showNotification(`Playing from 0s to ${endSeconds}s`);
-  Spicetify.Player.seek(0);
-  Spicetify.Player.play();
-
-  let debouncing = 0;
-  const stopListener = (event: Event) => {
-    if (debouncing) {
-      console.log('debouncing');
-      if (event.timeStamp - debouncing > DEBOUNCE_TIME) {
-        debouncing = 0;
-        console.log('reset debouncing');
-      }
-      return;
-    }
-    const currentProgress =
-      songLengthMillis * Spicetify.Player.getProgressPercent();
-    console.log({ currentProgress, endMilliseconds: endMillis });
-    if (currentProgress > endMillis) {
-      debouncing = event.timeStamp;
-      Spicetify.Player.pause();
-      console.log('stopping');
-      Spicetify.Player.removeEventListener('onprogress', stopListener);
-      return;
-    }
-  };
-
-  Spicetify.Player.addEventListener('onprogress', stopListener);
-};
-
 // TODO: potentially tweak this (e.g. accept '&'/'and' or other things)
 const normalize = (str: string) => {
   let cleaned = str.trim().toLowerCase();
 
   // Remove anything within parentheses
-  cleaned = cleaned.replace(/\(.*\)/g, '')
+  cleaned = cleaned.replace(/\(.*\)/g, '');
 
   // Remove special characters
   // TODO: This strips out spaces in between words...
-  cleaned = cleaned.replace(/[^a-zA-Z0-9]/g, '')
+  cleaned = cleaned.replace(/[^a-zA-Z0-9]/g, '');
 
   // TODO: add any other logic?
 
