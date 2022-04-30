@@ -226,7 +226,8 @@ export async function playList(list: string[], context) {
   }
 
   success(count);
-  Spicetify.Player.next();
+  // We don't want it to start playing immediately after queueing up
+  // Spicetify.Player.next();
 }
 
 export function fetchAndPlay(uri: string) {
