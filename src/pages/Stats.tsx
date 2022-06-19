@@ -48,6 +48,11 @@ const options = {
       },
     },
   },
+  scale: {
+    ticks: {
+      precision: 0,
+    },
+  },
 };
 
 import styles from '../css/app.module.scss';
