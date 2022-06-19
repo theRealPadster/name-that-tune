@@ -50,7 +50,7 @@ const fetchPlaylist = async (uri: string): Promise<string[]> => {
  * @param {string} uri
  * @returns {object} folder
  */
-const searchFolder = (rows, uri: string) => {
+const searchFolder = (rows: {type: string; link: string; rows: any;}[], uri: string) => {
   for (const r of rows) {
     if (r.type !== 'folder' || r.rows == null) {
       continue;

@@ -11,10 +11,10 @@ export default class AudioManager {
       if (!this.end) return;
 
       if (this.debouncing) {
-        console.log('debouncing');
+        console.debug('debouncing');
         if (event.timeStamp - this.debouncing > this.DEBOUNCE_TIME) {
           this.debouncing = 0;
-          console.log('reset debouncing');
+          console.debug('reset debouncing');
         }
         return;
       }
@@ -29,7 +29,7 @@ export default class AudioManager {
 
       const currentProgress =
         songLengthMillis * Spicetify.Player.getProgressPercent();
-      console.log({ currentProgress, endMilliseconds: endMillis });
+      // console.debug({ currentProgress, endMilliseconds: endMillis });
       if (currentProgress > endMillis) {
         Spicetify.Player.pause();
         Spicetify.Player.skipBack();

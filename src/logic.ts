@@ -8,7 +8,7 @@ export const toggleNowPlaying = (visible: boolean) => {
   // Hide items that give away information while playing
   [
     // The left side chunk with the title, artist, album art, etc.
-    document.querySelector<HTMLElement>('.main-nowPlayingWidget-nowPlaying'),
+    document.querySelector<HTMLElement>('.main-nowPlayingBar-left'),
     // Play/pause/next/previous/etc.
     document.querySelector<HTMLElement>('.player-controls__buttons'),
   ].forEach((item) => {
