@@ -2,5 +2,9 @@
   "name": "Name That Tune",
   "description": "Heardle.app made for Spicetify",
   "preview": "docs/preview.png",
-  "readme": "README.md"
+  "readme": "README.md",
+  "tags": [
+    "game",
+    "beta"
+  ]
 }
