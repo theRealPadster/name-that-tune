@@ -8,6 +8,7 @@
 
 .title {
   font-size: 50px;
+  color: var(--spice-text);
 }
 
 .subtitle {
@@ -71,4 +72,14 @@
   align-items: center;
   // flex-direction: column;
   gap: 20px;
+}
+
+.StatsButton {
+  color: var(--spice-text) !important;
+  background-color: transparent !important;
+  padding: 12px !important;
+
+  position: fixed !important;
+  bottom: 4px;
+  right: 4px;
 }

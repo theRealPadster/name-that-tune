@@ -147,6 +147,10 @@ class App extends React.Component<
     });
   };
 
+  goToStats = () => {
+    Spicetify.showNotification('Stats coming soon!');
+  }
+
   render() {
     const gameWon = this.state.gameState === GameState.Won;
     const isPlaying = this.state.gameState === GameState.Playing;
@@ -196,6 +200,9 @@ class App extends React.Component<
               />
             ))}
           </ol>
+          <Button onClick={this.goToStats} classes={[styles.StatsButton]}>
+            Stats
+          </Button>
         </div>
       </>
     );
