@@ -84,6 +84,7 @@ class Game extends React.Component<
     if (this.state.guess.trim().length === 0) return;
 
     const won = checkGuess(this.state.guess);
+    if (won) saveStats(this.state.stage);
 
     // Add the guess to the guess list in the state
     this.setState({
@@ -102,8 +103,6 @@ class Game extends React.Component<
       } else {
         this.audioManager.setEnd(stageToTime(this.state.stage));
       }
-
-      saveStats(this.state.stage);
     });
   };
 
