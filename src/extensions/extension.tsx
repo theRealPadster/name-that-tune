@@ -1,6 +1,3 @@
-/// <reference path='../../../spicetify-cli/globals.d.ts' />
-/// <reference path='../../../spicetify-cli/jsHelper/spicetifyWrapper.js' />
-
 import { toggleNowPlaying } from '../logic';
 
 (async () => {
@@ -18,7 +15,7 @@ import { toggleNowPlaying } from '../logic';
   console.log('running name-that-tune extension');
 
   // Show/hide the now playing info on navigation
-  Spicetify.Platform.History.listen((data) => {
+  Spicetify.Platform.History.listen((data: any) => {
     console.log('History changed', data);
 
     const onApp = data.pathname.indexOf('name-that-tune') != -1;
@@ -55,14 +52,14 @@ import { toggleNowPlaying } from '../logic';
     if (URIs.length === 1) {
       const uriObj = Spicetify.URI.fromString(URIs[0]);
       switch (uriObj.type) {
-        case Spicetify.URI.Type.SHOW:
-        case Spicetify.URI.Type.PLAYLIST:
-        case Spicetify.URI.Type.PLAYLIST_V2:
-        case Spicetify.URI.Type.FOLDER:
-        case Spicetify.URI.Type.ALBUM:
-        case Spicetify.URI.Type.COLLECTION:
-        case Spicetify.URI.Type.ARTIST:
-          return true;
+      case Spicetify.URI.Type.SHOW:
+      case Spicetify.URI.Type.PLAYLIST:
+      case Spicetify.URI.Type.PLAYLIST_V2:
+      case Spicetify.URI.Type.FOLDER:
+      case Spicetify.URI.Type.ALBUM:
+      case Spicetify.URI.Type.COLLECTION:
+      case Spicetify.URI.Type.ARTIST:
+        return true;
       }
       return false;
     }
