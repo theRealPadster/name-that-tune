@@ -1,7 +1,14 @@
 {
   "name": "name-that-tune",
   "version": "0.1.0",
-  "private": true,
+  "homepage": "https://github.com/theRealPadster/name-that-tune",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theRealPadster/name-that-tune.git"
+  },
+  "bugs": {
+    "url": "https://github.com/theRealPadster/name-that-tune/issues"
+  },
   "scripts": {
     "build": "spicetify-creator",
     "build:local": "spicetify-creator --out=dist --minify",
@@ -10,10 +17,19 @@
     "watch": "spicetify-creator --watch"
   },
   "license": "GPL-3.0",
+  "engines": {
+    "node": ">=16"
+  },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
     "copyfiles": "^2.4.1",
-    "spicetify-creator": "^1.0.10"
+    "eslint": "7.32.0",
+    "eslint-plugin-react": "^7.30.0",
+    "recharts": "recharts/recharts",
+    "spicetify-creator": "^1.0.10",
+    "typescript": "^4.7.3"
   }
 }
