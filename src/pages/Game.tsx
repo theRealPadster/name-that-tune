@@ -8,7 +8,7 @@ import React from 'react';
 import GuessItem from '../components/GuessItem';
 import Button from '../components/Button';
 
-import { initialize, toggleNowPlaying, checkGuess } from '../logic';
+import { initialize, toggleNowPlaying, checkGuess, saveStats, stageToTime } from '../logic';
 import AudioManager from '../AudioManager';
 
 enum GameState {
@@ -55,19 +55,7 @@ class Game extends React.Component<
     this.audioManager.unlisten();
   }
 
-  /*
-   * Don't just add the same amount of time for each guess
-   * Heardle offsets:
-   * 1s, +1s, +2s, +3s, +4s, +5s
-   * Which is this equation:
-   * s = 1 + 0.5x + 0.5x^2
-   */
-  timeAllowed = () => {
-    return (1 + 0.5 * (this.state.stage + this.state.stage ** 2));
-  }
-
   playClick = () => {
-    // playSegment(this.state.timeAllowed);
     this.audioManager.play();
   };
 
@@ -85,7 +73,7 @@ class Game extends React.Component<
       // Increment the stage
       stage: this.state.stage + 1,
     }, () => {
-      this.audioManager.setEnd(this.timeAllowed());
+      this.audioManager.setEnd(stageToTime(this.state.stage));
     });
   };
 
@@ -112,8 +100,10 @@ class Game extends React.Component<
         Spicetify.Player.play();
         toggleNowPlaying(true);
       } else {
-        this.audioManager.setEnd(this.timeAllowed());
+        this.audioManager.setEnd(stageToTime(this.state.stage));
       }
+
+      saveStats(this.state.stage);
     });
   };
 
@@ -122,6 +112,7 @@ class Game extends React.Component<
     Spicetify.Player.seek(0);
     Spicetify.Player.play();
     toggleNowPlaying(true);
+    saveStats(-1);
 
     this.setState({
       gameState: GameState.Lost,
@@ -143,13 +134,11 @@ class Game extends React.Component<
       stage: 0,
       gameState: GameState.Playing,
     }, () => {
-      this.audioManager.setEnd(this.timeAllowed());
+      this.audioManager.setEnd(stageToTime(this.state.stage));
     });
   };
 
   goToStats = () => {
-    // Spicetify.showNotification('Stats coming soon!');
-
     Spicetify.Platform.History.push({
       pathname: '/name-that-tune/stats',
       state: {
@@ -196,7 +185,7 @@ class Game extends React.Component<
           {isPlaying ? (
             <Button
               onClick={this.playClick}
-            >{`Play ${this.timeAllowed()}s`}</Button>
+            >{`Play ${stageToTime(this.state.stage)}s`}</Button>
           ) : null}
 
           <Button onClick={isPlaying ? this.giveUp : this.nextSong}>

@@ -9,7 +9,8 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import faker from 'faker';
+import { getLocalStorageDataFromKey } from '../Utils';
+import { STATS_KEY } from '../constants';
 
 ChartJS.register(
   CategoryScale,
@@ -34,7 +35,7 @@ const options = {
     tooltip: {
       // enabled: false,
       callbacks: {
-        label: function(context) {
+        label: (context) => {
           // let label = context.dataset.label || '';
           // if (label) label += ': ';
           let label = '';
@@ -49,23 +50,10 @@ const options = {
   },
 };
 
-// TODO: can I dynamically make this as long as I have data for, or just cap at >16s?
-const labels = ['1s', '2s', '4s', '7s', '11s', '16s', '>16s'];
-
-const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-  ],
-};
-
 import styles from '../css/app.module.scss';
 
 import Button from '../components/Button';
+import { stageToTime } from '../logic';
 
 class Stats extends React.Component {
   state = {
@@ -83,6 +71,37 @@ class Stats extends React.Component {
   }
 
   render() {
+    // const labels = ['1s', '2s', '4s', '7s', '11s', '16s', '>16s', 'gave up'];
+    const savedStats = getLocalStorageDataFromKey(STATS_KEY, {});
+    const parsedStats = Object.entries(savedStats)
+      .reduce((accum, [key, value]) => {
+        const stage = parseInt(key, 10);
+        // I pass in -1 when saving if they gave up
+        if (stage === -1) {
+          accum['gave up'] = value;
+        } else if (stage > 5) { // >16s
+          const longOnes = accum['>16s'] || 0;
+          accum['>16s'] = longOnes + value;
+        } else { // stage is 0-5, output seconds
+          const time = stageToTime(stage);
+          accum[`${time}s`] = value;
+        }
+        return accum;
+      }, {});
+
+    const data = {
+      labels: Object.keys(parsedStats),
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: Object.values(parsedStats),
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+      ],
+    };
+
+    console.log(data);
+
     return (
       <>
         <div className={styles.container}>

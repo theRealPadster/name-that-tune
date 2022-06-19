@@ -2,6 +2,8 @@
 /// <reference path="../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
 
 import { fetchAndPlay, shuffle, playList } from './shuffle+';
+import { getLocalStorageDataFromKey } from './Utils';
+import { STATS_KEY } from './constants';
 
 export const toggleNowPlaying = (visible: boolean) => {
   // visible = true;
@@ -80,4 +82,27 @@ export const initialize = (URIs?: string[]) => {
     // }
     Spicetify.Player.seek(0);
   }
+};
+
+/*
+  * Don't just add the same amount of time for each guess
+  * Heardle offsets:
+  * 1s, +1s, +2s, +3s, +4s, +5s
+  * Which is this equation:
+  * s = 1 + 0.5x + 0.5x^2
+  */
+export const stageToTime = (stage: number) => {
+  return (1 + 0.5 * (stage + stage ** 2));
+};
+
+/**
+ * Saves an object to localStorage with key:value pairs as stage:occurrences
+ * @param stage The stage they won at, or -1 if they gave up
+ */
+export const saveStats = (stage: number) => {
+  const savedStats = getLocalStorageDataFromKey(STATS_KEY, {});
+  console.debug('Existing stats:', savedStats);
+  savedStats[stage] = savedStats[stage] + 1 || 1;
+  console.debug('Saving stats:', savedStats);
+  localStorage.setItem(STATS_KEY, JSON.stringify(savedStats));
 };
