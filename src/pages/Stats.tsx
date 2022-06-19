@@ -10,7 +10,11 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { getLocalStorageDataFromKey } from '../Utils';
+import { stageToTime } from '../logic';
 import { STATS_KEY } from '../constants';
+import Button from '../components/Button';
+
+import styles from '../css/app.module.scss';
 
 ChartJS.register(
   CategoryScale,
@@ -54,11 +58,6 @@ const options = {
     },
   },
 };
-
-import styles from '../css/app.module.scss';
-
-import Button from '../components/Button';
-import { stageToTime } from '../logic';
 
 class Stats extends React.Component {
   state = {

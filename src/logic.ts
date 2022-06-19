@@ -1,5 +1,5 @@
-/// <reference path="../../spicetify-cli/globals.d.ts" />
-/// <reference path="../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
+// import FuzzySet from 'fuzzyset';
+import { diceCoefficient } from 'dice-coefficient';
 
 import { fetchAndPlay, shuffle, playList } from './shuffle+';
 import { getLocalStorageDataFromKey } from './Utils';
@@ -27,15 +27,20 @@ export const toggleNowPlaying = (visible: boolean) => {
   }
 };
 
-// TODO: potentially tweak this (e.g. accept '&'/'and' or other things)
+// TODO: potentially tweak this
 const normalize = (str: string) => {
   let cleaned = str.trim().toLowerCase();
 
   // Remove anything within parentheses
   cleaned = cleaned.replace(/\(.*\)/g, '');
 
-  // Remove special characters
-  // TODO: This strips out spaces in between words...
+  // Remove anything that comes after a ' - '
+  cleaned = cleaned.replace(/\s-\s.*$/, '');
+
+  // Convert & to 'and'
+  cleaned = cleaned.replace(/&/g, 'and');
+
+  // Remove special characters and spaces
   cleaned = cleaned.replace(/[^a-zA-Z0-9]/g, '');
 
   // TODO: add any other logic?
@@ -44,21 +49,34 @@ const normalize = (str: string) => {
 };
 
 export const checkGuess = (guess: string) => {
-  console.log({ guess });
-  console.log(`title: ${Spicetify.Player.data.track.metadata.title}`);
-  console.log(
-    `artist_name: ${Spicetify.Player.data.track.metadata.artist_name}`
-  );
-  console.log(
-    `album_artist_name: ${Spicetify.Player.data.track.metadata.album_artist_name}`
-  );
+  console.log({
+    title: Spicetify.Player.data.track.metadata.title,
+    guess,
+  });
+  // console.log({
+  //   artist_name: Spicetify.Player.data.track.metadata.artist_name,
+  //   album_artist_name: Spicetify.Player.data.track.metadata.album_artist_name,
+  // });
 
+  const normalizedTitle = normalize(
+    Spicetify.Player.data.track.metadata.title,
+  );
   const normalizedGuess = normalize(guess);
-  const normalizedAnswer = normalize(
-    Spicetify.Player.data.track.metadata.title
-  );
+  console.log({ normalizedTitle, normalizedGuess });
 
-  return normalizedGuess === normalizedAnswer;
+  // const set = FuzzySet([normalizedTitle], false);
+  // const result = set.get(normalizedGuess);
+  // if (result) {
+  //   const [similarity, match] = result.flat();
+  //   console.log({ similarity, match });
+  // } else {
+  //   console.log('no match');
+  // }
+
+  const similarity = diceCoefficient(normalizedGuess, normalizedTitle);
+  console.log({ similarity });
+
+  return similarity > 0.8;
 };
 
 export const initialize = (URIs?: string[]) => {
