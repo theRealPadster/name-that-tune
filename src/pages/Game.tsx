@@ -1,6 +1,3 @@
-/// <reference path='../../../spicetify-cli/globals.d.ts' />
-/// <reference path='../../../spicetify-cli/jsHelper/spicetifyWrapper.js' />
-
 import styles from '../css/app.module.scss';
 // import '../css/app.global.scss';
 import React from 'react';

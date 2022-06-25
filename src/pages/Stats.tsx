@@ -25,7 +25,7 @@ ChartJS.register(
   Legend,
 );
 
-const options = {
+const chartOptions = {
   responsive: true,
   plugins: {
     legend: {
@@ -93,7 +93,7 @@ class Stats extends React.Component {
         return accum;
       }, {});
 
-    const data = {
+    const chartData = {
       labels: Object.keys(parsedStats),
       datasets: [
         {
@@ -104,14 +104,41 @@ class Stats extends React.Component {
       ],
     };
 
-    console.log(data);
+    const totalGames = Object.values(savedStats).reduce((accum, value) => accum + value, 0);
+    const winPercentage = 1 - (savedStats['-1'] || 0) / totalGames;
+
+    console.log({
+      chartData,
+      totalGames,
+      winPercentage,
+    });
 
     return (
       <>
         <div className={styles.container}>
           <h1 className={styles.title}>{'🎵 Name That Tune'}</h1>
           <h2>Stats</h2>
-          <Bar options={options} data={data} />
+          <p>Win percentage: {`${(winPercentage * 100).toFixed(2)}%`}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Songs</th>
+                <th>%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(parsedStats).map(([key, value]) => (
+                <tr key={key}>
+                  <td>{key}</td>
+                  <td>{value}</td>
+                  <td>{(value / (totalGames) * 100).toFixed(2)}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {/* TODO: add total games played and games won vs gave up */}
+          <Bar options={chartOptions} data={chartData} />
         </div>
       </>
     );
