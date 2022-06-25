@@ -25,39 +25,9 @@ ChartJS.register(
   Legend,
 );
 
-const chartOptions = {
-  responsive: true,
-  plugins: {
-    legend: {
-      display: false,
-      position: 'top' as const,
-    },
-    // title: {
-    //   display: true,
-    //   text: 'Chart.js Bar Chart',
-    // },
-    tooltip: {
-      // enabled: false,
-      callbacks: {
-        label: (context) => {
-          // let label = context.dataset.label || '';
-          // if (label) label += ': ';
-          let label = '';
-          if (context.parsed.y !== null) {
-            // label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-            label += context.parsed.y + ' songs';
-          }
-          return label;
-        },
-      },
-    },
-  },
-  scale: {
-    ticks: {
-      precision: 0,
-    },
-  },
-};
+// ChartJS.defaults.color = '#fff';
+// ChartJS.defaults.backgroundColor = '#fff';
+// ChartJS.defaults.borderColor = '#fff';
 
 class Stats extends React.Component {
   state = {
@@ -102,6 +72,66 @@ class Stats extends React.Component {
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
       ],
+    };
+
+    const chartOptions = {
+      responsive: true,
+      indexAxis: 'y' as const,
+      plugins: {
+        legend: {
+          display: false,
+          position: 'top' as const,
+        },
+        // title: {
+        //   display: true,
+        //   text: 'Chart.js Bar Chart',
+        // },
+        tooltip: {
+          enabled: false,
+          callbacks: {
+            label: (context) => {
+              // let label = context.dataset.label || '';
+              // if (label) label += ': ';
+              let label = '';
+              if (context.parsed.y !== null) {
+                // label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                label += context.parsed.y + ' songs';
+              }
+              return label;
+            },
+          },
+        },
+      },
+      scale: {
+        ticks: {
+          precision: 0,
+        },
+      },
+      hover: {
+        animationDuration: 0,
+      },
+      animation: { // TODO: the label disappears for a second when you hover over the bar...
+        duration: 1,
+        onComplete: function({ chart }) {
+          const chartInstance = chart;
+          console.log(chart, chartInstance.config.options);
+          const ctx = chartInstance.ctx;
+
+          // ctx.font = ChartJS.helpers.fontString(ChartJS.defaults.global.defaultFontSize, ChartJS.defaults.global.defaultFontStyle, ChartJS.defaults.global.defaultFontFamily);
+          // ctx.fillStyle = chartInstance.config.options.defaultFontColor;
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'bottom';
+
+          chartData.datasets.forEach(function(dataset, i) {
+            const meta = chartInstance.getDatasetMeta(i);
+            meta.data.forEach(function(bar, index) {
+              const data = dataset.data[index];
+              ctx.fillText(data, bar.x - 30, bar.y + 5); // TODO: make this responsive based on how long the labels are
+            });
+          });
+        },
+      },
     };
 
     const totalGames = Object.values(savedStats).reduce((accum, value) => accum + value, 0);
