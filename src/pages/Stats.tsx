@@ -5,14 +5,17 @@ import {
   LinearScale,
   BarElement,
   Title,
-  Tooltip,
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 import { getLocalStorageDataFromKey } from '../Utils';
 import { stageToTime } from '../logic';
 import { STATS_KEY } from '../constants';
 import Button from '../components/Button';
+
+import { SavedStats } from '../types/name-that-tune';
 
 import styles from '../css/app.module.scss';
 
@@ -21,8 +24,8 @@ ChartJS.register(
   LinearScale,
   BarElement,
   Title,
-  Tooltip,
   Legend,
+  ChartDataLabels,
 );
 
 // ChartJS.defaults.color = '#fff';
@@ -46,7 +49,7 @@ class Stats extends React.Component {
 
   render() {
     // const labels = ['1s', '2s', '4s', '7s', '11s', '16s', '>16s', 'gave up'];
-    const savedStats = getLocalStorageDataFromKey(STATS_KEY, {});
+    const savedStats = getLocalStorageDataFromKey(STATS_KEY, {}) as SavedStats;
     const parsedStats = Object.entries(savedStats)
       .reduce((accum, [key, value]) => {
         const stage = parseInt(key, 10);
@@ -61,7 +64,7 @@ class Stats extends React.Component {
           accum[`${time}s`] = value;
         }
         return accum;
-      }, {});
+      }, {} as { [key: string]: number });
 
     const chartData = {
       labels: Object.keys(parsedStats),
@@ -78,27 +81,23 @@ class Stats extends React.Component {
       responsive: true,
       indexAxis: 'y' as const,
       plugins: {
-        legend: {
-          display: false,
-          position: 'top' as const,
-        },
         // title: {
         //   display: true,
         //   text: 'Chart.js Bar Chart',
         // },
-        tooltip: {
-          enabled: false,
-          callbacks: {
-            label: (context) => {
-              // let label = context.dataset.label || '';
-              // if (label) label += ': ';
-              let label = '';
-              if (context.parsed.y !== null) {
-                // label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-                label += context.parsed.y + ' songs';
-              }
-              return label;
-            },
+        legend: {
+          display: false,
+          position: 'top' as const,
+        },
+        datalabels: {
+          color: '#fff',
+          anchor: 'end',
+          align: 'start',
+          offset: 8,
+          clip: true,
+          formatter: (value) => {
+            if (value == 1) return `${value} song`;
+            return `${value} songs`;
           },
         },
       },
@@ -107,30 +106,9 @@ class Stats extends React.Component {
           precision: 0,
         },
       },
-      hover: {
-        animationDuration: 0,
-      },
-      animation: { // TODO: the label disappears for a second when you hover over the bar...
-        duration: 1,
-        onComplete: function({ chart }) {
-          const chartInstance = chart;
-          console.log(chart, chartInstance.config.options);
-          const ctx = chartInstance.ctx;
-
-          // ctx.font = ChartJS.helpers.fontString(ChartJS.defaults.global.defaultFontSize, ChartJS.defaults.global.defaultFontStyle, ChartJS.defaults.global.defaultFontFamily);
-          // ctx.fillStyle = chartInstance.config.options.defaultFontColor;
-          ctx.fillStyle = '#fff';
-          ctx.textAlign = 'left';
-          ctx.textBaseline = 'bottom';
-
-          chartData.datasets.forEach(function(dataset, i) {
-            const meta = chartInstance.getDatasetMeta(i);
-            meta.data.forEach(function(bar, index) {
-              const data = dataset.data[index];
-              ctx.fillText(data, bar.x - 30, bar.y + 5); // TODO: make this responsive based on how long the labels are
-            });
-          });
-        },
+      // animation: false,
+      animation: {
+        duration: 1000,
       },
     };
 

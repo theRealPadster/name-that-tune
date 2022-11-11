@@ -37,7 +37,6 @@ class Game extends React.Component<
   audioManager: AudioManager;
   constructor(props: any) {
     super(props);
-    //@ts-ignore
     this.URIs = Spicetify.Platform.History.location.state.URIs;
     this.audioManager = new AudioManager();
   }
