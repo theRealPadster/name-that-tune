@@ -5,14 +5,17 @@ import {
   LinearScale,
   BarElement,
   Title,
-  Tooltip,
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 import { getLocalStorageDataFromKey } from '../Utils';
 import { stageToTime } from '../logic';
 import { STATS_KEY } from '../constants';
 import Button from '../components/Button';
+
+import { SavedStats } from '../types/name-that-tune';
 
 import styles from '../css/app.module.scss';
 
@@ -21,43 +24,13 @@ ChartJS.register(
   LinearScale,
   BarElement,
   Title,
-  Tooltip,
   Legend,
+  ChartDataLabels,
 );
 
-const chartOptions = {
-  responsive: true,
-  plugins: {
-    legend: {
-      display: false,
-      position: 'top' as const,
-    },
-    // title: {
-    //   display: true,
-    //   text: 'Chart.js Bar Chart',
-    // },
-    tooltip: {
-      // enabled: false,
-      callbacks: {
-        label: (context) => {
-          // let label = context.dataset.label || '';
-          // if (label) label += ': ';
-          let label = '';
-          if (context.parsed.y !== null) {
-            // label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-            label += context.parsed.y + ' songs';
-          }
-          return label;
-        },
-      },
-    },
-  },
-  scale: {
-    ticks: {
-      precision: 0,
-    },
-  },
-};
+// ChartJS.defaults.color = '#fff';
+// ChartJS.defaults.backgroundColor = '#fff';
+// ChartJS.defaults.borderColor = '#fff';
 
 class Stats extends React.Component {
   state = {
@@ -76,7 +49,7 @@ class Stats extends React.Component {
 
   render() {
     // const labels = ['1s', '2s', '4s', '7s', '11s', '16s', '>16s', 'gave up'];
-    const savedStats = getLocalStorageDataFromKey(STATS_KEY, {});
+    const savedStats = getLocalStorageDataFromKey(STATS_KEY, {}) as SavedStats;
     const parsedStats = Object.entries(savedStats)
       .reduce((accum, [key, value]) => {
         const stage = parseInt(key, 10);
@@ -91,7 +64,7 @@ class Stats extends React.Component {
           accum[`${time}s`] = value;
         }
         return accum;
-      }, {});
+      }, {} as { [key: string]: number });
 
     const chartData = {
       labels: Object.keys(parsedStats),
@@ -102,6 +75,41 @@ class Stats extends React.Component {
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
       ],
+    };
+
+    const chartOptions = {
+      responsive: true,
+      indexAxis: 'y' as const,
+      plugins: {
+        // title: {
+        //   display: true,
+        //   text: 'Chart.js Bar Chart',
+        // },
+        legend: {
+          display: false,
+          position: 'top' as const,
+        },
+        datalabels: {
+          color: '#fff',
+          anchor: 'end',
+          align: 'start',
+          offset: 8,
+          clip: true,
+          formatter: (value) => {
+            if (value == 1) return `${value} song`;
+            return `${value} songs`;
+          },
+        },
+      },
+      scale: {
+        ticks: {
+          precision: 0,
+        },
+      },
+      // animation: false,
+      animation: {
+        duration: 1000,
+      },
     };
 
     const totalGames = Object.values(savedStats).reduce((accum, value) => accum + value, 0);

@@ -35,7 +35,7 @@ export default class AudioManager {
         Spicetify.Player.skipBack();
         return;
       }
-    }
+    };
   }
 
   setEnd(end: number) {

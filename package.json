@@ -26,6 +26,7 @@
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "chart.js": "^3.8.0",
+    "chartjs-plugin-datalabels": "^2.1.0",
     "copyfiles": "^2.4.1",
     "dice-coefficient": "^2.1.0",
     "eslint": "7.32.0",
