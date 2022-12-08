@@ -15,7 +15,7 @@ Download the [dist branch](https://github.com/theRealPadster/name-that-tune/arch
 | **Platform**    | **Path**                               |
 |-----------------|----------------------------------------|
 | **Linux/macOS** | `~/.config/spicetify/CustomApps`       |
-| **Windows**     | `%userprofile%/.spicetify/CustomApps/` |
+| **Windows**     | `%localappdata%\spicetify\CustomApps` |
 
 After putting the name-that-tune folder into the correct custom apps folder, run the following command to enable it:
 ```
