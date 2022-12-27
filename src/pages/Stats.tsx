@@ -57,13 +57,13 @@ class Stats extends React.Component<{ t: TFunction }> {
         const stage = parseInt(key, 10);
         // I pass in -1 when saving if they gave up
         if (stage === -1) {
-          accum['gave up'] = value;
+          accum[t('stats.gaveUp')] = value;
         } else if (stage > 5) { // >16s
-          const longOnes = accum['>16s'] || 0;
-          accum['>16s'] = longOnes + value;
+          const longOnes = accum[t('stats.greaterThan16')] || 0;
+          accum[t('stats.greaterThan16')] = longOnes + value;
         } else { // stage is 0-5, output seconds
           const time = stageToTime(stage);
-          accum[`${time}s`] = value;
+          accum[t('stats.xSeconds', { count: time })] = value;
         }
         return accum;
       }, {} as { [key: string]: number });

@@ -17,7 +17,10 @@
       "songs": "Songs",
       "winPercentage": "Win percentage: {{percentage}}%",
       "songWithCount_one": "{{count}} song",
-      "songWithCount_other": "{{count}} songs"
+      "songWithCount_other": "{{count}} songs",
+      "gaveUp": "gave up",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
     }
   }
 }
