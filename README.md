@@ -6,9 +6,9 @@ This project is fairly early in development and is not complete/bug-free. If you
 ![Preview screenshot](docs/preview.png)
 
 ## Table of contents
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Translations](#translations)
+  - [Installation](#⚙️-installation)
+  - [Usage](#🪄-usage)
+  - [Translations](#🌎-translations)
   - [Planned Features](#planned-features)
 
 ## ⚙️ Installation
