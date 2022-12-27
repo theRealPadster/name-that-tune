@@ -98,8 +98,7 @@ class Stats extends React.Component<{ t: TFunction }> {
           offset: 8,
           clip: true,
           formatter: (value) => {
-            if (value == 1) return `${value} song`;
-            return `${value} songs`;
+            return t('stats.songWithCount', { count: value });
           },
         },
       },

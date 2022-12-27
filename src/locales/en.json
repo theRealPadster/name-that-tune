@@ -11,7 +11,9 @@
       "title": "Stats",
       "time": "Time",
       "songs": "Songs",
-      "winPercentage": "Win percentage: {{percentage}}%"
+      "winPercentage": "Win percentage: {{percentage}}%",
+      "songWithCount_one": "{{count}} song",
+      "songWithCount_other": "{{count}} songs"
     }
   }
 }
