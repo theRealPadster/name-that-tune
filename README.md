@@ -8,6 +8,7 @@ This project is fairly early in development and is not complete/bug-free. If you
 ## Table of contents
   - [Installation](#installation)
   - [Usage](#usage)
+  - [Translations](#translations)
   - [Planned Features](#planned-features)
 
 ## ⚙️ Installation
