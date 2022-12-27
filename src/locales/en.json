@@ -7,6 +7,8 @@
     "skipBtn": "Skip",
     "giveUp": "Give up",
     "nextSong": "Next song",
+    "menuEntry": "Play Name That Tune",
+    "sendingURIs": "Sending {{count}} URIs to Name That Tune",
     "stats": {
       "title": "Stats",
       "time": "Time",
