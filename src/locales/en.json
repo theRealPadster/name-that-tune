@@ -1,0 +1,26 @@
+{
+  "translation": {
+    "appName": "Name That Tune",
+    "title": "🎵 $t(appName)",
+    "winMsg": "You won!",
+    "guessPlaceholder": "Guess the song",
+    "guessBtn": "Guess",
+    "skipBtn": "Skip",
+    "giveUp": "Give up",
+    "nextSong": "Next song",
+    "menuEntry": "Play $t(appName)",
+    "sendingURIs_one": "Sending {{count}} URI to $t(appName)",
+    "sendingURIs_other": "Sending {{count}} URIs to $t(appName)",
+    "stats": {
+      "title": "Stats",
+      "time": "Time",
+      "songs": "Songs",
+      "winPercentage": "Win percentage: {{percentage}}%",
+      "songWithCount_one": "{{count}} song",
+      "songWithCount_other": "{{count}} songs",
+      "gaveUp": "gave up",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
+    }
+  }
+}

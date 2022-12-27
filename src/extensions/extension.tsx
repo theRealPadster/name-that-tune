@@ -1,5 +1,28 @@
 import { toggleNowPlaying } from '../logic';
 
+import i18n, { t } from 'i18next';
+import en from '../locales/en.json';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .use(LanguageDetector)
+  .init({
+    // the translations
+    resources: {
+      en,
+    },
+    detection: {
+      order: [ 'navigator', 'htmlTag' ],
+    },
+    // lng: "en", // if you're using a language detector, do not define the lng option
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+    },
+  });
+
 (async () => {
   while (
     !(
@@ -23,7 +46,7 @@ import { toggleNowPlaying } from '../logic';
   });
 
   function sendToApp(URIs: string[]) {
-    Spicetify.showNotification(`Sending ${URIs.length} URIs to Name That Tune`);
+    Spicetify.showNotification(t('sendingURIs', { count: URIs.length }));
     console.log('Sending URIs:', URIs);
     // example artist: spotify:artist:5k979N1TnPncUyqlXlaRSv
     // example playlist: spotify:playlist:37i9dQZF1DZ06evO38b2WA
@@ -68,7 +91,7 @@ import { toggleNowPlaying } from '../logic';
   }
 
   const contextMenuItem = new Spicetify.ContextMenu.Item(
-    'Play Name That Tune',
+    t('menuEntry'),
     sendToApp,
     shouldDisplayContextMenu,
     'gamepad',

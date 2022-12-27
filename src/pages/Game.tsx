@@ -1,6 +1,7 @@
 import styles from '../css/app.module.scss';
 // import '../css/app.global.scss';
 import React from 'react';
+import { TFunction } from 'i18next';
 
 import GuessItem from '../components/GuessItem';
 import Button from '../components/Button';
@@ -15,7 +16,10 @@ enum GameState {
 }
 
 class Game extends React.Component<
-  { URIs?: string[] },
+  {
+    URIs?: string[],
+    t: TFunction,
+  },
   {
     stage: number;
     guess: string;
@@ -151,28 +155,29 @@ class Game extends React.Component<
   render() {
     const gameWon = this.state.gameState === GameState.Won;
     const isPlaying = this.state.gameState === GameState.Playing;
+    const { t } = this.props;
 
     return (
       <>
         <div className={styles.container}>
-          <h1 className={styles.title}>{'🎵 Name That Tune'}</h1>
-          {gameWon ? <h2 className={styles.subtitle}>{'You won!'}</h2> : null}
+          <h1 className={styles.title}>{t('title')}</h1>
+          {gameWon ? <h2 className={styles.subtitle}>{t('winMsg')}</h2> : null}
 
           <form onSubmit={this.submitGuess}>
             <input
               type={'text'}
               className={styles.input}
-              placeholder='Guess the song'
+              placeholder={t('guessPlaceholder') as string}
               value={this.state.guess}
               disabled={!isPlaying}
               onChange={this.guessChange}
             />
             <div className={styles.formButtonContainer}>
               <Button onClick={this.submitGuess} disabled={!isPlaying}>
-                {'Guess'}
+                {t('guessBtn')}
               </Button>
               <Button onClick={this.skipGuess} disabled={!isPlaying}>
-                {'Skip'}
+                {t('skipBtn')}
               </Button>
             </div>
           </form>
@@ -184,7 +189,7 @@ class Game extends React.Component<
           ) : null}
 
           <Button onClick={isPlaying ? this.giveUp : this.nextSong}>
-            {isPlaying ? 'Give up' : 'Next song'}
+            {isPlaying ? t('giveUp') : t('nextSong')}
           </Button>
 
           <ol className={styles.guessList}>
@@ -198,7 +203,7 @@ class Game extends React.Component<
             ))}
           </ol>
           <Button onClick={this.goToStats} classes={[styles.StatsButton]}>
-            Stats
+            {t('stats.title')}
           </Button>
         </div>
       </>
