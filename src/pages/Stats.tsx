@@ -1,4 +1,5 @@
 import React from 'react';
+import { TFunction } from 'i18next';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -32,7 +33,7 @@ ChartJS.register(
 // ChartJS.defaults.backgroundColor = '#fff';
 // ChartJS.defaults.borderColor = '#fff';
 
-class Stats extends React.Component {
+class Stats extends React.Component<{ t: TFunction }> {
   state = {
     // // What guess you're on
     // stage: 0,
@@ -48,6 +49,7 @@ class Stats extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     // const labels = ['1s', '2s', '4s', '7s', '11s', '16s', '>16s', 'gave up'];
     const savedStats = getLocalStorageDataFromKey(STATS_KEY, {}) as SavedStats;
     const parsedStats = Object.entries(savedStats)
@@ -124,14 +126,14 @@ class Stats extends React.Component {
     return (
       <>
         <div className={styles.container}>
-          <h1 className={styles.title}>{'🎵 Name That Tune'}</h1>
-          <h2>Stats</h2>
-          <p>Win percentage: {`${(winPercentage * 100).toFixed(2)}%`}</p>
+          <h1 className={styles.title}>{t('title')}</h1>
+          <h2>{t('stats.title')}</h2>
+          <p>{t('stats.winPercentage', { percentage: (winPercentage * 100).toFixed(2) })}</p>
           <table>
             <thead>
               <tr>
-                <th>Time</th>
-                <th>Songs</th>
+                <th>{t('stats.time')}</th>
+                <th>{t('stats.songs')}</th>
                 <th>%</th>
               </tr>
             </thead>

@@ -1,0 +1,17 @@
+{
+  "translation": {
+    "title": "🎵 Name That Tune",
+    "winMsg": "You won!",
+    "guessPlaceholder": "Guess the song",
+    "guessBtn": "Guess",
+    "skipBtn": "Skip",
+    "giveUp": "Give up",
+    "nextSong": "Next song",
+    "stats": {
+      "title": "Stats",
+      "time": "Time",
+      "songs": "Songs",
+      "winPercentage": "Win percentage: {{percentage}}%"
+    }
+  }
+}
