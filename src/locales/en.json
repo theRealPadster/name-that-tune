@@ -1,14 +1,16 @@
 {
   "translation": {
-    "title": "🎵 Name That Tune",
+    "appName": "Name That Tune",
+    "title": "🎵 $t(appName)",
     "winMsg": "You won!",
     "guessPlaceholder": "Guess the song",
     "guessBtn": "Guess",
     "skipBtn": "Skip",
     "giveUp": "Give up",
     "nextSong": "Next song",
-    "menuEntry": "Play Name That Tune",
-    "sendingURIs": "Sending {{count}} URIs to Name That Tune",
+    "menuEntry": "Play $t(appName)",
+    "sendingURIs_one": "Sending {{count}} URI to $t(appName)",
+    "sendingURIs_other": "Sending {{count}} URIs to $t(appName)",
     "stats": {
       "title": "Stats",
       "time": "Time",
