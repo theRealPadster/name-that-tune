@@ -41,7 +41,7 @@ const normalize = (str: string) => {
   cleaned = cleaned.replace(/&/g, 'and');
 
   // Remove special characters and spaces
-  cleaned = cleaned.replace(/[^a-zA-Z0-9]/g, '');
+  cleaned = cleaned.replace(/[^\wа-яА-ЯіїІЇ\d]/g, '');
 
   // TODO: add any other logic?
 
