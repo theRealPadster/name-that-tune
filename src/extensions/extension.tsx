@@ -2,6 +2,7 @@ import { toggleNowPlaying } from '../logic';
 
 import i18n, { t } from 'i18next';
 import en from '../locales/en.json';
+import de from '../locales/de.json';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
@@ -12,6 +13,7 @@ i18n
     // the translations
     resources: {
       en,
+      de,
     },
     detection: {
       order: [ 'navigator', 'htmlTag' ],

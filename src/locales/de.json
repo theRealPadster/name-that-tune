@@ -1,0 +1,27 @@
+{
+  "translation": {
+    "appName": "Errate den Titel!",
+    "title": "🎵 $t(appName)",
+    "winMsg": "Das war richtig!",
+    "guessPlaceholder": "Rate den Titel",
+	  "playXSeconds": "Spiele {{count}}s ab",
+    "guessBtn": "Raten",
+    "skipBtn": "Überspringen",
+    "giveUp": "Aufgeben",
+    "nextSong": "Nächster Titel",
+    "menuEntry": "Spiele $t(appName)",
+    "sendingURIs_one": "Sende {{count}} URI an $t(appName)",
+    "sendingURIs_other": "Sende {{count}} URIs an $t(appName)",
+    "stats": {
+      "title": "Statistik",
+      "time": "Zeit",
+      "songs": "Titel",
+      "winPercentage": "Gewonnen: {{percentage}}%",
+      "songWithCount_one": "{{count}} Titel",
+      "songWithCount_other": "{{count}} Titel",
+      "gaveUp": "Aufgegeben",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
+    }
+  }
+}
