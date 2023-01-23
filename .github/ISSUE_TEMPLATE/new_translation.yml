@@ -16,5 +16,6 @@ body:
     attributes:
       label: Translation JSON
       placeholder: Copy src/locales/en.json and paste updated version here
+      value: "```json\nCopy src/locales/en.json and paste updated version here\n```"
     validations:
       required: true
