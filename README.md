@@ -47,7 +47,7 @@ spicetify apply
 ## Translations
 I've added translations support! If you use Spotify in a non-English language and are getting the "Play Name That Tune" menu item etc in English, you can get your language added by either: 
 - Submitting a pull request with a new copy of `src/locales/en.json` but named after your locale, with your translated content inside. 
-- Or making a new issue with the relevant translations from [`src/locales/en.json`](https://github.com/theRealPadster/name-that-tune/blob/main/src/locales/en.json). 
+- Or making a [new issue](https://github.com/theRealPadster/name-that-tune/issues/new?labels=i18n&template=new_translation.yml) with the relevant translations from [`src/locales/en.json`](https://github.com/theRealPadster/name-that-tune/blob/main/src/locales/en.json). 
 
 ## Planned Features
 - Possible "random" mode that doesn't use the beginning of the song, but grabs random segments from it
