@@ -4,6 +4,7 @@
     "title": "🎵 $t(appName)",
     "winMsg": "You won!",
     "guessPlaceholder": "Guess the song",
+    "playXSeconds": "Play {{count}}s",
     "guessBtn": "Guess",
     "skipBtn": "Skip",
     "giveUp": "Give up",

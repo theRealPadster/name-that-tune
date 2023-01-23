@@ -185,7 +185,7 @@ class Game extends React.Component<
           {isPlaying ? (
             <Button
               onClick={this.playClick}
-            >{`Play ${stageToTime(this.state.stage)}s`}</Button>
+            >{t('playXSeconds', { count: stageToTime(this.state.stage) })}</Button>
           ) : null}
 
           <Button onClick={isPlaying ? this.giveUp : this.nextSong}>
