@@ -1,5 +1,5 @@
 i18n:
-  - "(i18n|translati(?>on|ng)|(?>locali(?>z|s))(?>ation|ing))"
+  - "(i18n|translation|localization|localisation)"
 bug:
   - "(bug|glitch)"
 duplicate:
