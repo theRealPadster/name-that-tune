@@ -1,0 +1,27 @@
+{
+  "translation": {
+    "appName": "Nombra la Rola",
+    "title": "🎵 $t(appName)",
+    "winMsg": "Ganaste!",
+    "guessPlaceholder": "Adivina la canción",
+    "playXSeconds": "Reproducir {{count}}s",
+    "guessBtn": "Adivinar",
+    "skipBtn": "Saltar",
+    "giveUp": "Rendirse",
+    "nextSong": "Siguiente Canción",
+    "menuEntry": "Reproducir $t(appName)",
+    "sendingURIs_one": "Enviando {{count}} URI a $t(appName)",
+    "sendingURIs_other": "Enviando {{count}} URIs a $t(appName)",
+    "stats": {
+      "title": "Estatus",
+      "time": "Tiempo",
+      "songs": "Canciones",
+      "winPercentage": "Ganar con porcentaje: {{percentage}}%",
+      "songWithCount_one": "{{count}} Canción",
+      "songWithCount_other": "{{count}} Canciones",
+      "gaveUp": "Rendiciones",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
+    }
+  }
+}
