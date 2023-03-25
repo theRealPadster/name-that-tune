@@ -1,0 +1,27 @@
+{
+  "translation": {
+    "appName": "Name That Tune",
+    "title": "🎵 $t(appName)",
+    "winMsg": "Vous avez gagné !",
+    "guessPlaceholder": "Devinez la chanson",
+    "playXSeconds": "Jouer à {{count}}s",
+    "guessBtn": "Devinez",
+    "skipBtn": "Passer",
+    "giveUp": "Abandonner",
+    "nextSong": "Chanson suivante",
+    "menuEntry": "Jouer à $t(appName)",
+    "sendingURIs_one": "Envoi de {{count}} URI à $t(appName)",
+    "sendingURIs_other": "Envoi de {{count}} URIs à $t(appName)",
+    "stats": {
+      "title": "Statistiques",
+      "time": "Temps",
+      "songs": "Chansons",
+      "winPercentage": "Pourcentage de victoire : {{percentage}}%",
+      "songWithCount_one": "{{count}} chanson",
+      "songWithCount_other": "{{count}} chansons",
+      "gaveUp": "a abandonné",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
+    }
+  }
+}
