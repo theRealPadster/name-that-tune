@@ -1,0 +1,27 @@
+{
+  "translation": {
+    "appName": "Encerta la cançó",
+    "title": "🎵 $t(appName)",
+    "winMsg": "Has guanyat!",
+    "guessPlaceholder": "Encerta la cançó",
+    "playXSeconds": "Reproduïr {{count}}s",
+    "guessBtn": "Endevinar",
+    "skipBtn": "Saltar",
+    "giveUp": "Rendir-se",
+    "nextSong": "Següent cançó",
+    "menuEntry": "Reproduïr $t(appName)",
+    "sendingURIs_one": "Enviant {{count}} URI a $t(appName)",
+    "sendingURIs_other": "Enviant {{count}} URIs a $t(appName)",
+    "stats": {
+      "title": "Estadístiques",
+      "time": "Temps",
+      "songs": "Cançons",
+      "winPercentage": "Percentatge de victòria: {{percentage}}%",
+      "songWithCount_one": "{{count}} cançó",
+      "songWithCount_other": "{{count}} cançons",
+      "gaveUp": "Rendicions",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
+    }
+  }
+}
