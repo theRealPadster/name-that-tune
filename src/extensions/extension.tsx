@@ -1,6 +1,7 @@
 import { toggleNowPlaying } from '../logic';
 
 import i18n, { t } from 'i18next';
+import ca from '../locales/ca.json';
 import en from '../locales/en.json';
 import de from '../locales/de.json';
 import esLatin from '../locales/es-419.json';
@@ -14,6 +15,7 @@ i18n
   .init({
     // the translations
     resources: {
+      ca,
       en,
       de,
       // TODO: change this to 'es-419' (latin spanish) if someone adds a european spanish translation
