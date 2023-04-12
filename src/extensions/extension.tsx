@@ -47,7 +47,7 @@ i18n
   console.log('running name-that-tune extension');
 
   // Show/hide the now playing info on navigation
-  Spicetify.Platform.History.listen((data: any) => {
+  Spicetify.Platform.History.listen((data) => {
     console.log('History changed', data);
 
     const onApp = data.pathname.indexOf('name-that-tune') != -1;

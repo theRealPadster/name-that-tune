@@ -39,7 +39,7 @@ class Game extends React.Component<
 
   URIs?: string[];
   audioManager: AudioManager;
-  constructor(props: any) {
+  constructor(props) {
     super(props);
     this.URIs = Spicetify.Platform.History.location.state.URIs;
     this.audioManager = new AudioManager();
@@ -150,7 +150,7 @@ class Game extends React.Component<
         },
       },
     });
-  }
+  };
 
   render() {
     const gameWon = this.state.gameState === GameState.Won;
