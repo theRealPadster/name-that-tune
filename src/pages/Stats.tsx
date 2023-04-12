@@ -14,7 +14,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { getLocalStorageDataFromKey } from '../Utils';
 import { stageToTime } from '../logic';
 import { STATS_KEY } from '../constants';
-import Button from '../components/Button';
+// import Button from '../components/Button';
 
 import { SavedStats } from '../types/name-that-tune';
 
@@ -44,7 +44,7 @@ class Stats extends React.Component<{ t: TFunction }> {
     // gameState: GameState.Playing,
   };
 
-  constructor(props: any) {
+  constructor(props) {
     super(props);
   }
 

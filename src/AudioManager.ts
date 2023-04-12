@@ -2,7 +2,7 @@ export default class AudioManager {
   end: number;
   debouncing: number;
   DEBOUNCE_TIME = 300;
-  listener: Function;
+  listener: (event: Event) => void;
 
   constructor() {
     this.end = 1;
