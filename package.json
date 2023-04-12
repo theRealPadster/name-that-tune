@@ -14,6 +14,9 @@
     "build:local": "spicetify-creator --out=dist --minify",
     "build:prod": "yarn build:local && yarn copy:docs",
     "copy:docs": "copyfiles README.md docs/* dist/",
+    "lint": "eslint --fix src",
+    "lint:ci": "eslint src",
+    "type-check": "tsc --noEmit",
     "watch": "spicetify-creator --watch"
   },
   "license": "GPL-3.0",
