@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 declare namespace Spicetify {
     type Metadata = Partial<Record<string, string>>;
     type ContextTrack = {
@@ -416,12 +418,12 @@ declare namespace Spicetify {
             deregister(): void;
         }
     }
-    
+
     /**
      * Keyboard shortcut library
-     * 
+     *
      * Documentation: https://craig.is/killing/mice v1.6.5
-     * 
+     *
      * Spicetify.Keyboard is wrapper of this library to be compatible with legacy Spotify,
      * so new extension should use this library instead.
      */
@@ -1293,21 +1295,21 @@ declare namespace Spicetify {
         };
         /**
          * Generic context menu provider
-         * 
+         *
          * Props:
          * @see Spicetify.ReactComponent.ContextMenuProps
          */
         const ContextMenu: any;
         /**
          * Wrapper of ReactComponent.ContextMenu with props: action = 'toggle' and trigger = 'right-click'
-         * 
+         *
          * Props:
          * @see Spicetify.ReactComponent.ContextMenuProps
          */
         const RightClickMenu: any;
         /**
          * Outer layer contain ReactComponent.MenuItem(s)
-         * 
+         *
          * Props:
          * @see Spicetify.ReactComponent.MenuProps
          */
@@ -1315,14 +1317,14 @@ declare namespace Spicetify {
         /**
          * Component to construct menu item
          * Used as ReactComponent.Menu children
-         * 
+         *
          * Props:
          * @see Spicetify.ReactComponent.MenuItemProps
          */
         const MenuItem: any;
         /**
          * Tailored ReactComponent.Menu for specific type of object
-         * 
+         *
          * Props: {
          *      uri: string;
          *      onRemoveCallback?: (uri: string) => void;
@@ -1349,7 +1351,7 @@ declare namespace Spicetify {
     }
 
     /**
-     * SVG icons 
+     * SVG icons
      */
     namespace SVGIcons {
         const check: string;
