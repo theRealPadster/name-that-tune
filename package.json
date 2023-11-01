@@ -36,7 +36,7 @@
     "dice-coefficient": "^2.1.1",
     "eslint": "8.50.0",
     "eslint-plugin-react": "^7.33.2",
-    "i18next": "^23.5.1",
+    "i18next": "^23.6.0",
     "i18next-browser-languagedetector": "^7.1.0",
     "react-chartjs-2": "^5.2.0",
     "react-i18next": "^13.2.2",
