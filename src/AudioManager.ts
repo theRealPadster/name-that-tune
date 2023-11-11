@@ -2,13 +2,13 @@ export default class AudioManager {
   end: number;
   debouncing: number;
   DEBOUNCE_TIME = 300;
-  listener: (event: Event) => void;
+  listener: (event: Event | undefined) => void;
 
   constructor() {
     this.end = 1;
     this.debouncing = 0;
-    this.listener = (event: Event) => {
-      if (!this.end) return;
+    this.listener = (event: Event | undefined) => {
+      if (!this.end || !event) return;
 
       if (this.debouncing) {
         console.debug('debouncing');
