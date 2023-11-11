@@ -28,7 +28,9 @@ export const toggleNowPlaying = (visible: boolean) => {
 };
 
 // TODO: potentially tweak this
-const normalize = (str: string) => {
+const normalize = (str: string | undefined) => {
+  if (!str) return '';
+
   let cleaned = str.trim().toLowerCase();
 
   // Remove anything within parentheses
@@ -50,7 +52,7 @@ const normalize = (str: string) => {
 
 export const checkGuess = (guess: string) => {
   console.log({
-    title: Spicetify.Player.data.track.metadata.title,
+    title: Spicetify.Player.data.track?.metadata?.title,
     guess,
   });
   // console.log({
@@ -59,7 +61,7 @@ export const checkGuess = (guess: string) => {
   // });
 
   const normalizedTitle = normalize(
-    Spicetify.Player.data.track.metadata.title,
+    Spicetify.Player.data.track?.metadata?.title,
   );
   const normalizedGuess = normalize(guess);
   console.log({ normalizedTitle, normalizedGuess });
