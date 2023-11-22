@@ -56,8 +56,8 @@ export const checkGuess = (guess: string) => {
     guess,
   });
   // console.log({
-  //   artist_name: Spicetify.Player.data.track.metadata.artist_name,
-  //   album_artist_name: Spicetify.Player.data.track.metadata.album_artist_name,
+  //   artist_name: Spicetify.Player.data.item.metadata.artist_name,
+  //   album_artist_name: Spicetify.Player.data.item.metadata.album_artist_name,
   // });
 
   const normalizedTitle = normalize(
