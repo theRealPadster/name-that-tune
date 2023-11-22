@@ -52,16 +52,16 @@ const normalize = (str: string | undefined) => {
 
 export const checkGuess = (guess: string) => {
   console.log({
-    title: Spicetify.Player.data.track?.metadata?.title,
+    title: Spicetify.Player.data.item?.metadata?.title,
     guess,
   });
   // console.log({
-  //   artist_name: Spicetify.Player.data.track.metadata.artist_name,
-  //   album_artist_name: Spicetify.Player.data.track.metadata.album_artist_name,
+  //   artist_name: Spicetify.Player.data.item.metadata.artist_name,
+  //   album_artist_name: Spicetify.Player.data.item.metadata.album_artist_name,
   // });
 
   const normalizedTitle = normalize(
-    Spicetify.Player.data.track?.metadata?.title,
+    Spicetify.Player.data.item?.metadata?.title,
   );
   const normalizedGuess = normalize(guess);
   console.log({ normalizedTitle, normalizedGuess });
