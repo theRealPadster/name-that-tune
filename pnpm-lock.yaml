@@ -6,8 +6,8 @@ settings:
 
 devDependencies:
   '@types/react':
-    specifier: ^17.0.2
-    version: 17.0.2
+    specifier: ^18.2.39
+    version: 18.2.39
   '@types/react-dom':
     specifier: ^17.0.2
     version: 17.0.2
@@ -174,7 +174,7 @@ packages:
   /@types/react-dom@17.0.2:
     resolution: {integrity: sha512-Icd9KEgdnFfJs39KyRyr0jQ7EKhq8U6CcHRMGAS45fp5qgUvxL3ujUCfWFttUK2UErqZNj97t9gsVPNAqcwoCg==}
     dependencies:
-      '@types/react': 18.2.37
+      '@types/react': 17.0.2
     dev: true
 
   /@types/react@17.0.2:
@@ -184,8 +184,8 @@ packages:
       csstype: 3.1.2
     dev: true
 
-  /@types/react@18.2.37:
-    resolution: {integrity: sha512-RGAYMi2bhRgEXT3f4B92WTohopH6bIXw05FuGlmJEnv/omEn190+QYEIYxIAuIBdKgboYYdVved2p1AxZVQnaw==}
+  /@types/react@18.2.39:
+    resolution: {integrity: sha512-Oiw+ppED6IremMInLV4HXGbfbG6GyziY3kqAwJYOR0PNbkYDmLWQA3a95EhdSmamsvbkJN96ZNN+YD+fGjzSBA==}
     dependencies:
       '@types/prop-types': 15.7.10
       '@types/scheduler': 0.16.6
