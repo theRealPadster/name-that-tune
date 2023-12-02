@@ -1,10 +1,14 @@
 // import FuzzySet from 'fuzzyset';
 import { diceCoefficient } from 'dice-coefficient';
 
-import { fetchAndPlay, shuffle, playList } from './shuffle+';
+import { fetchAndPlay, shuffle, Queue } from './shuffle+';
 import { getLocalStorageDataFromKey } from './Utils';
 import { STATS_KEY } from './constants';
 
+/**
+ * Set "now playing" info visiblity
+ * @param visible If we are enabling or disabling the now-playing info
+ */
 export const toggleNowPlaying = (visible: boolean) => {
   // visible = true;
   // Hide items that give away information while playing
@@ -89,7 +93,7 @@ export const initialize = (URIs?: string[]) => {
       return;
     }
 
-    playList(shuffle(URIs), null);
+    Queue(shuffle(URIs), null);
 
     // Spicetify.Player.playUri(URIs[0]);
     // Because it will start playing automatically
