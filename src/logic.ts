@@ -17,6 +17,8 @@ export const toggleNowPlaying = (visible: boolean) => {
     document.querySelector<HTMLElement>('.main-nowPlayingBar-left'),
     // Play/pause/next/previous/etc.
     document.querySelector<HTMLElement>('.player-controls__buttons'),
+    // Now Playing sidebar
+    document.querySelector<HTMLElement>('.main-nowPlayingView-content'),
   ].forEach((item) => {
     if (item) {
       item.style.opacity = visible ? '1' : '0';
