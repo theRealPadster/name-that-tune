@@ -1,5 +1,12 @@
 // When app is open...
 body.name-that-tune {
+
+  // "Next in queue" section on "now playing" sidebar
+  // (Always hide while app is active)
+  .main-nowPlayingView-queue {
+    display: none;
+  }
+
   // While guessing, hide items that give away information while playing
   &.name-that-tune--guessing {
     // The left side chunk with the title, artist, album art, etc.
