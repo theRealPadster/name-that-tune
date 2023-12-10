@@ -1,4 +1,4 @@
-import { toggleNowPlaying } from '../logic';
+import { toggleIsGuessing } from '../logic';
 
 import i18n, { t } from 'i18next';
 import ca from '../locales/ca.json';
@@ -51,7 +51,12 @@ i18n
     console.log('History changed', data);
 
     const onApp = data.pathname.indexOf('name-that-tune') != -1;
-    toggleNowPlaying(!onApp);
+
+    // Add class to main container to indicate that the app is open
+    document.body.classList.toggle('name-that-tune', onApp);
+
+    // When app is first launched, it starts in guessing mode
+    toggleIsGuessing(onApp);
   });
 
   function sendToApp(URIs: string[]) {
