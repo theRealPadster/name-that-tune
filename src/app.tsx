@@ -12,6 +12,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Game from './pages/Game';
 import Stats from './pages/Stats';
 
+import './css/app.global.scss';
+
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .use(LanguageDetector)

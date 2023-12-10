@@ -6,31 +6,11 @@ import { getLocalStorageDataFromKey } from './Utils';
 import { STATS_KEY } from './constants';
 
 /**
- * Set "now playing" info visiblity
- * @param visible If we are enabling or disabling the now-playing info
+ * Set "is guessing" body class (controls element visibility/interactivity)
+ * @param guessing If we are enabling or disabling the "is guessing" class
  */
-export const toggleNowPlaying = (visible: boolean) => {
-  // visible = true;
-  // Hide items that give away information while playing
-  [
-    // The left side chunk with the title, artist, album art, etc.
-    document.querySelector<HTMLElement>('.main-nowPlayingBar-left'),
-    // Play/pause/next/previous/etc.
-    document.querySelector<HTMLElement>('.player-controls__buttons'),
-    // Now Playing sidebar
-    document.querySelector<HTMLElement>('.main-nowPlayingView-content'),
-  ].forEach((item) => {
-    if (item) {
-      item.style.opacity = visible ? '1' : '0';
-      item.style.pointerEvents = visible ? 'auto' : 'none';
-    }
-  });
-
-  // Disable playback bar interaction while playing
-  const playbackBar = document.querySelector<HTMLElement>('.playback-bar');
-  if (playbackBar) {
-    playbackBar.style.pointerEvents = visible ? 'auto' : 'none';
-  }
+export const toggleIsGuessing = (guessing: boolean) => {
+  document.body.classList.toggle('name-that-tune--guessing', guessing);
 };
 
 // TODO: potentially tweak this
