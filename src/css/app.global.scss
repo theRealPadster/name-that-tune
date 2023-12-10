@@ -7,6 +7,15 @@ body.name-that-tune {
     display: none;
   }
 
+  // Disable prev/next buttons while playing
+  // (You need to use the in-game "next song" button, and I don't want people skipping
+  // backwards and having to replay the same songs to get back to where they were)
+  .main-skipForwardButton-button,
+  .main-skipBackButton-button {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
   // While guessing, hide items that give away information while playing
   &.name-that-tune--guessing {
     // The left side chunk with the title, artist, album art, etc.
