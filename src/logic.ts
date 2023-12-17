@@ -28,8 +28,8 @@ const normalize = (str: string | undefined) => {
   // Convert & to 'and'
   cleaned = cleaned.replace(/&/g, 'and');
 
-  // Remove special characters and spaces
-  cleaned = cleaned.replace(/[^\wа-яА-ЯіїІЇ\d]/g, '');
+  // Remove everything (including spaces) that is not a number, letter, Cyrylic alphabet, Polish alphabet
+  cleaned = cleaned.replace(/[^\wа-яА-ЯіїІЇ\dąćęłńóśźż\d]/g, '');
 
   // TODO: add any other logic?
 
