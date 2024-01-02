@@ -28,8 +28,9 @@ const normalize = (str: string | undefined) => {
   // Convert & to 'and'
   cleaned = cleaned.replace(/&/g, 'and');
 
-  // Remove everything (including spaces) that is not a number, letter, Cyrylic alphabet, Polish alphabet
-  cleaned = cleaned.replace(/[^\wа-яА-ЯіїІЇ\dąćęłńóśźż\d]/g, '');
+  // Remove everything (including spaces) that is not a number, letter, or from Cyrylic/Polish/Arabic/Hebrew alphabet
+  // (Github Copilot says Arabic letters range from \u0621 to \u064A and Hebrew letters range from \u05D0 to \u05EA)
+  cleaned = cleaned.replace(/[^\wа-яА-ЯіїІЇ\dąćęłńóśźż\u0621-\u064A\u05D0-\u05EA\d]/g, '');
 
   // TODO: add any other logic?
 
