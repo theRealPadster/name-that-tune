@@ -6,6 +6,7 @@ import en from '../locales/en.json';
 import de from '../locales/de.json';
 import esLatin from '../locales/es-419.json';
 import fr from '../locales/fr.json';
+import pl from '../locales/pl.json';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
@@ -21,6 +22,7 @@ i18n
       // TODO: change this to 'es-419' (latin spanish) if someone adds a european spanish translation
       es: esLatin,
       fr,
+      pl,
     },
     detection: {
       order: [ 'navigator', 'htmlTag' ],
