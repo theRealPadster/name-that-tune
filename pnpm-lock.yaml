@@ -45,8 +45,8 @@ devDependencies:
     specifier: ^5.2.0
     version: 5.2.0(chart.js@4.4.2)(react@18.2.0)
   react-i18next:
-    specifier: ^14.0.5
-    version: 14.0.5(i18next@23.10.0)(react@18.2.0)
+    specifier: ^14.1.0
+    version: 14.1.0(i18next@23.10.0)(react@18.2.0)
   spicetify-creator:
     specifier: ^1.0.17
     version: 1.0.17(less@4.2.0)(postcss@8.4.31)(sass@1.69.5)(stylus@0.61.0)
@@ -2327,8 +2327,8 @@ packages:
       react: 18.2.0
     dev: true
 
-  /react-i18next@14.0.5(i18next@23.10.0)(react@18.2.0):
-    resolution: {integrity: sha512-5+bQSeEtgJrMBABBL5lO7jPdSNAbeAZ+MlFWDw//7FnVacuVu3l9EeWFzBQvZsKy+cihkbThWOAThEdH8YjGEw==}
+  /react-i18next@14.1.0(i18next@23.10.0)(react@18.2.0):
+    resolution: {integrity: sha512-3KwX6LHpbvGQ+sBEntjV4sYW3Zovjjl3fpoHbUwSgFHf0uRBcbeCBLR5al6ikncI5+W0EFb71QXZmfop+J6NrQ==}
     peerDependencies:
       i18next: '>= 23.2.3'
       react: '>= 16.8.0'
