@@ -44,6 +44,6 @@
     "react-chartjs-2": "^5.2.0",
     "react-i18next": "^14.0.5",
     "spicetify-creator": "^1.0.17",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   }
 }
