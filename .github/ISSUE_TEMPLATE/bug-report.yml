@@ -16,9 +16,11 @@ body:
       value: |
         - Spotify version:
         - Spicetify version:
+        - Name That Tune version:
       placeholder: |
         - Spotify version: Spotify for macOS (Apple Silicon) 1.1.77.643.g3c4c6fc6
         - Spicetify version: 2.8.5
+        - Name That Tune: 0.1.3
       render: Markdown
     validations:
       required: true
