@@ -1,0 +1,31 @@
+{
+  "translation": {
+    "appName": "Jaka To Melodia",
+    "title": "🎵 $t(appName)",
+    "winMsg": "Wygrałeś!",
+    "guessPlaceholder": "Zgadnij tytuł",
+    "playXSeconds": "Odtwórz {{count}}s",
+    "guessBtn": "Zgadnij",
+    "skipBtn": "Pomiń",
+    "giveUp": "Poddaj się",
+    "nextSong": "Następna piosenka",
+    "menuEntry": "Zagraj w $t(appName)",
+    "sendingURIs_one": "Wysyłanie {{count}} linku do $t(appName)",
+    "sendingURIs_few": "Wysyłanie {{count}} linków do $t(appName)",
+    "sendingURIs_many": "Wysyłanie {{count}} linków do $t(appName)",
+    "sendingURIs_other": "Wysyłanie {{count}} linków do $t(appName)",
+    "stats": {
+      "title": "Statystyki",
+      "time": "Czas",
+      "songs": "Piosenki",
+      "winPercentage": "Procent wygranych: {{percentage}}%",
+      "songWithCount_one": "{{count}} piosenka",
+      "songWithCount_few": "{{count}} piosenki",
+      "songWithCount_many": "{{count}} piosenek",
+      "songWithCount_other": "{{count}} piosenek",
+      "gaveUp": "poddano się",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
+    }
+  }
+}
