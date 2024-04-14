@@ -1,0 +1,29 @@
+{
+  "translation": {
+    "appName": "Вгадай Мелодію",
+    "title": "🎵 $t(appName)",
+    "winMsg": "Ви перемогли!",
+    "guessPlaceholder": "Назва пісні",
+    "playXSeconds": "Слухати {{count}}с",
+    "guessBtn": "Вгадати",
+    "skipBtn": "Пропустити",
+    "giveUp": "Здатись",
+    "nextSong": "Наступна пісня",
+    "menuEntry": "Грати у $t(appName)",
+    "sendingURIs_one": "Відправка {{count}} URI до $t(appName)",
+    "sendingURIs_other": "Відправка {{count}} URIs до $t(appName)",
+    "stats": {
+      "title": "Статистика",
+      "time": "Час",
+      "songs": "Пісні",
+      "winPercentage": "Відсоток перемог: {{percentage}}%",
+      "songWithCount_one": "{{count}} пісня",
+	  "songWithCount_few": "{{count}} пісні",
+      "songWithCount_many": "{{count}} пісень",
+      "songWithCount_other": "{{count}} пісень",
+      "gaveUp": "Здались",
+      "greaterThan16": ">16с",
+      "xSeconds": "{{count}}с"
+    }
+  }
+}
