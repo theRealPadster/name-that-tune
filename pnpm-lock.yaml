@@ -36,8 +36,8 @@ devDependencies:
     specifier: ^7.34.1
     version: 7.34.1(eslint@8.57.0)
   i18next:
-    specifier: ^23.10.0
-    version: 23.10.0
+    specifier: ^23.11.3
+    version: 23.11.3
   i18next-browser-languagedetector:
     specifier: ^7.2.0
     version: 7.2.0
@@ -46,7 +46,7 @@ devDependencies:
     version: 5.2.0(chart.js@4.4.2)(react@18.2.0)
   react-i18next:
     specifier: ^14.1.0
-    version: 14.1.0(i18next@23.10.0)(react@18.2.0)
+    version: 14.1.0(i18next@23.11.3)(react@18.2.0)
   spicetify-creator:
     specifier: ^1.0.17
     version: 1.0.17(less@4.2.0)(postcss@8.4.31)(sass@1.69.5)(stylus@0.61.0)
@@ -1746,10 +1746,10 @@ packages:
       '@babel/runtime': 7.23.2
     dev: true
 
-  /i18next@23.10.0:
-    resolution: {integrity: sha512-/TgHOqsa7/9abUKJjdPeydoyDc0oTi/7u9F8lMSj6ufg4cbC1Oj3f/Jja7zj7WRIhEQKB7Q4eN6y68I9RDxxGQ==}
+  /i18next@23.11.3:
+    resolution: {integrity: sha512-Pq/aSKowir7JM0rj+Wa23Kb6KKDUGno/HjG+wRQu0PxoTbpQ4N89MAT0rFGvXmLkRLNMb1BbBOKGozl01dabzg==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.24.0
     dev: true
 
   /iconv-lite@0.6.3:
@@ -2604,7 +2604,7 @@ packages:
       react: 18.2.0
     dev: true
 
-  /react-i18next@14.1.0(i18next@23.10.0)(react@18.2.0):
+  /react-i18next@14.1.0(i18next@23.11.3)(react@18.2.0):
     resolution: {integrity: sha512-3KwX6LHpbvGQ+sBEntjV4sYW3Zovjjl3fpoHbUwSgFHf0uRBcbeCBLR5al6ikncI5+W0EFb71QXZmfop+J6NrQ==}
     peerDependencies:
       i18next: '>= 23.2.3'
@@ -2619,7 +2619,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.24.0
       html-parse-stringify: 3.0.1
-      i18next: 23.10.0
+      i18next: 23.11.3
       react: 18.2.0
     dev: true
 
