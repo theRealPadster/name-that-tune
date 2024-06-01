@@ -8,6 +8,7 @@ import esLatin from '../locales/es-419.json';
 import fr from '../locales/fr.json';
 import pl from '../locales/pl.json';
 import ptBR from '../locales/pt-BR.json';
+import uk from '../locales/uk.json';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
@@ -25,6 +26,7 @@ i18n
       fr,
       pl,
       ptBR,
+      uk,
     },
     detection: {
       order: [ 'navigator', 'htmlTag' ],
