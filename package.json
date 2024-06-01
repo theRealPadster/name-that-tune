@@ -40,7 +40,7 @@
     "eslint": "8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "i18next": "^23.11.3",
-    "i18next-browser-languagedetector": "^7.2.0",
+    "i18next-browser-languagedetector": "^8.0.0",
     "react-chartjs-2": "^5.2.0",
     "react-i18next": "^14.1.0",
     "spicetify-creator": "^1.0.17",
