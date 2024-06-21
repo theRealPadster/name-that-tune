@@ -4,7 +4,7 @@ import i18n, { t } from 'i18next';
 import ca from '../locales/ca.json';
 import en from '../locales/en.json';
 import de from '../locales/de.json';
-import es from './locales/es.json';
+import es from '../locales/es.json';
 import esLatin from '../locales/es-419.json';
 import fr from '../locales/fr.json';
 import pl from '../locales/pl.json';
