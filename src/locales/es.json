@@ -1,0 +1,27 @@
+{
+  "translation": {
+    "appName": "Adivina la Canción",
+    "title": "🎵 $t(appName)",
+    "winMsg": "¡Correcto!",
+    "guessPlaceholder": "Adivina la canción",
+    "playXSeconds": "Reproducir {{count}}s",
+    "guessBtn": "Adivinar",
+    "skipBtn": "Saltar",
+    "giveUp": "Rendirse",
+    "nextSong": "Siguiente canción",
+    "menuEntry": "Juega a $t(appName)",
+    "sendingURIs_one": "Enviando {{count}} URI a $t(appName)",
+    "sendingURIs_other": "Enviando {{count}} URIs a $t(appName)",
+    "stats": {
+      "title": "Estadísticas",
+      "time": "Tiempo",
+      "songs": "Canciones",
+      "winPercentage": "Porcentaje de aciertos: {{percentage}}%",
+      "songWithCount_one": "{{count}} canción",
+      "songWithCount_other": "{{count}} canciones",
+      "gaveUp": "Rendido",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
+    }
+  }
+}

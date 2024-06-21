@@ -4,6 +4,7 @@ import i18n, { t } from 'i18next';
 import ca from './locales/ca.json';
 import en from './locales/en.json';
 import de from './locales/de.json';
+import es from './locales/es.json';
 import esLatin from './locales/es-419.json';
 import fr from './locales/fr.json';
 import pl from './locales/pl.json';
@@ -26,8 +27,8 @@ i18n
       ca,
       en,
       de,
-      // TODO: change this to 'es-419' (latin spanish) if someone adds a european spanish translation
-      es: esLatin,
+      es,
+      'es-419': esLatin,
       fr,
       pl,
       ptBR,
