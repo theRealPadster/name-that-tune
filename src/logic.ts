@@ -28,6 +28,9 @@ const normalize = (str: string | undefined) => {
   // Convert & to 'and'
   cleaned = cleaned.replace(/&/g, 'and');
 
+  // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript/37511463#37511463
+  cleaned = cleaned.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+
   // Remove everything (including spaces) that is not a number, letter, or from Cyrylic/Polish/Arabic/Hebrew alphabet
   // (Github Copilot says Arabic letters range from \u0621 to \u064A and Hebrew letters range from \u05D0 to \u05EA)
   cleaned = cleaned.replace(/[^\wа-яА-ЯіїІЇ\dąćęłńóśźż\u0621-\u064A\u05D0-\u05EA\d]/g, '');
