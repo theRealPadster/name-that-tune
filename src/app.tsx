@@ -2,6 +2,7 @@ import React from 'react';
 
 import i18n, { t } from 'i18next';
 import ca from './locales/ca.json';
+import el from './locales/el.json';
 import en from './locales/en.json';
 import de from './locales/de.json';
 import es from './locales/es.json';
@@ -25,6 +26,7 @@ i18n
     // the translations
     resources: {
       ca,
+      el,
       en,
       de,
       es,

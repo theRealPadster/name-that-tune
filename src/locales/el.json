@@ -1,0 +1,28 @@
+{
+  "translation": {
+    "appName": "Ονομάστε αυτή τη μελωδία",
+    "title": "🎵 $t(appName)",
+    "winMsg": "Κέρδισες!",
+    "guessPlaceholder": "Βρες το Τραγούδι",
+    "playXSeconds": "Παίξε {{count}}s",
+    "guessBtn": "Μάντεψε",
+    "skipBtn": "Παράλειψη",
+    "giveUp": "Παραιτούμαι",
+    "nextSong": "Επόμενο τραγούδι",
+    "menuEntry": "Παίξε $t(appName)",
+    "sendingURIs_one": "Αποστολή {{count}} URI σε $t(appName)",
+    "sendingURIs_other": "Αποστολή {{count}} URIs σε $t(appName)",
+    "stats": {
+      "title": "Στατιστικά",
+      "time": "Χρόνος",
+      "songs": "Τραγούδια",
+      "winPercentage": "Ποσοστό νίκης: {{percentage}}%",
+      "songWithCount_one": "{{count}} τραγούδι",
+      "songWithCount_other": "{{count}} τραγούδια",
+      "gaveUp": "Παραιτήθηκα",
+      "greaterThan16": ">16s",
+      "xSeconds": "{{count}}s"
+    }
+  }
+}
+
