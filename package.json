@@ -38,7 +38,7 @@
     "copyfiles": "^2.4.1",
     "dice-coefficient": "^2.1.1",
     "eslint": "8.57.0",
-    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react": "^7.37.1",
     "i18next": "^23.15.1",
     "i18next-browser-languagedetector": "^8.0.0",
     "react-chartjs-2": "^5.2.0",
