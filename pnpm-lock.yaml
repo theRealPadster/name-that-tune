@@ -48,8 +48,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(chart.js@4.4.3)(react@18.2.0)
       react-i18next:
-        specifier: ^15.0.0
-        version: 15.0.0(i18next@23.15.1)(react@18.2.0)
+        specifier: ^15.1.0
+        version: 15.1.0(i18next@23.15.1)(react@18.2.0)
       spicetify-creator:
         specifier: ^1.0.17
         version: 1.0.17(less@4.2.0)(postcss@8.4.31)(sass@1.69.5)(stylus@0.61.0)
@@ -72,6 +72,10 @@ packages:
 
   '@babel/runtime@7.24.8':
     resolution: {integrity: sha512-5F7SDGs1T72ZczbRwbGO9lQi0NLjQxzl6i4lJxLxfW9U5UluCSyEJeniWvnhl3/euNiqQVbo8zruhsDfid0esA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.26.0':
+    resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
     engines: {node: '>=6.9.0'}
 
   '@esbuild/linux-loong64@0.14.54':
@@ -622,6 +626,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:
@@ -1297,8 +1302,8 @@ packages:
       chart.js: ^4.1.1
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  react-i18next@15.0.0:
-    resolution: {integrity: sha512-2O3IgF4zivg57Q6p6i+ChDgJ371IDcEWbuWC6gvoh5NbkDMs0Q+O7RPr4v61+Se32E0V+LmtwePAeqWZW0bi6g==}
+  react-i18next@15.1.0:
+    resolution: {integrity: sha512-zj3nJynMnZsy2gPZiOTC7XctCY5eQGqT3tcKMmfJWC9FMvgd+960w/adq61j8iPzpwmsXejqID9qC3Mqu1Xu2Q==}
     peerDependencies:
       i18next: '>= 23.2.3'
       react: '>= 16.8.0'
@@ -1656,6 +1661,10 @@ snapshots:
       regenerator-runtime: 0.14.0
 
   '@babel/runtime@7.24.8':
+    dependencies:
+      regenerator-runtime: 0.14.0
+
+  '@babel/runtime@7.26.0':
     dependencies:
       regenerator-runtime: 0.14.0
 
@@ -3013,9 +3022,9 @@ snapshots:
       chart.js: 4.4.3
       react: 18.2.0
 
-  react-i18next@15.0.0(i18next@23.15.1)(react@18.2.0):
+  react-i18next@15.1.0(i18next@23.15.1)(react@18.2.0):
     dependencies:
-      '@babel/runtime': 7.24.8
+      '@babel/runtime': 7.26.0
       html-parse-stringify: 3.0.1
       i18next: 23.15.1
       react: 18.2.0
