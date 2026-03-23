@@ -1,6 +1,5 @@
 /* eslint-disable */
 /// <reference path="../../spicetify-cli/globals.d.ts" />
-/// <reference path="../../spicetify-cli/jsHelper/spicetifyWrapper.js" />
 /* eslint-enable */
 
 const { Type } = Spicetify.URI;
@@ -232,7 +231,7 @@ export async function fetchAndPlay(rawUri) {
     } else {
       const uriObj = Spicetify.URI.fromString(rawUri);
       type = uriObj.type;
-      uri = uriObj._base62Id ?? uriObj.id;
+      uri = (uriObj as { _base62Id?: string })._base62Id ?? uriObj.id;
 
       switch (type) {
       case Type.PLAYLIST:
