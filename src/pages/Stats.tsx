@@ -2,6 +2,7 @@ import React from 'react';
 import { TFunction } from 'i18next';
 import {
   Chart as ChartJS,
+  type ChartOptions,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -79,7 +80,7 @@ class Stats extends React.Component<{ t: TFunction }> {
       ],
     };
 
-    const chartOptions = {
+    const chartOptions: ChartOptions<'bar'> = {
       responsive: true,
       indexAxis: 'y' as const,
       plugins: {
@@ -93,8 +94,8 @@ class Stats extends React.Component<{ t: TFunction }> {
         },
         datalabels: {
           color: '#fff',
-          anchor: 'end',
-          align: 'start',
+          anchor: 'end' as const,
+          align: 'start' as const,
           offset: 8,
           clip: true,
           formatter: (value) => {
@@ -102,9 +103,11 @@ class Stats extends React.Component<{ t: TFunction }> {
           },
         },
       },
-      scale: {
-        ticks: {
-          precision: 0,
+      scales: {
+        x: {
+          ticks: {
+            precision: 0,
+          },
         },
       },
       // animation: false,

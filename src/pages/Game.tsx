@@ -77,8 +77,8 @@ class Game extends React.Component<
     });
   };
 
-  submitGuess = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  submitGuess = (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
 
     // Don't allow empty guesses
     if (this.state.guess.trim().length === 0) return;
@@ -173,7 +173,7 @@ class Game extends React.Component<
               onChange={this.guessChange}
             />
             <div className={styles.formButtonContainer}>
-              <Button onClick={this.submitGuess} disabled={!isPlaying}>
+              <Button onClick={() => this.submitGuess()} disabled={!isPlaying}>
                 {t('guessBtn')}
               </Button>
               <Button onClick={this.skipGuess} disabled={!isPlaying}>
