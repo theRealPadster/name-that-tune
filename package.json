@@ -27,7 +27,7 @@
     "yarn": "please-use-pnpm",
     "npm": "please-use-pnpm",
     "pnpm": ">=9",
-    "node": ">=20"
+    "node": ">=24"
   },
   "devDependencies": {
     "@types/react": "^18.3.1",
