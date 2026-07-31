@@ -65,13 +65,11 @@ export function shuffle(array) {
 }
 
 async function fetchPlaylistTracks(uri) {
-  const res = await Spicetify.CosmosAsync.get(`sp://core-playlist/v1/playlist/spotify:playlist:${uri}/rows`, {
-    policy: {
-      link: true,
-      playable: true,
-    },
-  });
-  return res.rows.filter(track => track.playable).map(track => track.link);
+  const response = await Spicetify.Platform.PlaylistAPI.getContents(`spotify:playlist:${uri}`);
+
+  return response.items
+    .filter(track => track.isPlayable && track.uri?.startsWith('spotify:track:'))
+    .map(track => track.uri);
 }
 
 async function fetchAlbumTracks(uri, includeMetadata = false) {

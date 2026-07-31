@@ -9,7 +9,6 @@ import {
   Title,
   Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import { getLocalStorageDataFromKey } from '../Utils';
@@ -29,6 +28,24 @@ ChartJS.register(
   Legend,
   ChartDataLabels,
 );
+
+function BarChart({ options, data }) {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  React.useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const chart = new ChartJS(canvasRef.current, {
+      type: 'bar',
+      data,
+      options,
+    });
+
+    return () => chart.destroy();
+  }, [data, options]);
+
+  return <canvas ref={canvasRef} />;
+}
 
 // ChartJS.defaults.color = '#fff';
 // ChartJS.defaults.backgroundColor = '#fff';
@@ -150,7 +167,7 @@ class Stats extends React.Component<{ t: TFunction }> {
             </tbody>
           </table>
           {/* TODO: add total games played and games won vs gave up */}
-          <Bar options={chartOptions} data={chartData} />
+          <BarChart options={chartOptions} data={chartData} />
         </div>
       </>
     );
