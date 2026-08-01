@@ -41,7 +41,9 @@ class Game extends React.Component<
   audioManager: AudioManager;
   constructor(props) {
     super(props);
-    this.URIs = Spicetify.Platform.History.location.state.URIs;
+    // No state when opened from the sidebar rather than the context menu,
+    // in which case we just use whatever is currently playing
+    this.URIs = Spicetify.Platform.History.location.state?.URIs;
     this.audioManager = new AudioManager();
   }
 
