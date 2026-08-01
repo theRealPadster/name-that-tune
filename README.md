@@ -17,7 +17,7 @@ Download the [dist branch](https://github.com/theRealPadster/name-that-tune/arch
 | **Platform**    | **Path**                               |
 |-----------------|----------------------------------------|
 | **Linux/macOS** | `~/.config/spicetify/CustomApps`       |
-| **Windows**     | `%localappdata%\spicetify\CustomApps` |
+| **Windows**     | `%appdata%\spicetify\CustomApps`       |
 
 After putting the name-that-tune folder into the correct custom apps folder, run the following command to enable it:
 ```
@@ -43,7 +43,7 @@ spicetify apply
 - Right-click on any artist, playlist, album, etc. 
 - Click "play" to hear the first second of the track.
 - Making a guess adds one second of music playback. It will reveal the song when you get it right. 
-- (If you open it via the left-side navigation, it will just use the song you are currently playing.)
+- (If you open the app directly from the header bar, it will just use the song you are currently playing.)
 
 ## Translations
 I've added translations support! If you use Spotify in a non-English language and are getting the "Play Name That Tune" menu item etc in English, you can get your language added by either: 
