@@ -2,6 +2,20 @@
 /// <reference path="../../spicetify-cli/globals.d.ts" />
 /* eslint-enable */
 
+// Adapted from the Shuffle+ extension in spicetify/cli:
+// https://github.com/spicetify/cli/blob/main/Extensions/shuffle+.js
+//
+// Last synced with upstream e95f802 (2026-07-04). To see what has changed since:
+//   git remote add spicetify https://github.com/spicetify/cli.git
+//   git fetch spicetify --filter=blob:none
+//   git log e95f802..spicetify/main -- 'Extensions/shuffle+.js'
+//
+// Intentional divergences from upstream: no CONFIG/settings UI or playbar
+// button, artists use singles and EPs only, and the artist GraphQL queries are
+// read live from Spicetify.GraphQL.Definitions rather than pinned to hardcoded
+// sha256 hashes (upstream pins them for older Spotify versions that no longer
+// ship those definitions).
+
 export async function Queue(list, context = null) {
   const count = list.length;
 
@@ -75,12 +89,15 @@ async function fetchPlaylistTracks(uri) {
 
 async function fetchAlbumTracks(uri, includeMetadata = false) {
   const { queryAlbumTracks } = Spicetify.GraphQL.Definitions;
-  const { data, errors } = await Spicetify.GraphQL.Request(queryAlbumTracks, { uri, offset: 0, limit: 500 });
+  // Limit 100 since GraphQL has a resource limit
+  const { data, errors } = await Spicetify.GraphQL.Request(queryAlbumTracks, { uri, offset: 0, limit: 100 });
 
   if (errors) throw errors[0].message;
   if (data.albumUnion.playability.playable === false) throw 'Album is not playable';
 
-  return data.albumUnion.tracks.items.filter(({ track }) => track.playability.playable).map(({ track }) => (includeMetadata ? track : track.uri));
+  return (data.albumUnion?.tracksV2 ?? data.albumUnion?.tracks ?? []).items
+    .filter(({ track }) => track.playability.playable)
+    .map(({ track }) => (includeMetadata ? track : track.uri));
 }
 
 async function scanForTracksFromAlbums(res, artistName) {
@@ -149,9 +166,9 @@ async function fetchLocalTracks() {
 }
 
 async function fetchLikedTracks() {
-  const res = await Spicetify.CosmosAsync.get('sp://core-collection/unstable/@/list/tracks/all?responseFormat=protobufJson');
+  const res = await Spicetify.Platform.LibraryAPI.getTracks({ limit: 9999999 });
 
-  return res.item.filter(track => track.trackMetadata.playable).map(track => track.trackMetadata.link);
+  return res.items.filter(track => track.isPlayable).map(track => track.uri);
 }
 
 async function fetchCollection(uriObj) {
@@ -181,30 +198,30 @@ async function fetchCollection(uriObj) {
 
 function searchFolder(rows, uri) {
   for (const r of rows) {
-    if (r.type !== 'folder' || !r.rows) continue;
+    if (r.type !== 'folder' || !r.items) continue;
 
-    if (r.link === uri) return r;
+    if (r.uri === uri) return r;
 
-    const found = searchFolder(r.rows, uri);
+    const found = searchFolder(r.items, uri);
     if (found) return found;
   }
 }
 
 async function fetchFolderTracks(uri) {
-  const res = await Spicetify.CosmosAsync.get(`sp://core-playlist/v1/rootlist`, {
-    policy: { folder: { rows: true, link: true } },
-  });
+  const res = await Spicetify.Platform.RootlistAPI.getContents();
 
-  const requestFolder = searchFolder(res.rows, uri);
+  const requestFolder = searchFolder(res.items, uri);
   if (!requestFolder) throw 'Cannot find folder';
 
   const requestPlaylists: unknown[] = [];
   async function fetchNested(folder) {
-    if (!folder.rows) return;
+    if (!folder.items) return;
 
-    for (const i of folder.rows) {
-      if (i.type === 'playlist') requestPlaylists.push(await fetchPlaylistTracks(i.link.split(':')[2]));
-      else if (i.type === 'folder') await fetchNested(i);
+    for (const i of folder.items) {
+      if (i.type === 'playlist') {
+        const uriObj = Spicetify.URI.fromString(i.uri);
+        requestPlaylists.push(await fetchPlaylistTracks((uriObj as { _base62Id?: string })._base62Id ?? uriObj.id));
+      } else if (i.type === 'folder') await fetchNested(i);
     }
   }
 
@@ -264,7 +281,7 @@ export async function fetchAndPlay(rawUri) {
       }
 
       context = rawUri;
-      if (type === 'folder' || type === 'collection') {
+      if (type === 'folder' || type === 'collection' || type === 'local') {
         context = null;
       }
     }
