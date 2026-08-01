@@ -2,8 +2,6 @@
 /// <reference path="../../spicetify-cli/globals.d.ts" />
 /* eslint-enable */
 
-const { Type } = Spicetify.URI;
-
 export async function Queue(list, context = null) {
   const count = list.length;
 
@@ -157,6 +155,7 @@ async function fetchLikedTracks() {
 }
 
 async function fetchCollection(uriObj) {
+  const { Type } = Spicetify.URI;
   const { category, type } = uriObj;
   const { pathname } = Spicetify.Platform.History.location;
 
@@ -220,6 +219,7 @@ async function fetchShows(uri) {
 }
 
 export async function fetchAndPlay(rawUri) {
+  const { Type } = Spicetify.URI;
   let list,
     context,
     type,
