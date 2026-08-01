@@ -83,3 +83,11 @@
   bottom: 4px;
   right: 4px;
 }
+
+:global(body.name-that-tune.name-that-tune--guessing) .container {
+  width: 100%;
+  min-height: calc(100vh - 140px);
+  box-sizing: border-box;
+  background-color: var(--spice-main);
+  background-image: none;
+}
