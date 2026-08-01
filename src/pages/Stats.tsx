@@ -2,7 +2,9 @@ import React from 'react';
 import { TFunction } from 'i18next';
 import {
   Chart as ChartJS,
+  type ChartData,
   type ChartOptions,
+  BarController,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -21,6 +23,8 @@ import { SavedStats } from '../types/name-that-tune';
 import styles from '../css/app.module.scss';
 
 ChartJS.register(
+  // react-chartjs-2's <Bar> used to register this for us
+  BarController,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -29,7 +33,10 @@ ChartJS.register(
   ChartDataLabels,
 );
 
-function BarChart({ options, data }) {
+function BarChart({ options, data }: {
+  options: ChartOptions<'bar'>;
+  data: ChartData<'bar'>;
+}) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   React.useEffect(() => {

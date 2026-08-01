@@ -65,7 +65,10 @@ export function shuffle(array) {
 }
 
 async function fetchPlaylistTracks(uri) {
-  const response = await Spicetify.Platform.PlaylistAPI.getContents(`spotify:playlist:${uri}`);
+  // getContents is paged - without an explicit limit you only get the first page
+  const response = await Spicetify.Platform.PlaylistAPI.getContents(`spotify:playlist:${uri}`, {
+    limit: 9999999,
+  });
 
   return response.items
     .filter(track => track.isPlayable && track.uri?.startsWith('spotify:track:'))
