@@ -1,3 +1,14 @@
+// These selectors are Spotify's own, so they rot when Spotify restructures its
+// UI - and they fail silently, by showing the player again rather than erroring.
+// To find what has been renamed, run this in devtools with a game in progress
+// and the "now playing" sidebar open. Anything reporting 0 needs a new selector:
+//
+//   ['.main-nowPlayingBar-left', '.player-controls__buttons',
+//    '.main-nowPlayingView-mainContainer', '.main-nowPlayingView-queue',
+//    '.playback-bar', '[data-testid="control-button-skip-back"]',
+//    '[data-testid="control-button-skip-forward"]']
+//     .forEach(s => console.log(document.querySelectorAll(s).length, s));
+
 // When app is open...
 body.name-that-tune {
 
@@ -10,8 +21,9 @@ body.name-that-tune {
   // Disable prev/next buttons while playing
   // (You need to use the in-game "next song" button, and I don't want people skipping
   // backwards and having to replay the same songs to get back to where they were)
-  .main-skipForwardButton-button,
-  .main-skipBackButton-button {
+  // Spotify no longer puts a mapped class on these, so go by its test ids
+  [data-testid='control-button-skip-back'],
+  [data-testid='control-button-skip-forward'] {
     opacity: 0.3;
     pointer-events: none;
   }
@@ -22,8 +34,10 @@ body.name-that-tune {
     .main-nowPlayingBar-left,
     // Play/pause/next/previous/etc.
     .player-controls__buttons,
-    // Now Playing sidebar
-    .main-nowPlayingView-content {
+    // Now Playing sidebar. Everything below its header: cover art, track info,
+    // about the artist, credits, tour dates and merch all name the artist.
+    // Leaving the header alone keeps the close button usable.
+    .main-nowPlayingView-mainContainer {
       opacity: 0;
       pointer-events: none;
     }
