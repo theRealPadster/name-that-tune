@@ -4,7 +4,8 @@
 // and the "now playing" sidebar open. Anything reporting 0 needs a new selector:
 //
 //   ['.main-nowPlayingBar-left', '.player-controls__buttons',
-//    '.main-nowPlayingView-mainContainer', '.main-nowPlayingView-queue',
+//    '.main-nowPlayingView-mainContainer', '.main-nowPlayingView-headerText',
+//    '.main-nowPlayingView-queue',
 //    '.playback-bar', '[data-testid="control-button-skip-back"]',
 //    '[data-testid="control-button-skip-forward"]']
 //     .forEach(s => console.log(document.querySelectorAll(s).length, s));
@@ -36,8 +37,11 @@ body.name-that-tune {
     .player-controls__buttons,
     // Now Playing sidebar. Everything below its header: cover art, track info,
     // about the artist, credits, tour dates and merch all name the artist.
-    // Leaving the header alone keeps the close button usable.
-    .main-nowPlayingView-mainContainer {
+    .main-nowPlayingView-mainContainer,
+    // The sidebar header shows the playback context, which is the album title
+    // when playing an album. Its buttons live in a sibling container, so the
+    // panel can still be closed.
+    .main-nowPlayingView-headerText {
       opacity: 0;
       pointer-events: none;
     }
