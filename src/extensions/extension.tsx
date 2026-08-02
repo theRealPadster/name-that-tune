@@ -88,6 +88,9 @@ i18n
 
     Spicetify.Platform.History.push({
       pathname: '/name-that-tune',
+      // Pushing an identical location is a no-op, so without something unique
+      // here you can't start a new game while already on the game page
+      search: `?t=${Date.now()}`,
       state: {
         URIs,
       },
