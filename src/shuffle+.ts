@@ -1,5 +1,5 @@
 /* eslint-disable */
-/// <reference path="../../spicetify-cli/globals.d.ts" />
+/// <reference path="./types/spicetify.d.ts" />
 /* eslint-enable */
 
 // Adapted from the Shuffle+ extension in spicetify/cli:
