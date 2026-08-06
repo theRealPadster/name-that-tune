@@ -9,6 +9,9 @@ import Button from '../components/Button';
 import { initialize, toggleIsGuessing, checkGuess, saveStats, stageToTime } from '../logic';
 import AudioManager from '../AudioManager';
 
+import TrackSuggestions from '../components/TrackSuggestions';
+import { searchTracks, TrackSuggestion } from '../search';
+
 enum GameState {
   Playing,
   Won,
@@ -25,6 +28,8 @@ class Game extends React.Component<
     guess: string;
     guesses: (string | null)[];
     gameState: GameState;
+    suggestions: TrackSuggestion[];
+    highlightedIndex: number;
   }
 > {
   state = {
@@ -35,10 +40,17 @@ class Game extends React.Component<
     // Past guesses
     guesses: [],
     gameState: GameState.Playing,
+
+    suggestions: [] as TrackSuggestion[],
+    highlightedIndex: -1,
   };
 
   URIs?: string[];
   audioManager: AudioManager;
+
+  searchTimeout?: ReturnType<typeof setTimeout>;
+  searchRequest = 0;
+
   constructor(props) {
     super(props);
     // Undefined when opened from the header bar rather than the context menu,
@@ -54,6 +66,7 @@ class Game extends React.Component<
   }
 
   componentWillUnmount() {
+    this.cancelSearch();
     this.audioManager.unlisten();
   }
 
@@ -61,14 +74,123 @@ class Game extends React.Component<
     this.audioManager.play();
   };
 
-  guessChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.setState({ guess: e.target.value });
+  guessChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const guess = event.target.value;
+
+    this.cancelSearch();
+    const requestId = this.searchRequest;
+
+    this.setState({
+      guess,
+      suggestions: [],
+      highlightedIndex: -1,
+    });
+
+    if (guess.trim().length < 2) return;
+
+    this.searchTimeout = setTimeout(async () => {
+      try {
+        const suggestions = await searchTracks(guess);
+
+        if (requestId !== this.searchRequest) return;
+
+        this.setState({
+          suggestions,
+          highlightedIndex: -1,
+        });
+      } catch (error) {
+        console.error('Unable to load song suggestions:', error);
+
+        if (requestId !== this.searchRequest) return;
+
+        this.setState({
+          suggestions: [],
+          highlightedIndex: -1,
+        });
+      }
+    }, 250);
+  };
+
+  cancelSearch = () => {
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = undefined;
+    }
+
+    this.searchRequest += 1;
+  };
+
+  selectSuggestion = (suggestion: TrackSuggestion) => {
+    this.cancelSearch();
+
+    this.setState({
+      guess: suggestion.title,
+      suggestions: [],
+      highlightedIndex: -1,
+    });
+  };
+
+  guessKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const { suggestions, highlightedIndex } = this.state;
+
+    if (event.key === 'Escape') {
+      this.cancelSearch();
+      this.setState({
+        suggestions: [],
+        highlightedIndex: -1,
+      });
+      return;
+    }
+
+    if (suggestions.length === 0) return;
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+
+      this.setState({
+        highlightedIndex:
+          highlightedIndex < suggestions.length - 1
+            ? highlightedIndex + 1
+            : 0,
+      });
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+
+      this.setState({
+        highlightedIndex:
+          highlightedIndex > 0
+            ? highlightedIndex - 1
+            : suggestions.length - 1,
+      });
+      return;
+    }
+
+    if (event.key === 'Enter' && highlightedIndex >= 0) {
+      event.preventDefault();
+      this.selectSuggestion(suggestions[highlightedIndex]);
+    }
+  };
+
+  closeSuggestions = () => {
+    this.cancelSearch();
+
+    this.setState({
+      suggestions: [],
+      highlightedIndex: -1,
+    });
+  };
 
   skipGuess = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    this.cancelSearch();
 
     // Add the guess to the guess list in the state
     this.setState({
+      suggestions: [],
+      highlightedIndex: -1,
       guesses: [...this.state.guesses, null],
       // Reset the guess
       guess: '',
@@ -85,11 +207,15 @@ class Game extends React.Component<
     // Don't allow empty guesses
     if (this.state.guess.trim().length === 0) return;
 
+    this.cancelSearch();
+
     const won = checkGuess(this.state.guess);
     if (won) saveStats(this.state.stage);
 
     // Add the guess to the guess list in the state
     this.setState({
+      suggestions: [],
+      highlightedIndex: -1,
       guesses: [...this.state.guesses, this.state.guess],
       // Reset the guess
       guess: '',
@@ -109,6 +235,7 @@ class Game extends React.Component<
   };
 
   giveUp = () => {
+    this.cancelSearch();
     this.audioManager.setEnd(0);
     Spicetify.Player.seek(0);
     Spicetify.Player.play();
@@ -117,10 +244,13 @@ class Game extends React.Component<
 
     this.setState({
       gameState: GameState.Lost,
+      suggestions: [],
+      highlightedIndex: -1,
     });
   };
 
   nextSong = () => {
+    this.cancelSearch();
     toggleIsGuessing(true);
     Spicetify.Player.next();
     Spicetify.Player.seek(0);
@@ -128,6 +258,8 @@ class Game extends React.Component<
     this.audioManager.setEnd(1);
 
     this.setState({
+      suggestions: [],
+      highlightedIndex: -1,
       guesses: [],
       // Reset the guess
       guess: '',
@@ -165,15 +297,29 @@ class Game extends React.Component<
           <h1 className={styles.title}>{t('title')}</h1>
           {gameWon ? <h2 className={styles.subtitle}>{t('winMsg')}</h2> : null}
 
-          <form onSubmit={this.submitGuess}>
-            <input
-              type={'text'}
-              className={styles.input}
-              placeholder={t('guessPlaceholder') as string}
-              value={this.state.guess}
-              disabled={!isPlaying}
-              onChange={this.guessChange}
-            />
+          <form
+            className={styles.guessForm}
+            onSubmit={this.submitGuess}
+          >
+            <div className={styles.inputContainer}>
+              <input
+                type={'text'}
+                className={styles.input}
+                placeholder={t('guessPlaceholder') as string}
+                value={this.state.guess}
+                disabled={!isPlaying}
+                onChange={this.guessChange}
+                onKeyDown={this.guessKeyDown}
+                onBlur={this.closeSuggestions}
+                autoComplete="off"
+              />
+
+              <TrackSuggestions
+                suggestions={this.state.suggestions}
+                highlightedIndex={this.state.highlightedIndex}
+                onSelect={this.selectSuggestion}
+              />
+            </div>
             <div className={styles.formButtonContainer}>
               <Button onClick={() => this.submitGuess()} disabled={!isPlaying}>
                 {t('guessBtn')}
