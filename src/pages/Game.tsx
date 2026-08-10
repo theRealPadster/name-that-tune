@@ -147,12 +147,7 @@ class Game extends React.Component<
     const { suggestions, highlightedIndex } = this.state;
 
     if (event.key === 'Escape') {
-      this.cancelSearch();
-
-      this.setState({
-        suggestions: [],
-        highlightedIndex: -1,
-      });
+      this.closeSuggestions();
       return;
     }
 
@@ -201,12 +196,10 @@ class Game extends React.Component<
 
   skipGuess = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    this.cancelSearch();
+    this.closeSuggestions();
 
     // Add the guess to the guess list in the state
     this.setState({
-      suggestions: [],
-      highlightedIndex: -1,
       guesses: [...this.state.guesses, null],
       // Reset the guess
       guess: '',
@@ -225,7 +218,7 @@ class Game extends React.Component<
       return;
     }
 
-    this.cancelSearch();
+    this.closeSuggestions();
 
     const won = checkGuess(this.state.guess);
     if (won) {
@@ -234,8 +227,6 @@ class Game extends React.Component<
 
     // Add the guess to the guess list in the state
     this.setState({
-      suggestions: [],
-      highlightedIndex: -1,
       guesses: [...this.state.guesses, this.state.guess],
       // Reset the guess
       guess: '',
@@ -255,7 +246,7 @@ class Game extends React.Component<
   };
 
   giveUp = () => {
-    this.cancelSearch();
+    this.closeSuggestions();
     this.audioManager.setEnd(0);
     Spicetify.Player.seek(0);
     Spicetify.Player.play();
@@ -264,13 +255,11 @@ class Game extends React.Component<
 
     this.setState({
       gameState: GameState.Lost,
-      suggestions: [],
-      highlightedIndex: -1,
     });
   };
 
   nextSong = () => {
-    this.cancelSearch();
+    this.closeSuggestions();
     toggleIsGuessing(true);
     Spicetify.Player.next();
     Spicetify.Player.seek(0);
@@ -278,8 +267,6 @@ class Game extends React.Component<
     this.audioManager.setEnd(1);
 
     this.setState({
-      suggestions: [],
-      highlightedIndex: -1,
       guesses: [],
       // Reset the guess
       guess: '',
