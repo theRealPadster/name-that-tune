@@ -87,11 +87,24 @@ export default [
         'error',
         { beforeColon: false, afterColon: true },
       ],
+      curly: [
+        'error',
+        'all',
+      ],
     },
     settings: {
       react: {
         version: '18.3.1',
       },
+    },
+  },
+  {
+    // Adapted from upstream Shuffle+ and periodically re-synced against it (see
+    // the header of the file), so it is kept close to upstream's formatting to
+    // keep those diffs reviewable.
+    files: ['src/shuffle+.ts'],
+    rules: {
+      curly: 'off',
     },
   },
 ];

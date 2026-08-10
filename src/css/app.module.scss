@@ -37,13 +37,14 @@
 
 .input {
   width: 100%;
-  margin-bottom: 10px;
+  margin: 0;
   padding: 10px 14px;
   background-color: var(--spice-main);
   color: var(--spice-text);
   font-size: 14px;
   border: 1px solid var(--spice-text);
   border-radius: 2px;
+  box-sizing: border-box;
 
   &:focus {
     border: 1px solid var(--spice-button);
@@ -90,4 +91,81 @@
   box-sizing: border-box;
   background-color: var(--spice-main);
   background-image: none;
+}
+
+.guessForm {
+  width: min(420px, 90vw);
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 100;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 4px;
+
+  // Stop the wheel chaining to the page once the list hits either end --
+  // otherwise overscrolling scrolls the game behind the dropdown, and since
+  // this is absolutely positioned it slides along with it.
+  overscroll-behavior: contain;
+
+  // Mostly opaque so album-art themes cannot show through and make the results
+  // unreadable, with the blur softening whatever does. The percentages are the
+  // ones the hardcoded colours used, except sourced from the theme rather than
+  // assuming a dark one: --spice-main is #121212 and --spice-text is #fff under
+  // the default theme, so this renders identically there and stays readable
+  // under a light theme, where a fixed near-black left dark text on near-black.
+  // The shadow stays plain black, since shadows read as dark under either.
+  background: color-mix(in srgb, var(--spice-main) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--spice-text) 14%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgb(0 0 0 / 55%);
+  backdrop-filter: blur(20px);
+}
+
+.suggestion {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: var(--spice-text);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover,
+  &.highlightedSuggestion {
+    background: var(--spice-card);
+  }
+}
+
+.suggestionTitle {
+  width: 100%;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suggestionArtist {
+  width: 100%;
+  overflow: hidden;
+  color: var(--spice-subtext);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inputContainer {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
 }

@@ -15,7 +15,9 @@ export const toggleIsGuessing = (guessing: boolean) => {
 
 // TODO: potentially tweak this
 const normalize = (str: string | undefined) => {
-  if (!str) return '';
+  if (!str) {
+    return '';
+  }
 
   let cleaned = str.trim().toLowerCase();
 

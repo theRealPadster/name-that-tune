@@ -8,7 +8,9 @@ export default class AudioManager {
     this.end = 1;
     this.debouncing = 0;
     this.listener = (event: Event | undefined) => {
-      if (!this.end || !event) return;
+      if (!this.end || !event) {
+        return;
+      }
 
       if (this.debouncing) {
         console.debug('debouncing');
@@ -25,7 +27,9 @@ export default class AudioManager {
       // Spicetify uses ms
       const endMillis = this.end * 1000;
       const songLengthMillis = Spicetify.Player.getDuration();
-      if (endMillis > songLengthMillis) return;
+      if (endMillis > songLengthMillis) {
+        return;
+      }
 
       const currentProgress =
         songLengthMillis * Spicetify.Player.getProgressPercent();

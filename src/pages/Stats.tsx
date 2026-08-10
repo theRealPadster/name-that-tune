@@ -40,7 +40,9 @@ function BarChart({ options, data }: {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   React.useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current) {
+      return;
+    }
 
     const chart = new ChartJS(canvasRef.current, {
       type: 'bar',
