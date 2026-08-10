@@ -18,6 +18,24 @@ const TrackSuggestions = ({
   highlightedIndex,
   onSelect,
 }: TrackSuggestionsProps) => {
+  const listRef = React.useRef<HTMLDivElement>(null);
+
+  // The arrow keys move aria-activedescendant, which is only a virtual focus --
+  // the real one stays on the input, so the browser has nothing to scroll to
+  // and the highlight walks off the bottom of the list on its own. More
+  // suggestions fit in MAX_SUGGESTIONS than fit in the dropdown's max-height,
+  // so this is reachable with any full set of results.
+  //
+  // Declared before the early return below, since hooks cannot run conditionally.
+  React.useEffect(() => {
+    if (highlightedIndex < 0) {
+      return;
+    }
+
+    const option = listRef.current?.children[highlightedIndex];
+    option?.scrollIntoView({ block: 'nearest' });
+  }, [highlightedIndex]);
+
   if (suggestions.length === 0) {
     return null;
   }
@@ -25,6 +43,7 @@ const TrackSuggestions = ({
   return (
     <div
       id={listboxId}
+      ref={listRef}
       className={styles.suggestions}
       role="listbox"
       aria-label={label}
