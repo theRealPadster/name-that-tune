@@ -195,11 +195,14 @@ class Game extends React.Component<
     e.preventDefault();
     this.cancelSearch();
 
+    // Add the guess to the guess list in the state
     this.setState({
       suggestions: [],
       highlightedIndex: -1,
       guesses: [...this.state.guesses, null],
+      // Reset the guess
       guess: '',
+      // Increment the stage
       stage: this.state.stage + 1,
     }, () => {
       this.audioManager.setEnd(stageToTime(this.state.stage));
@@ -217,11 +220,14 @@ class Game extends React.Component<
     const won = checkGuess(this.state.guess);
     if (won) saveStats(this.state.stage);
 
+    // Add the guess to the guess list in the state
     this.setState({
       suggestions: [],
       highlightedIndex: -1,
       guesses: [...this.state.guesses, this.state.guess],
+      // Reset the guess
       guess: '',
+      // Increment the stage
       stage: this.state.stage + 1,
       gameState: won ? GameState.Won : GameState.Playing,
     }, () => {
@@ -263,7 +269,9 @@ class Game extends React.Component<
       suggestions: [],
       highlightedIndex: -1,
       guesses: [],
+      // Reset the guess
       guess: '',
+      // Reset the stage
       stage: 0,
       gameState: GameState.Playing,
     }, () => {
