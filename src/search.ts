@@ -4,6 +4,17 @@ export type TrackSuggestion = {
   artist: string;
 };
 
+// How many suggestions the dropdown shows.
+const MAX_SUGGESTIONS = 8;
+
+// Deliberately much larger than MAX_SUGGESTIONS. itemsV2 is a mixed list --
+// alongside tracks it carries autocomplete phrases, albums, and playlists, all
+// of which we discard, and then we dedupe and drop unplayable tracks on top of
+// that. A search for "superman" returns 30 items of which only 14 are tracks,
+// so asking for exactly MAX_SUGGESTIONS would often come back short. Lower this
+// and the dropdown quietly gets stubby on queries that skew towards albums.
+const REQUEST_LIMIT = 30;
+
 type SearchArtist = {
   profile?: {
     name?: string;
@@ -56,8 +67,8 @@ const SEARCH_DEFINITIONS = [
     name: 'searchSuggestions',
     variables: (query: string) => ({
       query,
-      limit: 30,
-      numberOfTopResults: 30,
+      limit: REQUEST_LIMIT,
+      numberOfTopResults: REQUEST_LIMIT,
       offset: 0,
       includeAuthors: true,
       includeAlbumPreReleases: true,
@@ -69,8 +80,8 @@ const SEARCH_DEFINITIONS = [
     name: 'searchModalResults',
     variables: (query: string) => ({
       searchTerm: query,
-      limit: 30,
-      numberOfTopResults: 30,
+      limit: REQUEST_LIMIT,
+      numberOfTopResults: REQUEST_LIMIT,
       offset: 0,
       includeAudiobooks: true,
       includeAuthors: true,
@@ -168,7 +179,7 @@ export const searchTracks = async (
       artist,
     });
 
-    if (suggestions.length === 8) break;
+    if (suggestions.length === MAX_SUGGESTIONS) break;
   }
 
   return suggestions;
