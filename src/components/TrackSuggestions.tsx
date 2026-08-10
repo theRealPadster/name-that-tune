@@ -16,7 +16,9 @@ const TrackSuggestions = ({
   highlightedIndex,
   onSelect,
 }: TrackSuggestionsProps) => {
-  if (suggestions.length === 0) return null;
+  if (suggestions.length === 0) {
+    return null;
+  }
 
   return (
     <div
