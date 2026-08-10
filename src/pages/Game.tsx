@@ -343,6 +343,7 @@ class Game extends React.Component<
 
               <TrackSuggestions
                 listboxId={TRACK_SUGGESTIONS_LISTBOX_ID}
+                label={t('suggestionsLabel')}
                 suggestions={this.state.suggestions}
                 highlightedIndex={this.state.highlightedIndex}
                 onSelect={this.selectSuggestion}

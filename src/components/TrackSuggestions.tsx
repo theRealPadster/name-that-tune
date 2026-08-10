@@ -5,6 +5,7 @@ import { TrackSuggestion } from '../search';
 
 type TrackSuggestionsProps = {
   listboxId: string;
+  label: string;
   suggestions: TrackSuggestion[];
   highlightedIndex: number;
   onSelect: (suggestion: TrackSuggestion) => void;
@@ -12,6 +13,7 @@ type TrackSuggestionsProps = {
 
 const TrackSuggestions = ({
   listboxId,
+  label,
   suggestions,
   highlightedIndex,
   onSelect,
@@ -25,7 +27,7 @@ const TrackSuggestions = ({
       id={listboxId}
       className={styles.suggestions}
       role="listbox"
-      aria-label="Song suggestions"
+      aria-label={label}
     >
       {suggestions.map((suggestion, index) => (
         <button
