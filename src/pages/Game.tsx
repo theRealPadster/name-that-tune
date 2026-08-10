@@ -93,20 +93,26 @@ class Game extends React.Component<
       highlightedIndex: -1,
     });
 
-    if (guess.trim().length < 2) return;
+    if (guess.trim().length < 2) {
+      return;
+    }
 
     this.searchTimeout = setTimeout(async () => {
       try {
         const suggestions = await searchTracks(guess);
 
-        if (requestId !== this.searchRequest) return;
+        if (requestId !== this.searchRequest) {
+          return;
+        }
 
         this.setState({
           suggestions,
           highlightedIndex: -1,
         });
       } catch (error) {
-        if (requestId !== this.searchRequest) return;
+        if (requestId !== this.searchRequest) {
+          return;
+        }
 
         console.error('Unable to load song suggestions:', error);
 
@@ -150,7 +156,9 @@ class Game extends React.Component<
       return;
     }
 
-    if (suggestions.length === 0) return;
+    if (suggestions.length === 0) {
+      return;
+    }
 
     if (event.key === 'ArrowDown') {
       event.preventDefault();
@@ -213,12 +221,16 @@ class Game extends React.Component<
     e?.preventDefault();
 
     // Don't allow empty guesses
-    if (this.state.guess.trim().length === 0) return;
+    if (this.state.guess.trim().length === 0) {
+      return;
+    }
 
     this.cancelSearch();
 
     const won = checkGuess(this.state.guess);
-    if (won) saveStats(this.state.stage);
+    if (won) {
+      saveStats(this.state.stage);
+    }
 
     // Add the guess to the guess list in the state
     this.setState({

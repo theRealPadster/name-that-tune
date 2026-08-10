@@ -100,7 +100,9 @@ let missingDefinitionLogged = false;
 // populated once Spotify's own bundle has loaded. A failed lookup is retried on
 // the next keystroke, but only complains the once.
 const getSearchDefinition = () => {
-  if (resolved) return resolved;
+  if (resolved) {
+    return resolved;
+  }
 
   const definitions = Spicetify.GraphQL?.Definitions ?? {};
 
@@ -128,7 +130,9 @@ export const searchTracks = async (
 ): Promise<TrackSuggestion[]> => {
   const trimmedQuery = query.trim();
 
-  if (trimmedQuery.length < 2) return [];
+  if (trimmedQuery.length < 2) {
+    return [];
+  }
 
   const search = getSearchDefinition();
 
@@ -152,7 +156,9 @@ export const searchTracks = async (
   const seenUris = new Set<string>();
 
   for (const result of results) {
-    if (result.item?.__typename !== 'TrackResponseWrapper') continue;
+    if (result.item?.__typename !== 'TrackResponseWrapper') {
+      continue;
+    }
 
     const track = result.item.data;
 
@@ -179,7 +185,9 @@ export const searchTracks = async (
       artist,
     });
 
-    if (suggestions.length === MAX_SUGGESTIONS) break;
+    if (suggestions.length === MAX_SUGGESTIONS) {
+      break;
+    }
   }
 
   return suggestions;

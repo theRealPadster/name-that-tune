@@ -17,8 +17,12 @@ const Button = (props: {
   const buttonType = props.type || 'round';
 
   const classList = [styles.button];
-  if (buttonType === 'circle') classList.push(styles.circle);
-  if (props.classes) classList.push(...props.classes);
+  if (buttonType === 'circle') {
+    classList.push(styles.circle);
+  }
+  if (props.classes) {
+    classList.push(...props.classes);
+  }
 
   return (
     <button className={classList.join(' ')} onClick={props.onClick} aria-label={props.label} disabled={props.disabled}>
