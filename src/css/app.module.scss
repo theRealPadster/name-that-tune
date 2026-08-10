@@ -107,8 +107,21 @@
   overflow-y: auto;
   box-sizing: border-box;
   padding: 4px;
-  background: rgb(18 18 18 / 94%);
-  border: 1px solid rgb(255 255 255 / 14%);
+
+  // Stop the wheel chaining to the page once the list hits either end --
+  // otherwise overscrolling scrolls the game behind the dropdown, and since
+  // this is absolutely positioned it slides along with it.
+  overscroll-behavior: contain;
+
+  // Mostly opaque so album-art themes cannot show through and make the results
+  // unreadable, with the blur softening whatever does. The percentages are the
+  // ones the hardcoded colours used, except sourced from the theme rather than
+  // assuming a dark one: --spice-main is #121212 and --spice-text is #fff under
+  // the default theme, so this renders identically there and stays readable
+  // under a light theme, where a fixed near-black left dark text on near-black.
+  // The shadow stays plain black, since shadows read as dark under either.
+  background: color-mix(in srgb, var(--spice-main) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--spice-text) 14%, transparent);
   border-radius: 8px;
   box-shadow: 0 12px 28px rgb(0 0 0 / 55%);
   backdrop-filter: blur(20px);
