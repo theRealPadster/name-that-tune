@@ -12,7 +12,6 @@ import pl from './locales/pl.json';
 import ptBR from './locales/pt-BR.json';
 import uk from './locales/uk.json';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
 import Game from './pages/Game';
 import Stats from './pages/Stats';
@@ -21,7 +20,6 @@ import './css/app.global.scss';
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
-  .use(LanguageDetector)
   .init({
     // the translations
     resources: {
@@ -36,10 +34,8 @@ i18n
       ptBR,
       uk,
     },
-    detection: {
-      order: [ 'navigator', 'htmlTag' ],
-    },
-    // lng: "en", // if you're using a language detector, do not define the lng option
+    // Use the locale the user picked in Spotify, not the embedded browser's — they can differ
+    lng: Spicetify.Locale.getLocale(),
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
