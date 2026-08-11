@@ -130,16 +130,35 @@ Keep the body to one line naming the bump's justification, as in #200.
 
 **Then stop and hand back to the user.** Everything below waits on that merge.
 
-## 5. Verify `dist` actually rebuilt
+## 5. Verify `dist` is current
 
-The tag should point at a commit users can already install.
+The tag should point at something users can already install.
 
 ```bash
-gh run list --workflow=push-dist.yml --limit 1
-git log --oneline -1 origin/dist
+./.claude/skills/draft-release/verify-dist.sh
 ```
 
-If the run failed, the release is a lie — sort that out before tagging.
+Exit 0 means `dist` matches main and it is safe to tag.
+
+**Do not judge this by `dist`'s head commit.** `push-dist.yml` ends in
+`git diff-index --quiet HEAD || git commit`, so it only commits when the *built output*
+changes. A release whose only new commit is the version bump changes no output — the
+version is not embedded in the bundle — so the run succeeds while `dist`'s head stays
+pointing at an older SHA. That looks like a failed deploy and is not one. 0.3.1 hit
+exactly this: `dist` read "generated at 111d1d1" (the PR before the bump) while its
+contents were entirely correct.
+
+So the script checks *content*, not commits: it confirms a successful `push-dist` run for
+main's current SHA, then rebuilds locally with CI's own `pnpm build:prod` and diffs the
+result against the branch. The build is reproducible, so a match is exact.
+
+It tolerates exactly one discrepancy, `preview.png` at the branch root — a stale artifact
+from an older layout that is no longer generated. The workflow builds into a checkout of
+`dist` without cleaning first, so nothing ever removes it. Anything *else* differing is a
+real problem: stop and work out why before tagging.
+
+The script clears `dist/` (gitignored build output) to get a clean comparison. Stop
+`pnpm watch` first if it is running.
 
 ## 6. Tag the bump commit
 
