@@ -20,7 +20,7 @@
     "lint:ci": "eslint src",
     "type-check": "tsc --noEmit",
     "watch": "node scripts/build.mjs --watch",
-    "update-types": "curl -s -o src/types/spicetify.d.ts https://raw.githubusercontent.com/spicetify/spicetify-cli/master/globals.d.ts"
+    "update-types": "curl -s -o src/types/spicetify.d.ts https://raw.githubusercontent.com/spicetify/cli/main/globals.d.ts"
   },
   "license": "GPL-3.0",
   "engines": {
