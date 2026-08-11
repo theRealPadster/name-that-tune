@@ -14,7 +14,6 @@ import * as esbuild from 'esbuild';
 import { compileAsync } from 'sass-embedded';
 import postcss from 'postcss';
 import postcssModules from 'postcss-modules';
-import autoprefixer from 'autoprefixer';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 import fs from 'node:fs';
@@ -128,22 +127,20 @@ const scss = {
 
     build.onLoad({ filter: /\.scss$/ }, async (args) => {
       const { css } = await compileAsync(args.path, { loadPaths: [path.dirname(args.path)] });
-      const isModule = args.path.endsWith('.module.scss');
+
+      // Global stylesheets need nothing further — postcss is here solely to
+      // scope CSS-module class names.
+      if (!args.path.endsWith('.module.scss')) {
+        return { contents: css, loader: 'css' };
+      }
 
       let exported = {};
-      const plugins = [autoprefixer];
-      if (isModule) {
-        plugins.push(postcssModules({
+      const result = await postcss([
+        postcssModules({
           generateScopedName: `[name]__[local]___[hash:base64:5]_${globalName}`,
           getJSON: (_, json) => { exported = json; },
-        }));
-      }
-
-      const result = await postcss(plugins).process(css, { from: args.path });
-
-      if (!isModule) {
-        return { contents: result.css, loader: 'css' };
-      }
+        }),
+      ]).process(css, { from: args.path });
 
       // Hand the CSS to esbuild via a virtual import so it lands in the shared
       // stylesheet, and export the local->scoped name map as the module's value.
