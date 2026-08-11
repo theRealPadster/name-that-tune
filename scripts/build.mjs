@@ -12,6 +12,8 @@
 
 import * as esbuild from 'esbuild';
 import { compileAsync } from 'sass-embedded';
+import postcss from 'postcss';
+import postcssModules from 'postcss-modules';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 import fs from 'node:fs';
@@ -104,24 +106,63 @@ const externalGlobals = {
   },
 };
 
-// SCSS. Compile with sass, then hand the result to esbuild, which does CSS
-// modules itself: `local-css` scopes class names and gives the importing module
-// a local-name -> scoped-name map.
+// SCSS + CSS modules. sass compiles, postcss-modules scopes the class names.
 //
-// esbuild builds those scoped names from the file's BASENAME alone — the
-// directory is ignored — and adds no app-specific suffix. Every Spicetify app's
-// stylesheet loads into one shared document, so a generically named
-// `app.module.scss` here would collide with another app's. That is why these
-// files are named `name-that-tune*.module.scss`: the prefix is what makes the
-// generated names unique, and renaming them back would reintroduce the clash.
+// esbuild can do CSS modules itself via its `local-css` loader, and this used to.
+// The catch only shows up in a minified build: esbuild treats local class names
+// as identifiers and renames them, so `--minify` turns the whole stylesheet into
+// `.i`, `.o`, `.s`. Every Spicetify app's CSS loads into one shared document, and
+// any other app minified the same way draws from that same tiny pool — so the
+// shipped artifact was the one place the names were *not* unique. An unminified
+// build looked fine, which is exactly how it got missed.
+//
+// postcss-modules writes the scoped names into the CSS before esbuild sees it,
+// and esbuild does not rename class names it did not create. So these survive
+// minification intact.
+//
+// `[name]` is the filename, which is why these files are `name-that-tune*` —
+// that prefix is what makes the names unique between apps. No content hash: the
+// filename plus the local name is already unique, and stable names are kinder to
+// anyone writing custom CSS against the app.
 const scss = {
   name: 'scss',
   setup(build) {
+    const cssStore = new Map();
+
+    build.onResolve({ filter: /\.module\.scss\.css$/ }, (args) => ({
+      path: args.path,
+      namespace: 'virtual-css',
+    }));
+    build.onLoad({ filter: /.*/, namespace: 'virtual-css' }, (args) => ({
+      contents: cssStore.get(args.path),
+      loader: 'css',
+    }));
+
     build.onLoad({ filter: /\.scss$/ }, async (args) => {
       const { css } = await compileAsync(args.path, { loadPaths: [path.dirname(args.path)] });
+
+      // Global stylesheets are written by hand and already namespaced.
+      if (!args.path.endsWith('.module.scss')) {
+        return { contents: css, loader: 'css' };
+      }
+
+      let exported = {};
+      const result = await postcss([
+        postcssModules({
+          generateScopedName: '[name]__[local]',
+          getJSON: (_, json) => { exported = json; },
+        }),
+      ]).process(css, { from: args.path });
+
+      // Feed the CSS back through a virtual import so it lands in the shared
+      // stylesheet as plain CSS, and export the local -> scoped name map. The
+      // path is repo-relative because esbuild writes it into a provenance
+      // comment, and an absolute one would differ between a local build and CI.
+      const virtual = `${path.relative(root, args.path)}.css`;
+      cssStore.set(virtual, result.css);
       return {
-        contents: css,
-        loader: args.path.endsWith('.module.scss') ? 'local-css' : 'global-css',
+        contents: `import ${JSON.stringify(virtual)};\nexport default ${JSON.stringify(exported)};`,
+        loader: 'js',
         resolveDir: path.dirname(args.path),
       };
     });
