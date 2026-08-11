@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from '../css/app.module.scss';
+import styles from '../css/name-that-tune.module.scss';
 import { TrackSuggestion } from '../search';
 
 type TrackSuggestionsProps = {

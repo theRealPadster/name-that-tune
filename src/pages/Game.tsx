@@ -1,4 +1,4 @@
-import styles from '../css/app.module.scss';
+import styles from '../css/name-that-tune.module.scss';
 // import '../css/app.global.scss';
 import React from 'react';
 import { TFunction } from 'i18next';
