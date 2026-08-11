@@ -43,9 +43,13 @@ released on merge.
    startup regardless of route. `extension.tsx` polls until `Spicetify.Platform`/`ContextMenu`/`URI`
    exist, then registers the right-click menu entry and a `History.listen` handler.
 
-They share no runtime state. This is why i18n init is **duplicated verbatim** in `src/app.tsx` and
-`src/extensions/extension.tsx` — adding a locale means editing the `resources` map in *both*, plus
-dropping the JSON in `src/locales/`.
+They share no runtime state, so each ends up with its own i18next instance. The *configuration* is
+shared source, though: `src/i18n.ts` exports `initI18n()`, which both entry points call. Adding a
+locale means dropping the JSON in `src/locales/` and adding one line to that file.
+
+`initI18n()` reads `Spicetify.Locale`, so it must be called rather than run on import. `app.tsx` calls
+it at module scope, which is safe because the app bundle only loads on navigation; `extension.tsx`
+calls it after its startup poll, because extensions load before `Spicetify.Locale` necessarily exists.
 
 `react` / `react-dom` are marked external and rewritten to `Spicetify.React` / `Spicetify.ReactDOM`.
 Everything else is bundled, which is why all deps live in `devDependencies`.
