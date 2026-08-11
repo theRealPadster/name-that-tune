@@ -34,7 +34,7 @@ released on merge.
 
 ### Two independent bundles
 
-`spicetify-creator` (esbuild) emits two separate things from `src/`:
+`scripts/build.mjs` (esbuild) emits two separate things from `src/`:
 
 1. **The custom app** — entry `src/app.tsx`, mounted by Spotify when the user navigates to
    `/name-that-tune`. `src/settings.json` is the app manifest (`nameId` determines both the output
@@ -49,6 +49,25 @@ dropping the JSON in `src/locales/`.
 
 `react` / `react-dom` are marked external and rewritten to `Spicetify.React` / `Spicetify.ReactDOM`.
 Everything else is bundled, which is why all deps live in `devDependencies`.
+
+### The build script
+
+`scripts/build.mjs` replaced `spicetify-creator`, which was deprecated in December 2025 while pinning
+esbuild 0.14. It reproduces what that tool did, and the resemblance is deliberate — several details are
+a contract with Spotify rather than choices to tidy up:
+
+- the esbuild `globalName` is `nameId` with `-` → `D` (`nameDthatDtune`), and `index.js` gets
+  `const render=()=>nameDthatDtune.default();` appended — that is how Spotify mounts the app;
+- `src/app.tsx` is wrapped by a generated entry that exports `render()`, so the app file itself
+  does not have to;
+- `index.css` is renamed to `style.css`, and `manifest.json` holds the icon SVG's *contents*;
+- each extension bundle is wrapped in an async IIFE that waits for `Spicetify.React` — extensions
+  load at startup, and `extension.tsx` imports `react-i18next`, so without the gate it evaluates
+  against an undefined global.
+
+CSS modules go through `postcss-modules` rather than esbuild's native `local-css` loader, to keep the
+`_nameDthatDtune` suffix on generated class names. Every Spicetify app shares one document, so esbuild's
+unsuffixed names would let two apps with a like-named `.module.scss` collide.
 
 ### Routing
 
