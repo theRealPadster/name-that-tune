@@ -69,12 +69,22 @@ a contract with Spotify rather than choices to tidy up:
   load at startup, and `extension.tsx` imports `react-i18next`, so without the gate it evaluates
   against an undefined global.
 
-CSS modules use esbuild's native `local-css` loader — sass compiles the SCSS, esbuild scopes the class
-names. **This is why the module stylesheets are called `name-that-tune*.module.scss`.** esbuild builds
-scoped names from the file's *basename* alone, ignoring the directory, and adds no app-specific suffix;
-every Spicetify app's stylesheet loads into one shared document, so a generic `app.module.scss` here
-would collide with another app's. The prefix in the filename is the only thing making these unique —
-renaming them back, or "organising" them into a `name-that-tune/` folder, reintroduces the clash.
+CSS modules go through `postcss-modules`, not esbuild's native `local-css` loader, and the reason only
+shows up in a **minified** build: esbuild treats local class names as identifiers and renames them, so
+`--minify` collapses the stylesheet to `.i`, `.o`, `.s`. Every Spicetify app's CSS loads into one shared
+document, and any other app minified the same way draws from the same tiny pool. postcss-modules writes
+the scoped names in before esbuild sees them, and esbuild does not rename class names it did not create.
+
+**This is why the module stylesheets are called `name-that-tune*.module.scss`.** The scoped name is
+`[name]__[local]`, where `[name]` is the filename — so the prefix there is what keeps these unique
+between apps. Renaming them back to `app.module.scss`, or "organising" them into a `name-that-tune/`
+folder (the directory is not part of the name), reintroduces the clash.
+
+There is no content hash in the pattern: filename plus local name is already unique, and stable names
+are kinder to anyone writing custom CSS against the app.
+
+**Check CSS changes against `pnpm build:local`, not `pnpm build`.** Only the former minifies, and that is
+where class-name behaviour differs — a dev build looks correct while the shipped artifact is not.
 
 ### Routing
 
