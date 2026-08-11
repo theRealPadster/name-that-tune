@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from '../css/button.module.scss';
+import styles from '../css/name-that-tune-button.module.scss';
 
 // Round is the default style
 // Circle is used by the install/remove button

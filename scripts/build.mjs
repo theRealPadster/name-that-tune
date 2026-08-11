@@ -12,8 +12,6 @@
 
 import * as esbuild from 'esbuild';
 import { compileAsync } from 'sass-embedded';
-import postcss from 'postcss';
-import postcssModules from 'postcss-modules';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 import fs from 'node:fs';
@@ -106,51 +104,24 @@ const externalGlobals = {
   },
 };
 
-// SCSS + CSS modules. esbuild can scope CSS itself via its local-css loader, but
-// its class names carry no app-specific suffix, and every Spicetify app shares
-// one document — two apps with a like-named .module.scss would collide. Keeping
-// postcss-modules preserves spicetify-creator's `_<globalName>` suffix, and
-// keeps the generated names identical so the output stays diffable.
+// SCSS. Compile with sass, then hand the result to esbuild, which does CSS
+// modules itself: `local-css` scopes class names and gives the importing module
+// a local-name -> scoped-name map.
+//
+// esbuild builds those scoped names from the file's BASENAME alone — the
+// directory is ignored — and adds no app-specific suffix. Every Spicetify app's
+// stylesheet loads into one shared document, so a generically named
+// `app.module.scss` here would collide with another app's. That is why these
+// files are named `name-that-tune*.module.scss`: the prefix is what makes the
+// generated names unique, and renaming them back would reintroduce the clash.
 const scss = {
   name: 'scss',
   setup(build) {
-    const cssStore = new Map();
-
-    build.onResolve({ filter: /\.module\.scss\.css$/ }, (args) => ({
-      path: args.path,
-      namespace: 'virtual-css',
-    }));
-    build.onLoad({ filter: /.*/, namespace: 'virtual-css' }, (args) => ({
-      contents: cssStore.get(args.path),
-      loader: 'css',
-    }));
-
     build.onLoad({ filter: /\.scss$/ }, async (args) => {
       const { css } = await compileAsync(args.path, { loadPaths: [path.dirname(args.path)] });
-
-      // Global stylesheets need nothing further — postcss is here solely to
-      // scope CSS-module class names.
-      if (!args.path.endsWith('.module.scss')) {
-        return { contents: css, loader: 'css' };
-      }
-
-      let exported = {};
-      const result = await postcss([
-        postcssModules({
-          generateScopedName: `[name]__[local]___[hash:base64:5]_${globalName}`,
-          getJSON: (_, json) => { exported = json; },
-        }),
-      ]).process(css, { from: args.path });
-
-      // Hand the CSS to esbuild via a virtual import so it lands in the shared
-      // stylesheet, and export the local->scoped name map as the module's value.
-      // The virtual path is repo-relative: esbuild writes it into a provenance
-      // comment, and an absolute one would differ between a local build and CI.
-      const virtual = `${path.relative(root, args.path)}.css`;
-      cssStore.set(virtual, result.css);
       return {
-        contents: `import ${JSON.stringify(virtual)};\nexport default ${JSON.stringify(exported)};`,
-        loader: 'js',
+        contents: css,
+        loader: args.path.endsWith('.module.scss') ? 'local-css' : 'global-css',
         resolveDir: path.dirname(args.path),
       };
     });

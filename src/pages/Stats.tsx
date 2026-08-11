@@ -20,7 +20,7 @@ import { STATS_KEY } from '../constants';
 
 import { SavedStats } from '../types/name-that-tune';
 
-import styles from '../css/app.module.scss';
+import styles from '../css/name-that-tune.module.scss';
 
 ChartJS.register(
   // react-chartjs-2's <Bar> used to register this for us

@@ -69,9 +69,12 @@ a contract with Spotify rather than choices to tidy up:
   load at startup, and `extension.tsx` imports `react-i18next`, so without the gate it evaluates
   against an undefined global.
 
-CSS modules go through `postcss-modules` rather than esbuild's native `local-css` loader, to keep the
-`_nameDthatDtune` suffix on generated class names. Every Spicetify app shares one document, so esbuild's
-unsuffixed names would let two apps with a like-named `.module.scss` collide.
+CSS modules use esbuild's native `local-css` loader — sass compiles the SCSS, esbuild scopes the class
+names. **This is why the module stylesheets are called `name-that-tune*.module.scss`.** esbuild builds
+scoped names from the file's *basename* alone, ignoring the directory, and adds no app-specific suffix;
+every Spicetify app's stylesheet loads into one shared document, so a generic `app.module.scss` here
+would collide with another app's. The prefix in the filename is the only thing making these unique —
+renaming them back, or "organising" them into a `name-that-tune/` folder, reintroduces the clash.
 
 ### Routing
 
