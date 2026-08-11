@@ -39,7 +39,7 @@ import { initReactI18next } from 'react-i18next';
         'es-419': esLatin,
         fr,
         pl,
-        ptBR,
+        'pt-BR': ptBR,
         uk,
       },
       // Use the locale the user picked in Spotify, not the embedded browser's — they can differ
