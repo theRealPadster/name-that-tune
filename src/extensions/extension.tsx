@@ -12,34 +12,6 @@ import pl from '../locales/pl.json';
 import ptBR from '../locales/pt-BR.json';
 import uk from '../locales/uk.json';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-
-i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
-  .use(LanguageDetector)
-  .init({
-    // the translations
-    resources: {
-      ca,
-      el,
-      en,
-      de,
-      es,
-      'es-419': esLatin,
-      fr,
-      pl,
-      ptBR,
-      uk,
-    },
-    detection: {
-      order: [ 'navigator', 'htmlTag' ],
-    },
-    // lng: "en", // if you're using a language detector, do not define the lng option
-    fallbackLng: 'en',
-    interpolation: {
-      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
-    },
-  });
 
 (async () => {
   while (
@@ -47,11 +19,36 @@ i18n
       Spicetify?.Platform &&
       Spicetify?.ContextMenu &&
       Spicetify?.URI &&
+      Spicetify?.Locale &&
       Spicetify?.showNotification
     )
   ) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
+
+  i18n
+    .use(initReactI18next) // passes i18n down to react-i18next
+    .init({
+      // the translations
+      resources: {
+        ca,
+        el,
+        en,
+        de,
+        es,
+        'es-419': esLatin,
+        fr,
+        pl,
+        ptBR,
+        uk,
+      },
+      // Use the locale the user picked in Spotify, not the embedded browser's — they can differ
+      lng: Spicetify.Locale.getLocale(),
+      fallbackLng: 'en',
+      interpolation: {
+        escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+      },
+    });
 
   console.log('running name-that-tune extension');
 
