@@ -22,7 +22,7 @@ notes are wrong you edit them; if the code is wrong you ship another commit.
 | 3 | Draft the notes, **show them to the user** |
 | 4 | Open the `chore: version bump` PR |
 | — | **⏸ Stop. The user merges it.** |
-| 5 | Verify CI pushed `dist` |
+| 5 | Verify `dist` matches main |
 | 6 | Tag the bump commit |
 | 7 | `gh release create --draft` — the user publishes |
 
