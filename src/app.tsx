@@ -1,46 +1,17 @@
 import React from 'react';
 
-import i18n, { t } from 'i18next';
-import ca from './locales/ca.json';
-import el from './locales/el.json';
-import en from './locales/en.json';
-import de from './locales/de.json';
-import es from './locales/es.json';
-import esLatin from './locales/es-419.json';
-import fr from './locales/fr.json';
-import pl from './locales/pl.json';
-import ptBR from './locales/pt-BR.json';
-import uk from './locales/uk.json';
-import { initReactI18next } from 'react-i18next';
+import { t } from 'i18next';
+
+import initI18n from './i18n';
 
 import Game from './pages/Game';
 import Stats from './pages/Stats';
 
 import './css/app.global.scss';
 
-i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
-  .init({
-    // the translations
-    resources: {
-      ca,
-      el,
-      en,
-      de,
-      es,
-      'es-419': esLatin,
-      fr,
-      pl,
-      'pt-BR': ptBR,
-      uk,
-    },
-    // Use the locale the user picked in Spotify, not the embedded browser's — they can differ
-    lng: Spicetify.Locale.getLocale(),
-    fallbackLng: 'en',
-    interpolation: {
-      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
-    },
-  });
+// Safe at module scope: the app bundle is only loaded once the user navigates
+// to it, by which point Spicetify.Locale exists.
+initI18n();
 
 type HistoryLocation = {
   pathname: string;

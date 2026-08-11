@@ -11,10 +11,26 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: locale-code
+    attributes:
+      label: Locale code
+      description: >-
+        Open the Spotify devtools console and run `Spicetify.Locale.getLocale()`.
+        Paste exactly what it prints — the file has to be named after it, hyphens
+        and all, or the translation never loads.
+      placeholder: e.g. es-419
+    validations:
+      required: true
+
   - type: textarea
     id: translation-json
     attributes:
       label: Translation JSON
+      description: >-
+        Some languages need more plural forms than English. Keys ending in `_one` /
+        `_other` follow i18next's plural rules — if yours also needs `_few` or
+        `_many` (Polish, for instance), include those too.
       placeholder: Copy src/locales/en.json and paste updated version here
       value: "```json\nCopy src/locales/en.json and paste updated version here\n```"
     validations:
