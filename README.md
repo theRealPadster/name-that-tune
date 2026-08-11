@@ -46,9 +46,16 @@ spicetify apply
 - (If you open the app directly from the header bar, it will just use the song you are currently playing.)
 
 ## Translations
-I've added translations support! If you use Spotify in a non-English language and are getting the "Play Name That Tune" menu item etc in English, you can get your language added by either: 
-- Submitting a pull request with a new copy of `src/locales/en.json` but named after your locale, with your translated content inside. 
-- Or making a [new issue](https://github.com/theRealPadster/name-that-tune/issues/new?labels=i18n&template=new_translation.yml) with the relevant translations from [`src/locales/en.json`](https://github.com/theRealPadster/name-that-tune/blob/main/src/locales/en.json). 
+I've added translations support! If you use Spotify in a non-English language and are getting the "Play Name That Tune" menu item etc in English, you can get your language added by either:
+
+- Making a [new issue](https://github.com/theRealPadster/name-that-tune/issues/new?labels=i18n&template=new_translation.yml) with the translated contents of [`src/locales/en.json`](https://github.com/theRealPadster/name-that-tune/blob/main/src/locales/en.json). No setup needed — I'll wire it up.
+- Or submitting a pull request:
+  1. Copy `src/locales/en.json` to `src/locales/<locale>.json` and translate the values.
+  2. **Register it in [`src/i18n.ts`](https://github.com/theRealPadster/name-that-tune/blob/main/src/i18n.ts)** — add the import and one entry to the `resources` map. A locale file that isn't listed there is never loaded, and the app silently falls back to English.
+
+`<locale>` has to match what Spotify reports, hyphens and all: `pt-BR`, `es-419`, `zh-CN` — not `ptBR`. You can check your own in the Spotify devtools console with `Spicetify.Locale.getLocale()`.
+
+Some languages need more plural forms than English does. Keys like `songWithCount` and `sendingURIs` use i18next's `_one` / `_other` suffixes; if your language also needs `_few` or `_many` (Polish, for instance), add those keys too.
 
 ## Planned Features
 - Possible "random" mode that doesn't use the beginning of the song, but grabs random segments from it
