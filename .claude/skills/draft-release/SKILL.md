@@ -23,8 +23,9 @@ notes are wrong you edit them; if the code is wrong you ship another commit.
 | 4 | Open the `chore: version bump` PR |
 | — | **⏸ Stop. The user merges it.** |
 | 5 | Verify `dist` matches main |
-| 6 | Tag the bump commit |
-| 7 | `gh release create --draft` — the user publishes |
+| 6 | Tag the commit whose build is on `dist` |
+| 7 | `gh release create --draft`, **then attach `name-that-tune-dist.zip`** |
+| — | The user publishes |
 
 Two hard stops: never merge the bump PR yourself, and never publish the release.
 Both are the user's call.
@@ -160,14 +161,26 @@ real problem: stop and work out why before tagging.
 The script clears `dist/` (gitignored build output) to get a clean comparison. Stop
 `pnpm watch` first if it is running.
 
-## 6. Tag the bump commit
+## 6. Tag the commit whose build is on `dist`
 
-The tag goes on the bump commit itself, not on whatever landed after it. Both 0.2.0 and
-0.3.0 are tagged this way.
+**Tag what users can actually install**, which is the commit `dist` was last generated
+from. Usually that is the version bump, because the bump is usually the last thing to
+merge — 0.2.0 and 0.3.0 are both tagged that way, and it is the default assumption.
+
+It is not a rule, though. If anything merged *after* the bump, tag that instead:
+
+```bash
+git log --oneline -1 origin/dist        # "Update to output generated at <sha>"
+```
+
+0.3.2 hit this. A fix landed after the bump PR, so the bump commit predated what `dist`
+served and the notes described class names that did not exist there yet. The tag went on
+the fix's merge commit — `package.json` still read `0.3.2` at that point, so the tag
+stayed internally consistent.
 
 ```bash
 git fetch origin
-git tag X.Y.Z <bump-commit-sha>
+git tag X.Y.Z <sha>
 git push origin X.Y.Z
 ```
 
@@ -175,14 +188,40 @@ Plain lightweight tags, no `v` prefix — match `0.3.0`, not `v0.3.0`.
 
 Ignore the stray `dev-release` tag; `gather.sh` already filters it out.
 
-## 7. Create the draft
+## 7. Create the draft, with its asset
 
 ```bash
 gh release create X.Y.Z --draft --title "X.Y.Z" --notes-file notes.md
 ```
 
-Give the user the URL and let them publish. Write `notes.md` to the scratchpad, not the
-repo — this project keeps no CHANGELOG, and the release body is the only changelog there is.
+Write `notes.md` to the scratchpad, not the repo — this project keeps no CHANGELOG, and
+the release body is the only changelog there is.
+
+**Then attach the dist zip.** Every release from 0.1.7 to 0.3.0 carries a
+`name-that-tune-dist.zip`, and 0.1.7's has 357 downloads — people install from it, not
+just from the `dist` branch link in the README. `gh release create` does not add it, and
+it is easy to finish the release without noticing; 0.3.1 and 0.3.2 were both cut without
+it and had to be fixed afterwards.
+
+It is the same layout GitHub's own branch archive produces — a single
+`name-that-tune-dist/` folder, which is the folder name the README tells people to use:
+
+```bash
+git fetch origin dist
+git archive --format=zip --prefix=name-that-tune-dist/ origin/dist > name-that-tune-dist.zip
+gh release upload X.Y.Z name-that-tune-dist.zip
+```
+
+Build it from `origin/dist`, not from a local `pnpm build:prod` — the asset should be the
+artifact CI published, not one rebuilt on your machine.
+
+Then confirm it is actually attached before handing over:
+
+```bash
+gh release view X.Y.Z --json isDraft,assets --jq '{isDraft, assets: [.assets[].name]}'
+```
+
+Give the user the URL and let them publish.
 
 ## Gotchas
 
