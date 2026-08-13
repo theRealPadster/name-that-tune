@@ -120,13 +120,17 @@
   }
 }
 
-// Container for the guess/skip buttons
+// Container for the guess/skip buttons. Spans the form so that guess can take
+// the room and skip can sit beside it at its natural width.
 .formButtonContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
-  // flex-direction: column;
-  gap: 20px;
+  gap: 10px;
+  width: 100%;
+}
+
+.guessButton {
+  flex: 1 1 auto;
 }
 
 // The button stylesheet is bundled after this one, so .button wins any property

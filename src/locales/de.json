@@ -8,7 +8,7 @@
 	  "playXSeconds": "Spiele {{count}}s ab",
     "guessBtn": "Raten",
     "skipBtn": "Überspringen +{{count}}s",
-    "giveUp": "Aufgeben",
+    "giveUp": "Aufgeben und auflösen",
     "nextSong": "Nächster Titel",
     "menuEntry": "Spiele $t(appName)",
     "sendingURIs_one": "Sende {{count}} URI an $t(appName)",

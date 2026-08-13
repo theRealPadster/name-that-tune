@@ -8,7 +8,7 @@
     "playXSeconds": "Reproduïr {{count}}s",
     "guessBtn": "Esbrinar",
     "skipBtn": "Saltar +{{count}}s",
-    "giveUp": "Rendir-se",
+    "giveUp": "Rendir-se i revelar",
     "nextSong": "Següent cançó",
     "menuEntry": "Reproduïr $t(appName)",
     "sendingURIs_one": "Enviant {{count}} URI a $t(appName)",

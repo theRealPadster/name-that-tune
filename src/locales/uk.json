@@ -8,7 +8,7 @@
     "playXSeconds": "Слухати {{count}}с",
     "guessBtn": "Вгадати",
     "skipBtn": "Пропустити +{{count}}с",
-    "giveUp": "Здатись",
+    "giveUp": "Здатись і показати",
     "nextSong": "Наступна пісня",
     "menuEntry": "Грати у $t(appName)",
     "sendingURIs_one": "Відправка {{count}} URI до $t(appName)",

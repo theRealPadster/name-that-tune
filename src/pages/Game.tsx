@@ -378,6 +378,7 @@ class Game extends React.Component<
             <div className={styles.formButtonContainer}>
               <Button
                 variant={'primary'}
+                classes={[styles.guessButton]}
                 onClick={() => this.submitGuess()}
                 disabled={!isPlaying}
               >

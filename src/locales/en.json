@@ -8,7 +8,7 @@
     "playXSeconds": "Play {{count}}s",
     "guessBtn": "Guess",
     "skipBtn": "Skip +{{count}}s",
-    "giveUp": "Give up",
+    "giveUp": "Give up and reveal",
     "nextSong": "Next song",
     "menuEntry": "Play $t(appName)",
     "sendingURIs_one": "Sending {{count}} URI to $t(appName)",
