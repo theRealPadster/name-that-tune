@@ -1,9 +1,11 @@
 .container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   gap: 20px;
+  box-sizing: border-box;
+  padding-top: 40px;
 }
 
 .title {
