@@ -7,7 +7,7 @@
     "suggestionsLabel": "Sugestie utworów",
     "playXSeconds": "Odtwórz {{count}}s",
     "guessBtn": "Zgadnij",
-    "skipBtn": "Pomiń",
+    "skipBtn": "Pomiń +{{count}}s",
     "giveUp": "Poddaj się",
     "nextSong": "Następna piosenka",
     "menuEntry": "Zagraj w $t(appName)",

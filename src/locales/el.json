@@ -7,7 +7,7 @@
     "suggestionsLabel": "Προτάσεις τραγουδιών",
     "playXSeconds": "Παίξε {{count}}s",
     "guessBtn": "Μάντεψε",
-    "skipBtn": "Παράλειψη",
+    "skipBtn": "Παράλειψη +{{count}}s",
     "giveUp": "Παραιτούμαι",
     "nextSong": "Επόμενο τραγούδι",
     "menuEntry": "Παίξε $t(appName)",

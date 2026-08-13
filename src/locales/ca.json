@@ -7,7 +7,7 @@
     "suggestionsLabel": "Suggeriments des cançons",
     "playXSeconds": "Reproduïr {{count}}s",
     "guessBtn": "Esbrinar",
-    "skipBtn": "Saltar",
+    "skipBtn": "Saltar +{{count}}s",
     "giveUp": "Rendir-se",
     "nextSong": "Següent cançó",
     "menuEntry": "Reproduïr $t(appName)",

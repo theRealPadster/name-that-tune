@@ -7,7 +7,7 @@
     "suggestionsLabel": "Suggestions de chansons",
     "playXSeconds": "Jouer à {{count}}s",
     "guessBtn": "Devinez",
-    "skipBtn": "Passer",
+    "skipBtn": "Passer +{{count}}s",
     "giveUp": "Abandonner",
     "nextSong": "Chanson suivante",
     "menuEntry": "Jouer à $t(appName)",

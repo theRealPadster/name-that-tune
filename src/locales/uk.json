@@ -7,7 +7,7 @@
     "suggestionsLabel": "Пропозиції пісень",
     "playXSeconds": "Слухати {{count}}с",
     "guessBtn": "Вгадати",
-    "skipBtn": "Пропустити",
+    "skipBtn": "Пропустити +{{count}}с",
     "giveUp": "Здатись",
     "nextSong": "Наступна пісня",
     "menuEntry": "Грати у $t(appName)",

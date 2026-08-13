@@ -300,6 +300,11 @@ class Game extends React.Component<
 
     const suggestionsOpen = this.state.suggestions.length > 0;
 
+    // What a skip actually buys you, so the button can price itself. Derived
+    // from the curve rather than hardcoded, so it stays right if that changes.
+    const skipCost =
+      stageToTime(this.state.stage + 1) - stageToTime(this.state.stage);
+
     const activeSuggestionId =
       this.state.highlightedIndex >= 0
         ? `${TRACK_SUGGESTIONS_LISTBOX_ID}-option-${this.state.highlightedIndex}`
@@ -308,7 +313,28 @@ class Game extends React.Component<
     return (
       <>
         <div className={styles.container}>
-          <h1 className={styles.title}>{t('title')}</h1>
+          <header className={styles.header}>
+            <h1 className={styles.title}>{t('title')}</h1>
+
+            <Button
+              variant={'tertiary'}
+              onClick={this.goToStats}
+              classes={[styles.StatsButton]}
+            >
+              <svg
+                width={16}
+                height={16}
+                viewBox={'0 0 24 24'}
+                fill={'currentColor'}
+                aria-hidden={true}
+              >
+                <rect x={3} y={12} width={4} height={9} rx={1} />
+                <rect x={10} y={7} width={4} height={14} rx={1} />
+                <rect x={17} y={3} width={4} height={18} rx={1} />
+              </svg>
+              <span className={styles.statsLabel}>{t('stats.title')}</span>
+            </Button>
+          </header>
 
           {gameWon ? (
             <h2 className={styles.subtitle}>{t('winMsg')}</h2>
@@ -351,6 +377,7 @@ class Game extends React.Component<
 
             <div className={styles.formButtonContainer}>
               <Button
+                variant={'primary'}
                 onClick={() => this.submitGuess()}
                 disabled={!isPlaying}
               >
@@ -358,10 +385,11 @@ class Game extends React.Component<
               </Button>
 
               <Button
+                variant={'secondary'}
                 onClick={this.skipGuess}
                 disabled={!isPlaying}
               >
-                {t('skipBtn')}
+                {t('skipBtn', { count: skipCost })}
               </Button>
             </div>
           </form>
@@ -373,10 +401,6 @@ class Game extends React.Component<
               })}
             </Button>
           ) : null}
-
-          <Button onClick={isPlaying ? this.giveUp : this.nextSong}>
-            {isPlaying ? t('giveUp') : t('nextSong')}
-          </Button>
 
           <ol className={styles.guessList}>
             {this.state.guesses.map((guess, i) => (
@@ -390,10 +414,10 @@ class Game extends React.Component<
           </ol>
 
           <Button
-            onClick={this.goToStats}
-            classes={[styles.StatsButton]}
+            variant={isPlaying ? 'tertiary' : 'primary'}
+            onClick={isPlaying ? this.giveUp : this.nextSong}
           >
-            {t('stats.title')}
+            {isPlaying ? t('giveUp') : t('nextSong')}
           </Button>
         </div>
       </>

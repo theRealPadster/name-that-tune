@@ -7,7 +7,7 @@
     "suggestionsLabel": "Titelvorschläge",
 	  "playXSeconds": "Spiele {{count}}s ab",
     "guessBtn": "Raten",
-    "skipBtn": "Überspringen",
+    "skipBtn": "Überspringen +{{count}}s",
     "giveUp": "Aufgeben",
     "nextSong": "Nächster Titel",
     "menuEntry": "Spiele $t(appName)",
