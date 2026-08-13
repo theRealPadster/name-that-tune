@@ -4,6 +4,7 @@
     "title": "🎵 $t(appName)",
     "winMsg": "Κέρδισες!",
     "guessPlaceholder": "Βρες το Τραγούδι",
+    "suggestionsLabel": "Προτάσεις τραγουδιών",
     "playXSeconds": "Παίξε {{count}}s",
     "guessBtn": "Μάντεψε",
     "skipBtn": "Παράλειψη",

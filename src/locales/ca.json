@@ -4,6 +4,7 @@
     "title": "🎵 $t(appName)",
     "winMsg": "Has guanyat!",
     "guessPlaceholder": "Esbrinar la cançó",
+    "suggestionsLabel": "Suggeriments des cançons",
     "playXSeconds": "Reproduïr {{count}}s",
     "guessBtn": "Esbrinar",
     "skipBtn": "Saltar",
