@@ -1,6 +1,6 @@
 ---
 name: spicetify-drive
-description: Attach to the running Spotify desktop client over the Chrome DevTools Protocol to inspect or drive it — read Spicetify internals, run real GraphQL requests, measure computed styles and geometry, dispatch real key/mouse/wheel input, and take screenshots. Also covers the build → refresh → reload → attach loop for testing a Spicetify custom app or extension in the real client, including recovering the client when a reload wedges it. Use when a claim about Spotify's runtime needs verifying rather than guessing (does this GraphQL definition exist, what shape does it return, which element actually receives this click, does this scroll chain), or when the user asks to run, test, or screenshot a Spicetify app in Spotify.
+description: Attach to the running Spotify desktop client over the Chrome DevTools Protocol to inspect or drive it — read Spicetify internals, run real GraphQL requests, measure computed styles and geometry, dispatch real key/mouse/wheel input, and take screenshots. Also covers the build → refresh → reload → attach loop for testing a Spicetify custom app or extension in the real client, including recovering the app's route from Spotify's error boundary. Use when a claim about Spotify's runtime needs verifying rather than guessing (does this GraphQL definition exist, what shape does it return, which element actually receives this click, does this scroll chain), or when the user asks to run, test, or screenshot a Spicetify app in Spotify.
 ---
 
 # Driving Spotify over the debug port
@@ -67,8 +67,8 @@ spicetify refresh -a       # copies CustomApps into Spotify.app; PID unchanged
 ```
 
 Spotify keeps running throughout, so playback survives. The reload does blank the
-UI mid-use and can drop the client on the error screen, so say what you are doing
-rather than cycling this repeatedly while the user watches.
+UI mid-use and can leave the app's route on an error boundary, so say what you are
+doing rather than cycling this repeatedly while the user watches.
 
 **`-a` alone, never combined.** It copies both the app and its extension, because
 this project builds `extension.js` into the CustomApps folder. `-e` is for the
@@ -115,42 +115,87 @@ defaults read /Applications/Spotify.app/Contents/Info.plist CFBundleVersion
 that acts on it does not, so the port comes back with the re-apply rather than
 needing `enable-devtools` run again.
 
-## Reloading without wedging the client
+## Reloading, and Spotify's error boundary
 
-**Do not use `location.reload()`.** It regularly drops xpui into Spotify's
-"Something went wrong / Try reloading the page" screen. When that happens the
-whole client is down, not just the app under test: `window.<globalName>` is
-undefined, the main view is empty, and no app `<script>` is present. That reads
-exactly like the app crashing, and will send you debugging code that is fine.
+"Something went wrong / Try reloading the page" is usually **a route-level error
+boundary inside the main view, not a dead client.** The node lives under `MAIN`
+inside `.Root__main-view`; the library sidebar, top bar and player keep working,
+and `Spicetify.Platform` stays available throughout. So `Spicetify` being present
+proves nothing, and neither does the chrome looking fine. The worse variant — the
+client never finishing boot at all — is covered further down.
 
-`Page.reload` over CDP does **not** rescue a client already on that screen. What
-does is clicking the dialog's own button. So always health-check after a reload,
-and recover, before measuring anything:
+Two consequences that cost real time:
+
+- **Scope the health check to the main view.** `document.body.innerText` cannot
+  tell a dead client from one bad route, because the body contains both the
+  boundary and the working chrome.
+- **The boundary latches, and reloading restores the last route.** If that route
+  is the one that failed, every reload lands straight back on it and re-latches.
+  That looks like the reload being broken when it is the route.
+
+Clicking the dialog's own `RELOAD PAGE` button is not a reliable escape: it only
+helps if whatever broke was transient. Measured on one stuck client, twelve
+clicks — six synthetic, six as real dispatched mouse events at the button's
+centre — recovered nothing. **Navigate somewhere known-good first, then reload:**
 
 ```js
-const reload = async (d) => {
+const reload = async (d, safeRoute = '/collection/tracks') => {
+  // Park somewhere that renders, so the reload does not restore the broken route.
+  await d.eval(`Spicetify.Platform.History.push({ pathname: ${JSON.stringify(safeRoute)} })`)
+    .catch(() => {});
+  await d.eval(`new Promise(r => setTimeout(r, 1500))`).catch(() => {});
+
   await d.send('Page.enable', {}).catch(() => {});
   await d.send('Page.reload', { ignoreCache: true });
+  await d.waitFor(`window.Spicetify && Spicetify.Platform ? 1 : 0`, { timeout: 40000 });
+  await d.eval(`new Promise(r => setTimeout(r, 3000))`).catch(() => {});
 
-  for (let i = 0; i < 6; i++) {
-    await d.waitFor(`document.readyState === 'complete' ? 1 : 0`, { timeout: 30000 }).catch(() => {});
-    const state = await d.eval(`(() => ({
-      error: document.body.innerText.includes('Something went wrong'),
-      ready: !!(window.Spicetify && Spicetify.Platform),
-    }))()`).catch(() => ({ error: true, ready: false }));
-    if (!state.error && state.ready) return;
-
-    await d.eval(`(() => { const b = [...document.querySelectorAll('button')]
-      .find(b => /reload page/i.test(b.textContent || '')); if (b) b.click(); })()`).catch(() => {});
-    await d.eval(`new Promise(r => setTimeout(r, 6000))`).catch(() => {});
-  }
-  throw new Error('client stuck on the error screen');
+  const broken = await d.eval(
+    `document.querySelector('.Root__main-view').innerText.includes('Something went wrong')`,
+  ).catch(() => true);
+  if (broken) throw new Error('main view still on the error boundary after reload');
 };
 ```
 
-Keep the loop. One run of this helper needed four passes and hit the error screen
-twice before coming back, so a single reload and a `sleep` is not equivalent.
-`spicetify restart` is the heavier fallback if it will not recover.
+Then navigate to the app route and confirm it mounted, rather than assuming.
+
+### What actually triggers it
+
+Not the reload API, and not a rebuild. `location.reload()` and CDP `Page.reload`
+both produce it, and no build or `refresh` is needed. What matters is **which
+route is active when you reload**, because Spotify restores the last route on
+startup.
+
+Measured, five reloads per condition on one machine:
+
+| reloading while parked on | came back healthy |
+|---|---|
+| a stock Spotify route (`/collection/tracks`) | 4 / 4 |
+| Marketplace — a different Spicetify custom app | 3 / 4 |
+| the app under test | 3 / 5 |
+
+**Marketplace fails the same way**, which is the part that matters: this is not
+one app's bundle misbehaving, it is restoring *any* Spicetify custom-app route on
+startup. Do not go hunting in your own code for it.
+
+The symptom varies, which is what makes it confusing:
+
+- sometimes the chrome renders and only the app's route shows the boundary
+- sometimes the client never finishes booting, with no `.Root__main-view` and no
+  `Spicetify.Locale` — a state no amount of reloading recovers, because each
+  reload restores the same route. Quit and relaunch Spotify.
+
+So the mitigation is the same either way: **park on a stock route before
+reloading**, which is what the helper above does.
+
+One thing worth knowing but *not* the cause: `Spicetify.React` only appears
+~436ms into boot and `ReactDOM`/`Locale` ~967ms, so a custom app that touches
+them at module scope is genuinely fragile if it is ever evaluated that early.
+Adding a wait-for-globals gate to the app under test did not change the failure
+rate above, so treat that as separate hardening rather than a fix for this.
+
+`spicetify restart` is the heavier fallback — but it **quits Spotify without
+relaunching it**, so follow it with `open -a Spotify` and wait for the port.
 
 ## Side effects, and putting things back
 
