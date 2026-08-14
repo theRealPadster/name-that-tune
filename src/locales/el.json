@@ -8,6 +8,7 @@
     "playXSeconds": "Παίξε {{count}}s",
     "guessBtn": "Μάντεψε",
     "skipBtn": "Παράλειψη",
+    "skipped": "Παραλείφθηκε",
     "giveUp": "Παραιτούμαι",
     "nextSong": "Επόμενο τραγούδι",
     "menuEntry": "Παίξε $t(appName)",

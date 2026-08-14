@@ -8,6 +8,7 @@
     "playXSeconds": "Слухати {{count}}с",
     "guessBtn": "Вгадати",
     "skipBtn": "Пропустити",
+    "skipped": "Пропущено",
     "giveUp": "Здатись",
     "nextSong": "Наступна пісня",
     "menuEntry": "Грати у $t(appName)",

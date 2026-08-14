@@ -8,6 +8,7 @@
     "playXSeconds": "Tocar {{count}}s",
     "guessBtn": "Adivinhar",
     "skipBtn": "Mais Tempo",
+    "skipped": "Pulado",
     "giveUp": "Desistir",
     "nextSong": "Próxima música",
     "menuEntry": "Jogar $t(appName)",
