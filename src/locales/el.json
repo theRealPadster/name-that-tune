@@ -11,6 +11,11 @@
     "skipped": "Παραλείφθηκε",
     "giveUp": "Παραιτούμαι και αποκαλύπτω",
     "nextSong": "Επόμενο τραγούδι",
+    "reveal": {
+      "wonIn": "Το βρήκες σε {{count}}",
+      "gaveUpAfter": "Παραιτήθηκες μετά από {{count}}",
+      "playingInFull": "Αναπαράγεται ολόκληρο"
+    },
     "menuEntry": "Παίξε $t(appName)",
     "sendingURIs_one": "Αποστολή {{count}} URI σε $t(appName)",
     "sendingURIs_other": "Αποστολή {{count}} URIs σε $t(appName)",

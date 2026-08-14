@@ -11,6 +11,11 @@
     "skipped": "Pominięto",
     "giveUp": "Poddaj się i pokaż",
     "nextSong": "Następna piosenka",
+    "reveal": {
+      "wonIn": "Zgadnięto w {{count}}",
+      "gaveUpAfter": "Poddano się po {{count}}",
+      "playingInFull": "Odtwarzanie w całości"
+    },
     "menuEntry": "Zagraj w $t(appName)",
     "sendingURIs_one": "Wysyłanie {{count}} linku do $t(appName)",
     "sendingURIs_few": "Wysyłanie {{count}} linków do $t(appName)",

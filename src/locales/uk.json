@@ -11,6 +11,11 @@
     "skipped": "Пропущено",
     "giveUp": "Здатись і показати",
     "nextSong": "Наступна пісня",
+    "reveal": {
+      "wonIn": "Вгадано за {{count}}",
+      "gaveUpAfter": "Здались після {{count}}",
+      "playingInFull": "Відтворюється повністю"
+    },
     "menuEntry": "Грати у $t(appName)",
     "sendingURIs_one": "Відправка {{count}} URI до $t(appName)",
     "sendingURIs_other": "Відправка {{count}} URIs до $t(appName)",

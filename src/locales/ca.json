@@ -11,6 +11,11 @@
     "skipped": "Omès",
     "giveUp": "Rendir-se i revelar",
     "nextSong": "Següent cançó",
+    "reveal": {
+      "wonIn": "Encertat en {{count}}",
+      "gaveUpAfter": "Rendit després de {{count}}",
+      "playingInFull": "Reproduint sencera"
+    },
     "menuEntry": "Reproduïr $t(appName)",
     "sendingURIs_one": "Enviant {{count}} URI a $t(appName)",
     "sendingURIs_other": "Enviant {{count}} URIs a $t(appName)",

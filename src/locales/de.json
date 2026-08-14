@@ -11,6 +11,11 @@
     "skipped": "Übersprungen",
     "giveUp": "Aufgeben und auflösen",
     "nextSong": "Nächster Titel",
+    "reveal": {
+      "wonIn": "In {{count}} erraten",
+      "gaveUpAfter": "Nach {{count}} aufgegeben",
+      "playingInFull": "Wird vollständig abgespielt"
+    },
     "menuEntry": "Spiele $t(appName)",
     "sendingURIs_one": "Sende {{count}} URI an $t(appName)",
     "sendingURIs_other": "Sende {{count}} URIs an $t(appName)",

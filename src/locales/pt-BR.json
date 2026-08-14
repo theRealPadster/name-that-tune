@@ -11,6 +11,11 @@
     "skipped": "Pulado",
     "giveUp": "Desistir e revelar",
     "nextSong": "Próxima música",
+    "reveal": {
+      "wonIn": "Acertou em {{count}}",
+      "gaveUpAfter": "Desistiu após {{count}}",
+      "playingInFull": "Tocando completa"
+    },
     "menuEntry": "Jogar $t(appName)",
     "sendingURIs_one": "Enviando{{count}} URI para $t(appName)",
     "sendingURIs_other": "Enviando {{count}} URIs para $t(appName)",

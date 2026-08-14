@@ -5,6 +5,7 @@ import { TFunction } from 'i18next';
 
 import GuessItem from '../components/GuessItem';
 import Button from '../components/Button';
+import Reveal from '../components/Reveal';
 import TrackSuggestions from '../components/TrackSuggestions';
 
 import {
@@ -310,6 +311,21 @@ class Game extends React.Component<
         ? `${TRACK_SUGGESTIONS_LISTBOX_ID}-option-${this.state.highlightedIndex}`
         : undefined;
 
+    // Shown in both states, but in different company: under the controls while
+    // guessing, under the reveal once the round is over.
+    const guessList = (
+      <ol className={styles.guessList}>
+        {this.state.guesses.map((guess, i) => (
+          <GuessItem
+            key={i}
+            index={i}
+            guesses={this.state.guesses}
+            won={gameWon}
+          />
+        ))}
+      </ol>
+    );
+
     return (
       <>
         <div className={styles.container}>
@@ -336,90 +352,86 @@ class Game extends React.Component<
             </Button>
           </header>
 
-          {gameWon ? (
-            <h2 className={styles.subtitle}>{t('winMsg')}</h2>
-          ) : null}
-
-          <form
-            className={styles.guessForm}
-            onSubmit={this.submitGuess}
-          >
-            <div className={styles.inputContainer}>
-              <input
-                type={'text'}
-                className={styles.input}
-                placeholder={t('guessPlaceholder') as string}
-                value={this.state.guess}
-                disabled={!isPlaying}
-                onChange={this.guessChange}
-                onKeyDown={this.guessKeyDown}
-                onBlur={this.closeSuggestions}
-                autoComplete="off"
-                role="combobox"
-                aria-autocomplete="list"
-                aria-expanded={suggestionsOpen}
-                aria-controls={
-                  suggestionsOpen
-                    ? TRACK_SUGGESTIONS_LISTBOX_ID
-                    : undefined
-                }
-                aria-activedescendant={activeSuggestionId}
-              />
-
-              <TrackSuggestions
-                listboxId={TRACK_SUGGESTIONS_LISTBOX_ID}
-                label={t('suggestionsLabel')}
-                suggestions={this.state.suggestions}
-                highlightedIndex={this.state.highlightedIndex}
-                onSelect={this.selectSuggestion}
-              />
-            </div>
-
-            <div className={styles.formButtonContainer}>
-              <Button
-                variant={'primary'}
-                classes={[styles.guessButton]}
-                onClick={() => this.submitGuess()}
-                disabled={!isPlaying}
-              >
-                {t('guessBtn')}
-              </Button>
-
-              <Button
-                variant={'secondary'}
-                onClick={this.skipGuess}
-                disabled={!isPlaying}
-              >
-                {t('skipBtn', { count: skipCost })}
-              </Button>
-            </div>
-          </form>
-
           {isPlaying ? (
-            <Button onClick={this.playClick}>
-              {t('playXSeconds', {
-                count: stageToTime(this.state.stage),
-              })}
-            </Button>
-          ) : null}
+            <>
+              <form
+                className={styles.guessForm}
+                onSubmit={this.submitGuess}
+              >
+                <div className={styles.inputContainer}>
+                  <input
+                    type={'text'}
+                    className={styles.input}
+                    placeholder={t('guessPlaceholder') as string}
+                    value={this.state.guess}
+                    onChange={this.guessChange}
+                    onKeyDown={this.guessKeyDown}
+                    onBlur={this.closeSuggestions}
+                    autoComplete="off"
+                    role="combobox"
+                    aria-autocomplete="list"
+                    aria-expanded={suggestionsOpen}
+                    aria-controls={
+                      suggestionsOpen
+                        ? TRACK_SUGGESTIONS_LISTBOX_ID
+                        : undefined
+                    }
+                    aria-activedescendant={activeSuggestionId}
+                  />
 
-          <ol className={styles.guessList}>
-            {this.state.guesses.map((guess, i) => (
-              <GuessItem
-                key={i}
-                index={i}
-                guesses={this.state.guesses}
+                  <TrackSuggestions
+                    listboxId={TRACK_SUGGESTIONS_LISTBOX_ID}
+                    label={t('suggestionsLabel')}
+                    suggestions={this.state.suggestions}
+                    highlightedIndex={this.state.highlightedIndex}
+                    onSelect={this.selectSuggestion}
+                  />
+                </div>
+
+                <div className={styles.formButtonContainer}>
+                  <Button
+                    variant={'primary'}
+                    classes={[styles.guessButton]}
+                    onClick={() => this.submitGuess()}
+                  >
+                    {t('guessBtn')}
+                  </Button>
+
+                  <Button
+                    variant={'secondary'}
+                    onClick={this.skipGuess}
+                  >
+                    {t('skipBtn', { count: skipCost })}
+                  </Button>
+                </div>
+              </form>
+
+              <Button onClick={this.playClick}>
+                {t('playXSeconds', {
+                  count: stageToTime(this.state.stage),
+                })}
+              </Button>
+
+              {guessList}
+
+              <Button variant={'tertiary'} onClick={this.giveUp}>
+                {t('giveUp')}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Reveal
                 won={gameWon}
+                attempts={this.state.guesses.length}
               />
-            ))}
-          </ol>
 
-          <Button
-            variant={isPlaying ? 'tertiary' : 'primary'}
-            onClick={isPlaying ? this.giveUp : this.nextSong}
-          >
-            {isPlaying ? t('giveUp') : t('nextSong')}
-          </Button>
+              <Button variant={'primary'} onClick={this.nextSong}>
+                {t('nextSong')}
+              </Button>
+
+              {guessList}
+            </>
+          )}
         </div>
       </>
     );
