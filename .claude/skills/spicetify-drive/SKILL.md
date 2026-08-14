@@ -1,6 +1,6 @@
 ---
 name: spicetify-drive
-description: Attach to the running Spotify desktop client over the Chrome DevTools Protocol to inspect or drive it — read Spicetify internals, run real GraphQL requests, measure computed styles and geometry, dispatch real key/mouse/wheel input, and take screenshots. Also covers the build → apply → relaunch → attach loop for testing a Spicetify custom app or extension in the real client. Use when a claim about Spotify's runtime needs verifying rather than guessing (does this GraphQL definition exist, what shape does it return, which element actually receives this click, does this scroll chain), or when the user asks to run, test, or screenshot a Spicetify app in Spotify.
+description: Attach to the running Spotify desktop client over the Chrome DevTools Protocol to inspect or drive it — read Spicetify internals, run real GraphQL requests, measure computed styles and geometry, dispatch real key/mouse/wheel input, and take screenshots. Also covers the build → refresh → reload → attach loop for testing a Spicetify custom app or extension in the real client, including recovering the client when a reload wedges it. Use when a claim about Spotify's runtime needs verifying rather than guessing (does this GraphQL definition exist, what shape does it return, which element actually receives this click, does this scroll chain), or when the user asks to run, test, or screenshot a Spicetify app in Spotify.
 ---
 
 # Driving Spotify over the debug port
@@ -27,7 +27,7 @@ flag on the process, so do not go looking for one.
 curl -s http://127.0.0.1:8088/json | python3 -m json.tool   # find the xpui target
 ```
 
-## Two modes, very different cost
+## Inspecting vs driving
 
 ### Inspect — cheap, do this freely
 
@@ -55,18 +55,102 @@ tree. Check before drawing conclusions:
 ls -la "$(dirname "$(spicetify -c)")/CustomApps/<app>/"
 ```
 
-### Drive — expensive, confirm with the user first
+### Drive — build, refresh, reload
 
-Testing working-tree changes needs the code inside Spotify's xpui, and there is no
-lighter path than a full apply. This **restarts Spotify** and **disturbs playback**.
-Get explicit agreement before running it.
+Testing working-tree changes needs the code inside Spotify's xpui. Three steps,
+and skipping the third is the classic mistake:
 
 ```bash
-pnpm build                       # into the live CustomApps folder
-spicetify apply                  # copies into Spotify.app, then QUITS Spotify
-open -a Spotify                  # apply does NOT relaunch it
-sleep 14                         # let xpui boot before attaching
+pnpm build                 # into the live CustomApps folder
+spicetify refresh -a       # copies CustomApps into Spotify.app; PID unchanged
+                           # then reload the client -- see below
 ```
+
+Spotify keeps running throughout, so playback survives. The reload does blank the
+UI mid-use and can drop the client on the error screen, so say what you are doing
+rather than cycling this repeatedly while the user watches.
+
+**`-a` alone, never combined.** It copies both the app and its extension, because
+this project builds `extension.js` into the CustomApps folder. `-e` is for the
+standalone `Extensions/` directory and does nothing here. Measured by touching the
+sources and watching what lands inside `Spotify.app`: `-a -e` copies **neither**
+while still printing `success`, and `-l` is a `watch` flag that `refresh` quietly
+treats as `-e`.
+
+**Copying the files is not enough, and the failure is silent.** The running
+renderer keeps serving the stylesheet and bundle it already parsed, so measuring
+before a reload measures the **old** build while the correct file sits on disk —
+indistinguishable from a fix that did not work. After reloading, confirm you are
+looking at the new code before you believe any measurement:
+
+```js
+// the rule you just changed, as the client actually has it
+await d.eval(`(() => {
+  for (const s of document.styleSheets) {
+    if (!(s.href || '').includes('<app-name>')) continue;
+    for (const r of s.cssRules) if (/YourClass/.test(r.selectorText || '')) return r.cssText;
+  }
+})()`);
+```
+
+A full apply **is** required after Spotify itself updates: the update replaces
+`Spotify.app` and takes the patch with it, so the custom app stops loading and the
+debug port stops answering. Take a fresh backup in the same breath, because the
+existing one describes the previous Spotify. Apply quits the client and does not
+relaunch it:
+
+```bash
+spicetify backup apply && open -a Spotify && sleep 14
+```
+
+To tell whether the backup matches the installed client — and so whether this has
+already been done — compare the version Spicetify recorded against the running one:
+
+```bash
+grep -A1 '^\[Backup\]' "$(spicetify -c)"      # version = 1.2.96.518.g366879e1
+defaults read /Applications/Spotify.app/Contents/Info.plist CFBundleVersion
+```
+
+`always_enable_devtools` lives in the config and survives the update, but the patch
+that acts on it does not, so the port comes back with the re-apply rather than
+needing `enable-devtools` run again.
+
+## Reloading without wedging the client
+
+**Do not use `location.reload()`.** It regularly drops xpui into Spotify's
+"Something went wrong / Try reloading the page" screen. When that happens the
+whole client is down, not just the app under test: `window.<globalName>` is
+undefined, the main view is empty, and no app `<script>` is present. That reads
+exactly like the app crashing, and will send you debugging code that is fine.
+
+`Page.reload` over CDP does **not** rescue a client already on that screen. What
+does is clicking the dialog's own button. So always health-check after a reload,
+and recover, before measuring anything:
+
+```js
+const reload = async (d) => {
+  await d.send('Page.enable', {}).catch(() => {});
+  await d.send('Page.reload', { ignoreCache: true });
+
+  for (let i = 0; i < 6; i++) {
+    await d.waitFor(`document.readyState === 'complete' ? 1 : 0`, { timeout: 30000 }).catch(() => {});
+    const state = await d.eval(`(() => ({
+      error: document.body.innerText.includes('Something went wrong'),
+      ready: !!(window.Spicetify && Spicetify.Platform),
+    }))()`).catch(() => ({ error: true, ready: false }));
+    if (!state.error && state.ready) return;
+
+    await d.eval(`(() => { const b = [...document.querySelectorAll('button')]
+      .find(b => /reload page/i.test(b.textContent || '')); if (b) b.click(); })()`).catch(() => {});
+    await d.eval(`new Promise(r => setTimeout(r, 6000))`).catch(() => {});
+  }
+  throw new Error('client stuck on the error screen');
+};
+```
+
+Keep the loop. One run of this helper needed four passes and hit the error screen
+twice before coming back, so a single reload and a `sleep` is not equivalent.
+`spicetify restart` is the heavier fallback if it will not recover.
 
 ## Side effects, and putting things back
 
@@ -99,9 +183,12 @@ await d.eval(`(() => { const s = document.documentElement.style;
 await d.eval(`['--spice-main','--spice-text'].forEach(p => document.documentElement.style.removeProperty(p))`);
 ```
 
-## Input gotchas
+## Gotchas
 
-Both of these cost real debugging time. They look like app bugs and are not.
+Every one of these cost real debugging time, and every one presents as a bug in
+the app rather than in the harness. Rule out the harness first.
+
+**Input**
 
 - **Printable characters must be a lone `char` event.** Pairing `char` with a
   `keyDown` that also carries `text` types everything twice — `bohem` arrives as
@@ -109,12 +196,44 @@ Both of these cost real debugging time. They look like app bugs and are not.
 - **Enter needs a real `keyDown` with `text: '\r'`.** A `rawKeyDown` suppresses the
   keypress, so Chromium never runs a form's default submit and the Enter appears
   to do nothing. `d.key('Enter', 13)` handles this.
+- **Dispatch real events, never `el.value = x`.** Spotify's UI is React, and
+  assigning to `value` does not drive a controlled input.
 
-Use real dispatched events, not `el.value = x` — Spotify's UI is React, and
-assigning to `value` does not drive a controlled input.
+**Selectors**
 
-Beware selectors that also match Spotify's own chrome. `input[role=combobox]`
-matches the main search bar; scope to something app-specific.
+- **Spotify's chrome answers to generic selectors.** `input[role=combobox]` is the
+  main search bar, and its design-system class names contain words like
+  `tertiary`, so a `className.includes(...)` filter over every `button` can match
+  its chrome before it reaches yours. Scope to something app-specific.
+- **`[class*=...]` also matches your own longer class names.**
+  `[class*="app__input"]` matches the input *and* its `app__inputContainer`, and
+  the container wins on document order. The symptom is `d.clear()` throwing
+  `TypeError: Illegal invocation`, because the value setter it borrows from
+  `HTMLInputElement.prototype` lands on a `div`. Lead with the tag:
+  `input[class*="app__input"]`.
+- **`d.clickText` matches the full trimmed text, not a prefix.** A label that grew
+  a suffix — `Skip` becoming `Skip +1s` — stops matching, and reads as the button
+  having vanished. Use a structural selector when the label is dynamic.
+
+**Navigation**
+
+- **`History.push` to the route you are already on does not re-fire an extension's
+  `History.listen`.** Body classes the extension owns therefore do not update,
+  which looks like the app failing to set them. Navigate away and back to test
+  that path for real.
+
+**Window state**
+
+- **Wheel events need a visible window; key and click events do not.** Scrolling
+  is handled by the compositor, which stops running when the window is hidden or
+  minimised, so the event neither scrolls nor gets acknowledged and an awaited
+  dispatch hangs forever. Because everything else keeps working, this reads as
+  `d.wheel` alone being broken. `d.wheel` now checks `document.hidden` and says
+  so; bring Spotify to the front for scroll checks:
+
+  ```js
+  await d.eval(`({ hidden: document.hidden, visibility: document.visibilityState })`);
+  ```
 
 ## Driver API
 
@@ -134,18 +253,28 @@ default-exports an async function taking `d`:
 | `d.consoleLines` | captured console output |
 | `d.send(method, params)` | any raw CDP call |
 
+**`d.eval` has no timeout.** It sets `awaitPromise`, so an expression whose promise
+never settles hangs the whole run with no output — and if you piped through `tail`,
+no partial output either, which looks like the client being stuck rather than your
+own probe. Race anything network-bound:
+
+```js
+await d.eval(`Promise.race([
+  Spicetify.GraphQL.Request(Spicetify.GraphQL.Definitions.searchSuggestions, { query: 'test', limit: 5 }),
+  new Promise(r => setTimeout(() => r({ timedOut: true }), 5000)),
+])`);
+```
+
+Log progress with timestamps in any probe that does more than a couple of steps,
+so a hang points at the step rather than the harness.
+
 ## Worked checks
 
 **Does a GraphQL definition exist, and what does it return?** Definitions are
 persisted queries (`{name, operation, sha256Hash, value: null}`) — there is no
-local AST to read, so run it and inspect the response. The server validates
-variables against the stored operation, so a wrong variable set gives
-`HttpResponseError`; different operations take different variables.
-
-```js
-const res = await d.eval(`Spicetify.GraphQL.Request(
-  Spicetify.GraphQL.Definitions.searchSuggestions, { query: 'test', limit: 5 })`);
-```
+local AST to read, so run it and inspect the response, wrapped in the race above.
+The server validates variables against the stored operation, so a wrong variable
+set gives `HttpResponseError`; different operations take different variables.
 
 **Which element really receives a click?** Settles overlay questions that reading
 CSS cannot.
@@ -168,5 +297,5 @@ Quote the measurement, not the impression: "ancestor `scrollTop` went 0 → 12"
 beats "it seems to scroll the page". When a fix is verified, show before and
 after from the same probe.
 
-If the driver itself misbehaves, say so plainly rather than reporting it as an
-app bug — the two input gotchas above both present as the app ignoring input.
+If the harness is what misbehaved, say so rather than reporting it as an app bug —
+and if you have already reported it the other way round, correct it plainly.
