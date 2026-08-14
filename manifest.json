@@ -1,7 +1,7 @@
 {
   "name": "Name That Tune",
-  "description": "Heardle.app made for Spicetify",
-  "preview": "docs/preview.png",
+  "description": "A Heardle-style song guessing game for Spicetify",
+  "preview": "docs/preview-2026-08.png",
   "readme": "README.md",
   "tags": [
     "game",

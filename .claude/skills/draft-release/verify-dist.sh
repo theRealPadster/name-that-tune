@@ -42,13 +42,12 @@ trap 'rm -rf "$REF"' EXIT
 git archive origin/dist | tar -x -C "$REF"
 
 echo "=== local build vs origin/dist ==="
-# preview.png is a stale artifact: it sits at the root of the dist branch but is
-# no longer generated. The workflow builds into a checkout of the branch without
-# cleaning, so it never gets removed. Expected — anything else is not.
-DIFF=$(diff -rq dist "$REF" 2>&1 | grep -v 'preview\.png$')
+# The workflow empties the worktree before building, so the branch is exactly
+# the build output. Any difference at all is a real one.
+DIFF=$(diff -rq dist "$REF" 2>&1)
 
 if [ -z "$DIFF" ]; then
-  echo "identical (ignoring the known stale preview.png)"
+  echo "identical"
   echo
   echo "dist is current with main. Safe to tag."
 else

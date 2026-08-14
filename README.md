@@ -1,10 +1,10 @@
 # Name That Tune
 
-**This project is no longer in active development and is not complete/bug-free. If you have suggestions or bug fixes, free to contribute.**
+**This project is not complete/bug-free. If you have suggestions or bug fixes, feel free to contribute.**
 
-Name That Tune is [Heardle.app](https://www.heardle.app) made for [Spicetify](https://spicetify.app). 
+Name That Tune is [Heardle](https://en.wikipedia.org/wiki/Heardle) made for [Spicetify](https://spicetify.app) — guess the song from progressively longer snippets. Spotify acquired the original and shut it down in 2023; this keeps the game alive inside their own desktop client.
 
-![Preview screenshot](docs/preview.png)
+![Preview screenshot](docs/preview-2026-08.png)
 
 ## Table of contents
   - [Installation](#installation)

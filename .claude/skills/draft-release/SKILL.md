@@ -153,10 +153,9 @@ So the script checks *content*, not commits: it confirms a successful `push-dist
 main's current SHA, then rebuilds locally with CI's own `pnpm build:prod` and diffs the
 result against the branch. The build is reproducible, so a match is exact.
 
-It tolerates exactly one discrepancy, `preview.png` at the branch root — a stale artifact
-from an older layout that is no longer generated. The workflow builds into a checkout of
-`dist` without cleaning first, so nothing ever removes it. Anything *else* differing is a
-real problem: stop and work out why before tagging.
+Any difference at all is a real problem: stop and work out why before tagging. The workflow
+empties the worktree before building into it, so the branch is exactly the build output —
+nothing lingers from an older layout to explain away.
 
 The script clears `dist/` (gitignored build output) to get a clean comparison. Stop
 `pnpm watch` first if it is running.
