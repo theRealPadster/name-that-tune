@@ -158,6 +158,12 @@
 .skipped .guessText {
   font-style: italic;
   opacity: 0.75;
+
+  // Spotify's UI font ships no italic, so the browser slants the upright face
+  // and the last glyph's ink then overhangs its advance width by ~1.3px. The
+  // overflow: hidden above clips that, shaving the edge off the final letter -
+  // "Skipped" renders as "Skippea". Give the slant somewhere to land.
+  padding-inline-end: 2px;
 }
 
 .correct {
