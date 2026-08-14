@@ -117,11 +117,12 @@ needing `enable-devtools` run again.
 
 ## Reloading, and Spotify's error boundary
 
-"Something went wrong / Try reloading the page" is **a route-level error boundary
-inside the main view, not a dead client.** The node lives under
-`MAIN` inside `.Root__main-view`; the library sidebar, top bar and player keep
-working, and `Spicetify.Platform` stays available throughout. So `Spicetify`
-being present proves nothing, and neither does the chrome looking fine.
+"Something went wrong / Try reloading the page" is usually **a route-level error
+boundary inside the main view, not a dead client.** The node lives under `MAIN`
+inside `.Root__main-view`; the library sidebar, top bar and player keep working,
+and `Spicetify.Platform` stays available throughout. So `Spicetify` being present
+proves nothing, and neither does the chrome looking fine. The worse variant — the
+client never finishing boot at all — is covered further down.
 
 Two consequences that cost real time:
 
@@ -158,11 +159,52 @@ const reload = async (d, safeRoute = '/collection/tracks') => {
 
 Then navigate to the app route and confirm it mounted, rather than assuming.
 
-The trigger is not the reload API. `location.reload()` and CDP `Page.reload`
-both produce it; reloading a healthy client parked on a good route is fine and
-was done repeatedly without incident. Every occurrence followed a reload landing
-on the app's own route around a `pnpm build` + `spicetify refresh -a`, so treat a
-bundle swap as the risky moment and let the copy settle before reloading.
+### Why it happens, and why it is an app bug
+
+The trigger is not the reload API and not a rebuild. `location.reload()` and CDP
+`Page.reload` both produce it, no build or `refresh` is needed, and reloading a
+healthy client parked on some other route is fine. What matters is **which route
+is active when you reload**: Spotify restores the last route on startup, so
+reloading while the custom app is open makes Spotify load the app bundle *during
+its own boot* rather than on navigation.
+
+Custom app bundles are usually written assuming the opposite. `Spicetify.React`,
+`Spicetify.ReactDOM` and `Spicetify.Locale` do not exist for the first few
+hundred milliseconds, and a bundle that touches any of them at module scope
+throws when it is loaded that early. Measured on a failing boot:
+
+```
+app <script> tag appears at 762ms
+Spicetify.Locale.getLocale     never became available
+the app's global               never appeared
+```
+
+So the module never finished evaluating, and Spicetify's own initialisation
+stalled behind it — `.Root__main-view` never rendered at all.
+
+That means the symptom varies, which is what makes it confusing:
+
+- sometimes the chrome renders and only the app's route shows the boundary
+- sometimes the client never finishes booting, with no main view and no
+  `Spicetify.Locale`
+
+A stalled boot does not recover by reloading; quit and relaunch Spotify.
+
+The durable fix belongs in the app, not the harness: gate the bundle the way
+Spicetify extensions are already gated, so it waits for the globals rather than
+assuming them.
+
+```js
+(async function () {
+  while (!Spicetify.React || !Spicetify.ReactDOM || !Spicetify.Locale) {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+  // ... bundle ...
+})();
+```
+
+Until a project does that, treat "reload while the app route is open" as the
+thing to avoid, and park elsewhere first.
 
 `spicetify restart` is the heavier fallback — but it **quits Spotify without
 relaunching it**, so follow it with `open -a Spotify` and wait for the port.
