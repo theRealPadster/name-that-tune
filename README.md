@@ -4,7 +4,7 @@
 
 Name That Tune is [Heardle.app](https://www.heardle.app) made for [Spicetify](https://spicetify.app). 
 
-![Preview screenshot](docs/preview.png)
+![Preview screenshot](docs/preview-2026-08.png)
 
 ## Table of contents
   - [Installation](#installation)

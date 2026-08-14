@@ -36,6 +36,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin HEAD
           git worktree add -B $TARGET_BRANCH dist origin/$TARGET_BRANCH
+          # Empty the worktree before building into it. Without this the branch
+          # only ever accumulates: anything the build stops producing is left
+          # behind forever, because the build overwrites but never deletes.
+          # `git add .` below then re-adds whatever the build wrote, so the
+          # branch ends up as exactly the build output and nothing else.
+          git -C dist rm -rq --ignore-unmatch .
 
       - name: Install Dependencies and Build
         run: |
