@@ -9,7 +9,7 @@ A [Spicetify](https://spicetify.app) custom app that turns the Spotify desktop c
 ContextMenu, URI, CosmosAsync, GraphQL, React) are the entire runtime API surface — there is no server,
 no bundled React, and no DOM outside of Spotify's own.
 
-Note the README: the project is no longer in active development.
+The README is honest that the app is not complete or bug-free, and invites contributions.
 
 ## Commands
 

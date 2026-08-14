@@ -1,6 +1,6 @@
 # Name That Tune
 
-**This project is no longer in active development and is not complete/bug-free. If you have suggestions or bug fixes, free to contribute.**
+**This project is not complete/bug-free. If you have suggestions or bug fixes, feel free to contribute.**
 
 Name That Tune is [Heardle.app](https://www.heardle.app) made for [Spicetify](https://spicetify.app). 
 
