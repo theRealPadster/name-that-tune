@@ -8,6 +8,7 @@
     "playXSeconds": "Reproduïr {{count}}s",
     "guessBtn": "Esbrinar",
     "skipBtn": "Saltar",
+    "skipped": "Omès",
     "giveUp": "Rendir-se",
     "nextSong": "Següent cançó",
     "menuEntry": "Reproduïr $t(appName)",
