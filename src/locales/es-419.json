@@ -2,15 +2,19 @@
   "translation": {
     "appName": "Nombra la Rola",
     "title": "🎵 $t(appName)",
-    "winMsg": "Ganaste!",
     "guessPlaceholder": "Adivina la canción",
     "suggestionsLabel": "Sugerencias de canciones",
     "playXSeconds": "Reproducir {{count}}s",
     "guessBtn": "Adivinar",
-    "skipBtn": "Saltar",
+    "skipBtn": "Saltar +{{count}}s",
     "skipped": "Omitido",
-    "giveUp": "Rendirse",
+    "giveUp": "Rendirse y revelar",
     "nextSong": "Siguiente Canción",
+    "reveal": {
+      "wonIn": "Acertada en {{count}}",
+      "gaveUpAfter": "Te rendiste tras {{count}}",
+      "playingInFull": "Reproduciendo completa"
+    },
     "menuEntry": "Reproducir $t(appName)",
     "sendingURIs_one": "Enviando {{count}} URI a $t(appName)",
     "sendingURIs_other": "Enviando {{count}} URIs a $t(appName)",

@@ -2,15 +2,19 @@
   "translation": {
     "appName": "Descubra a música",
     "title": "🎵 $t(appName)",
-    "winMsg": "Você acertou!",
     "guessPlaceholder": "Adivinhe a música",
     "suggestionsLabel": "Sugestões de músicas",
     "playXSeconds": "Tocar {{count}}s",
     "guessBtn": "Adivinhar",
-    "skipBtn": "Mais Tempo",
+    "skipBtn": "Mais Tempo +{{count}}s",
     "skipped": "Pulado",
-    "giveUp": "Desistir",
+    "giveUp": "Desistir e revelar",
     "nextSong": "Próxima música",
+    "reveal": {
+      "wonIn": "Acertou em {{count}}",
+      "gaveUpAfter": "Desistiu após {{count}}",
+      "playingInFull": "Tocando completa"
+    },
     "menuEntry": "Jogar $t(appName)",
     "sendingURIs_one": "Enviando{{count}} URI para $t(appName)",
     "sendingURIs_other": "Enviando {{count}} URIs para $t(appName)",

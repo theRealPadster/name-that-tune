@@ -8,13 +8,20 @@
   padding-top: 40px;
 }
 
-.title {
-  font-size: 50px;
-  color: var(--spice-text);
+// The heading and the stats link share a row across the top of the game column,
+// which keeps stats reachable without it drifting down as guesses accumulate.
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(420px, 90vw);
 }
 
-.subtitle {
-  font-size: 40px;
+.title {
+  font-size: 22px;
+  margin: 0;
+  color: var(--spice-text);
 }
 
 .button {
@@ -41,46 +48,158 @@
   width: 100%;
   margin: 0;
   padding: 10px 14px;
-  background-color: var(--spice-main);
+  background-color: var(--spice-card);
   color: var(--spice-text);
   font-size: 14px;
-  border: 1px solid var(--spice-text);
-  border-radius: 2px;
+  border: 1px solid transparent;
+  border-radius: 6px;
   box-sizing: border-box;
 
   &:focus {
-    border: 1px solid var(--spice-button);
+    outline: none;
+    border-color: var(--spice-text);
   }
 }
 
+// The end-of-round reveal: artwork, how it went, and what the song was.
+.reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: min(420px, 90vw);
+  text-align: center;
+}
+
+.revealArt {
+  width: 160px;
+  height: 160px;
+  border-radius: 7px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 55%);
+}
+
+.revealVerdict {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--spice-button);
+}
+
+// Giving up is not a failure state worth colouring, so it drops to the muted
+// text colour rather than borrowing the error red.
+.revealVerdictLost {
+  color: var(--spice-subtext);
+}
+
+.revealTitle {
+  margin: 0;
+  font-size: 22px;
+  color: var(--spice-text);
+}
+
+.revealArtist {
+  margin: 0;
+  font-size: 13px;
+  color: var(--spice-subtext);
+}
+
+.revealMeta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--spice-subtext);
+}
+
+// Wrong guesses are attempts, not errors, so they sit on a neutral card and let
+// the marker carry the meaning. Only the correct one spends any colour.
 .guessList {
-  list-style-type: decimal;
+  list-style: none;
+  width: min(420px, 90vw);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 
   &:empty {
     display: none;
   }
+}
 
-  li {
-    color: var(--spice-notification-error);
-    &.correct {
-      color: var(--spice-button);
-    }
+.guessItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 11px;
+  border-radius: 5px;
+  background-color: var(--spice-card);
+  font-size: 13px;
+  color: var(--spice-subtext);
+}
+
+.guessMark {
+  flex: 0 0 auto;
+  width: 13px;
+  text-align: center;
+}
+
+.guessText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skipped .guessText {
+  font-style: italic;
+  opacity: 0.75;
+
+  // Spotify's UI font ships no italic, so the browser slants the upright face
+  // and the last glyph's ink then overhangs its advance width by ~1.3px. The
+  // overflow: hidden above clips that, shaving the edge off the final letter -
+  // "Skipped" renders as "Skippea". Give the slant somewhere to land.
+  padding-inline-end: 2px;
+}
+
+.correct {
+  background-color: color-mix(in srgb, var(--spice-button) 18%, var(--spice-card));
+  color: var(--spice-text);
+  font-weight: 700;
+
+  .guessMark {
+    color: var(--spice-button);
   }
 }
 
-// Container for the guess/skip buttons
+// Container for the guess/skip buttons. Spans the form so that guess can take
+// the room and skip can sit beside it at its natural width.
 .formButtonContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
-  // flex-direction: column;
-  gap: 20px;
+  gap: 10px;
+  width: 100%;
 }
 
+.guessButton {
+  flex: 1 1 auto;
+}
+
+// The button stylesheet is bundled after this one, so .button wins any property
+// it also sets regardless of what we do here - hence !important on exactly the
+// two it fights us over, and nothing else.
 .StatsButton {
-  color: var(--spice-text) !important;
-  background-color: transparent !important;
-  padding: 12px !important;
+  flex: 0 0 auto;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none !important;
+}
+
+// Underline the label rather than the whole control, so the rule does not run
+// under the icon as well.
+.statsLabel {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 :global(body.name-that-tune.name-that-tune--guessing) .container {

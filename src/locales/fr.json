@@ -2,15 +2,19 @@
   "translation": {
     "appName": "Name That Tune",
     "title": "🎵 $t(appName)",
-    "winMsg": "Vous avez gagné !",
     "guessPlaceholder": "Devinez la chanson",
     "suggestionsLabel": "Suggestions de chansons",
     "playXSeconds": "Jouer à {{count}}s",
     "guessBtn": "Devinez",
-    "skipBtn": "Passer",
+    "skipBtn": "Passer +{{count}}s",
     "skipped": "Passé",
-    "giveUp": "Abandonner",
+    "giveUp": "Abandonner et révéler",
     "nextSong": "Chanson suivante",
+    "reveal": {
+      "wonIn": "Trouvé en {{count}}",
+      "gaveUpAfter": "Abandonné après {{count}}",
+      "playingInFull": "Lecture complète"
+    },
     "menuEntry": "Jouer à $t(appName)",
     "sendingURIs_one": "Envoi de {{count}} URI à $t(appName)",
     "sendingURIs_other": "Envoi de {{count}} URIs à $t(appName)",

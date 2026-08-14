@@ -2,15 +2,19 @@
   "translation": {
     "appName": "Name That Tune",
     "title": "🎵 $t(appName)",
-    "winMsg": "You won!",
     "guessPlaceholder": "Guess the song",
     "suggestionsLabel": "Song suggestions",
     "playXSeconds": "Play {{count}}s",
     "guessBtn": "Guess",
-    "skipBtn": "Skip",
+    "skipBtn": "Skip +{{count}}s",
     "skipped": "Skipped",
-    "giveUp": "Give up",
+    "giveUp": "Give up and reveal",
     "nextSong": "Next song",
+    "reveal": {
+      "wonIn": "Got it in {{count}}",
+      "gaveUpAfter": "Gave up after {{count}}",
+      "playingInFull": "Playing in full"
+    },
     "menuEntry": "Play $t(appName)",
     "sendingURIs_one": "Sending {{count}} URI to $t(appName)",
     "sendingURIs_other": "Sending {{count}} URIs to $t(appName)",

@@ -41,7 +41,10 @@
   padding-block: 12px;
   padding-inline: 32px;
 
-  &:hover {
+  // :hover still matches a disabled button - unlike :active, which the browser
+  // suppresses - so every hover effect has to opt out of it explicitly, or a
+  // button you cannot press still reacts to the pointer.
+  &:hover:not(:disabled) {
     transform: scale(1.04);
   }
 
@@ -54,6 +57,58 @@
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+}
+
+// Variants below override .button, so they have to stay after it in the file -
+// they carry the same specificity and win on source order alone.
+
+// The one action the round is about.
+.primary {
+  background-color: var(--spice-button);
+  color: var(--spice-main);
+
+  &:active {
+    background-color: var(--spice-button-active, var(--spice-button));
+  }
+}
+
+// A real alternative to the primary action rather than a lesser version of it,
+// so it is outlined rather than a dimmer fill.
+.secondary {
+  background-color: transparent;
+  color: var(--spice-text);
+  box-shadow: inset 0 0 0 1px var(--spice-subtext);
+
+  &:hover:not(:disabled) {
+    box-shadow: inset 0 0 0 1px var(--spice-text);
+  }
+
+  &:active {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px var(--spice-subtext);
+  }
+}
+
+// Findable without inviting a click. Used for the one-way exits.
+.tertiary {
+  background-color: transparent;
+  color: var(--spice-subtext);
+  font-size: 12px;
+  font-weight: 600;
+  padding-block: 6px;
+  padding-inline: 8px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover:not(:disabled) {
+    color: var(--spice-text);
+    transform: none;
+  }
+
+  &:active {
+    background-color: transparent;
+    transform: none;
   }
 }
 

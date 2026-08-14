@@ -2,15 +2,19 @@
   "translation": {
     "appName": "Adivina la Canción",
     "title": "🎵 $t(appName)",
-    "winMsg": "¡Correcto!",
     "guessPlaceholder": "Adivina la canción",
     "suggestionsLabel": "Sugerencias de canciones",
     "playXSeconds": "Reproducir {{count}}s",
     "guessBtn": "Adivinar",
-    "skipBtn": "Saltar",
+    "skipBtn": "Saltar +{{count}}s",
     "skipped": "Omitido",
-    "giveUp": "Rendirse",
+    "giveUp": "Rendirse y revelar",
     "nextSong": "Siguiente canción",
+    "reveal": {
+      "wonIn": "Acertada en {{count}}",
+      "gaveUpAfter": "Te rendiste tras {{count}}",
+      "playingInFull": "Reproduciendo completa"
+    },
     "menuEntry": "Juega a $t(appName)",
     "sendingURIs_one": "Enviando {{count}} URI a $t(appName)",
     "sendingURIs_other": "Enviando {{count}} URIs a $t(appName)",

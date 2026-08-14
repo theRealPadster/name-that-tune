@@ -2,15 +2,19 @@
   "translation": {
     "appName": "Ονομάστε αυτή τη μελωδία",
     "title": "🎵 $t(appName)",
-    "winMsg": "Κέρδισες!",
     "guessPlaceholder": "Βρες το Τραγούδι",
     "suggestionsLabel": "Προτάσεις τραγουδιών",
     "playXSeconds": "Παίξε {{count}}s",
     "guessBtn": "Μάντεψε",
-    "skipBtn": "Παράλειψη",
+    "skipBtn": "Παράλειψη +{{count}}s",
     "skipped": "Παραλείφθηκε",
-    "giveUp": "Παραιτούμαι",
+    "giveUp": "Παραιτούμαι και αποκαλύπτω",
     "nextSong": "Επόμενο τραγούδι",
+    "reveal": {
+      "wonIn": "Το βρήκες σε {{count}}",
+      "gaveUpAfter": "Παραιτήθηκες μετά από {{count}}",
+      "playingInFull": "Αναπαράγεται ολόκληρο"
+    },
     "menuEntry": "Παίξε $t(appName)",
     "sendingURIs_one": "Αποστολή {{count}} URI σε $t(appName)",
     "sendingURIs_other": "Αποστολή {{count}} URIs σε $t(appName)",
