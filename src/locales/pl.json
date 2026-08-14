@@ -8,6 +8,7 @@
     "playXSeconds": "Odtwórz {{count}}s",
     "guessBtn": "Zgadnij",
     "skipBtn": "Pomiń +{{count}}s",
+    "skipped": "Pominięto",
     "giveUp": "Poddaj się i pokaż",
     "nextSong": "Następna piosenka",
     "menuEntry": "Zagraj w $t(appName)",

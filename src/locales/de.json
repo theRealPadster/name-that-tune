@@ -8,6 +8,7 @@
 	  "playXSeconds": "Spiele {{count}}s ab",
     "guessBtn": "Raten",
     "skipBtn": "Überspringen +{{count}}s",
+    "skipped": "Übersprungen",
     "giveUp": "Aufgeben und auflösen",
     "nextSong": "Nächster Titel",
     "menuEntry": "Spiele $t(appName)",

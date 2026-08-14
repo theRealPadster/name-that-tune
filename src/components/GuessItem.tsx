@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import styles from '../css/name-that-tune.module.scss';
 
@@ -7,6 +8,7 @@ const GuessItem = (props: {
   won: boolean;
   index: number;
 }) => {
+  const { t } = useTranslation();
   const guess = props.guesses[props.index];
   const correct = props.won && (props.index === props.guesses.length - 1);
   const skipped = !guess;
@@ -26,7 +28,7 @@ const GuessItem = (props: {
       <span className={styles.guessMark}>
         {correct ? '✔' : skipped ? '–' : '✕'}
       </span>
-      <span className={styles.guessText}>{guess || 'SKIPPED'}</span>
+      <span className={styles.guessText}>{guess || t('skipped')}</span>
     </li>
   );
 };

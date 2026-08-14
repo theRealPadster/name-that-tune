@@ -8,6 +8,7 @@
     "playXSeconds": "Jouer à {{count}}s",
     "guessBtn": "Devinez",
     "skipBtn": "Passer +{{count}}s",
+    "skipped": "Passé",
     "giveUp": "Abandonner et révéler",
     "nextSong": "Chanson suivante",
     "menuEntry": "Jouer à $t(appName)",
