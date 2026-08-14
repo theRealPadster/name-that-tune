@@ -2,7 +2,6 @@
   "translation": {
     "appName": "Вгадай Мелодію",
     "title": "🎵 $t(appName)",
-    "winMsg": "Ви перемогли!",
     "guessPlaceholder": "Назва пісні",
     "suggestionsLabel": "Пропозиції пісень",
     "playXSeconds": "Слухати {{count}}с",

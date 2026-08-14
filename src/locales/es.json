@@ -2,7 +2,6 @@
   "translation": {
     "appName": "Adivina la Canción",
     "title": "🎵 $t(appName)",
-    "winMsg": "¡Correcto!",
     "guessPlaceholder": "Adivina la canción",
     "suggestionsLabel": "Sugerencias de canciones",
     "playXSeconds": "Reproducir {{count}}s",

@@ -2,7 +2,6 @@
   "translation": {
     "appName": "Ονομάστε αυτή τη μελωδία",
     "title": "🎵 $t(appName)",
-    "winMsg": "Κέρδισες!",
     "guessPlaceholder": "Βρες το Τραγούδι",
     "suggestionsLabel": "Προτάσεις τραγουδιών",
     "playXSeconds": "Παίξε {{count}}s",

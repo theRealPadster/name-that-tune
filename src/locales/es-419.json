@@ -2,7 +2,6 @@
   "translation": {
     "appName": "Nombra la Rola",
     "title": "🎵 $t(appName)",
-    "winMsg": "Ganaste!",
     "guessPlaceholder": "Adivina la canción",
     "suggestionsLabel": "Sugerencias de canciones",
     "playXSeconds": "Reproducir {{count}}s",

@@ -2,7 +2,6 @@
   "translation": {
     "appName": "Errate den Titel!",
     "title": "🎵 $t(appName)",
-    "winMsg": "Das war richtig!",
     "guessPlaceholder": "Rate den Titel",
     "suggestionsLabel": "Titelvorschläge",
 	  "playXSeconds": "Spiele {{count}}s ab",

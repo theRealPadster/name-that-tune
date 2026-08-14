@@ -2,7 +2,6 @@
   "translation": {
     "appName": "Name That Tune",
     "title": "🎵 $t(appName)",
-    "winMsg": "Vous avez gagné !",
     "guessPlaceholder": "Devinez la chanson",
     "suggestionsLabel": "Suggestions de chansons",
     "playXSeconds": "Jouer à {{count}}s",
