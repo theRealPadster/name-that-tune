@@ -163,6 +163,13 @@ const d = {
     await this.eval(`(() => {
       const el = document.querySelector(${JSON.stringify(selector)});
       if (!el) throw new Error('no element matched ' + ${JSON.stringify(selector)});
+      // A [class*=...] selector matches the wrapper as well as the field, and the
+      // wrapper wins on document order. Say so, rather than letting the value
+      // setter below fail with a bare "Illegal invocation".
+      if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement)) {
+        throw new Error(${JSON.stringify(selector)} + ' matched <' + el.tagName.toLowerCase() +
+          '>, not an input -- lead the selector with the tag');
+      }
       const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
       set.call(el, '');
       el.dispatchEvent(new Event('input', { bubbles: true }));
@@ -191,10 +198,28 @@ const d = {
     }
   },
 
-  /** Scroll over an element. Useful for overscroll and scroll-chaining checks. */
+  /**
+   * Scroll over an element. Useful for overscroll and scroll-chaining checks.
+   *
+   * Wheel input is handled by the compositor, which does not run while the
+   * window is hidden -- the event then neither scrolls nor gets acknowledged,
+   * so an awaited dispatch hangs forever. Key and click events are unaffected,
+   * which makes this look like wheel alone being broken. Fail fast instead.
+   */
   async wheel(selector, deltaY, deltaX = 0) {
+    if (await this.eval('document.hidden')) {
+      throw new Error(
+        'the Spotify window is hidden, so wheel events are not processed -- '
+        + 'bring it to the front before scroll checks',
+      );
+    }
     const { x, y } = await boxOf(selector);
-    await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x, y, deltaX, deltaY });
+    await Promise.race([
+      send('Input.dispatchMouseEvent', { type: 'mouseWheel', x, y, deltaX, deltaY }),
+      new Promise((_, reject) => setTimeout(
+        () => reject(new Error('mouseWheel was not acknowledged within 5s')), 5000,
+      )),
+    ]);
   },
 
   async shot(path) {
