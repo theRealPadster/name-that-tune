@@ -8,11 +8,13 @@
     "guessBtn": "Raten",
     "skipBtn": "Überspringen +{{count}}s",
     "skipped": "Übersprungen",
-    "giveUp": "Aufgeben und auflösen",
+    "giveUp": "Aufgeben und Titel anzeigen",
     "nextSong": "Nächster Titel",
     "reveal": {
-      "wonIn": "In {{count}} erraten",
-      "gaveUpAfter": "Nach {{count}} aufgegeben",
+      "wonIn_one": "Mit {{count}} Versuch erraten",
+      "wonIn_other": "Mit {{count}} Versuchen erraten",
+      "gaveUpAfter_one": "Nach {{count}} Versuch aufgegeben",
+      "gaveUpAfter_other": "Nach {{count}} Versuchen aufgegeben",
       "playingInFull": "Wird vollständig abgespielt"
     },
     "menuEntry": "Spiele $t(appName)",
