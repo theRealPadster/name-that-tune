@@ -46,13 +46,6 @@ import initI18n from '../i18n';
       console.log('uriObj:', uriObj);
     });
 
-    // TODO: If artist, add tracks from artist
-    // TODO: If album, add tracks from album
-    // TODO: If playlist, add tracks from playlist
-    // TODO: Other sources?
-
-    // Ooh, I can just use Spicetify.Player.playUri(uri) and it will work with whatever you send it!
-
     Spicetify.Platform.History.push({
       pathname: '/name-that-tune',
       // Pushing an identical location is a no-op, so without something unique
@@ -68,7 +61,6 @@ import initI18n from '../i18n';
     if (URIs.length === 1) {
       const uriObj = Spicetify.URI.fromString(URIs[0]);
       switch (uriObj.type) {
-      case Spicetify.URI.Type.SHOW:
       case Spicetify.URI.Type.PLAYLIST:
       case Spicetify.URI.Type.PLAYLIST_V2:
       case Spicetify.URI.Type.FOLDER:

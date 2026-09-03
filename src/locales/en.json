@@ -2,14 +2,35 @@
   "translation": {
     "appName": "Name That Tune",
     "title": "🎵 $t(appName)",
+    "loadingTrack": "Preparing a song…",
+    "guessLabel": "Song title",
     "guessPlaceholder": "Guess the song",
+    "attemptsLabel": "Previous attempts",
     "suggestionsLabel": "Song suggestions",
     "playXSeconds": "Play {{count}}s",
+    "playRandomXSeconds": "Play {{count}}s from the mystery spot",
     "guessBtn": "Guess",
     "skipBtn": "Skip +{{count}}s",
+    "skipAndReveal": "Skip and reveal",
     "skipped": "Skipped",
     "giveUp": "Give up and reveal",
     "nextSong": "Next song",
+    "tryAgain": "Try again",
+    "mode": {
+      "label": "Clip mode",
+      "intro": "Intro",
+      "random": "Random spot"
+    },
+    "search": {
+      "loading": "Searching Spotify…",
+      "empty": "No matching songs found",
+      "error": "Song search is temporarily unavailable"
+    },
+    "errors": {
+      "title": "This round couldn’t start",
+      "generic": "Spotify returned an unexpected playback error.",
+      "trackChanged": "The song changed outside the game. Start a fresh round to keep the answer fair."
+    },
     "reveal": {
       "wonIn": "Got it in {{count}}",
       "gaveUpAfter": "Gave up after {{count}}",
@@ -22,6 +43,7 @@
       "title": "Stats",
       "time": "Time",
       "songs": "Songs",
+      "noGames": "Play a round to start building your stats.",
       "winPercentage": "Win percentage: {{percentage}}%",
       "songWithCount_one": "{{count}} song",
       "songWithCount_other": "{{count}} songs",

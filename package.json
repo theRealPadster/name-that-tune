@@ -18,6 +18,8 @@
     "copy:docs": "copyfiles README.md docs/* dist/",
     "lint": "eslint --fix src",
     "lint:ci": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "type-check": "tsc --noEmit",
     "watch": "node scripts/build.mjs --watch",
     "update-types": "curl -s -o src/types/spicetify.d.ts https://raw.githubusercontent.com/spicetify/cli/main/globals.d.ts"
@@ -48,6 +50,14 @@
     "postcss-modules": "^9.0.1",
     "react-i18next": "^17.0.6",
     "sass-embedded": "^1.103.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@humanfs/node@<0.16.8": "0.16.8",
+      "brace-expansion@<1.1.18": "1.1.18",
+      "js-yaml@>=4.0.0 <4.3.1": "4.3.1"
+    }
   }
 }

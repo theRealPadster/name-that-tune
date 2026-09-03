@@ -46,6 +46,9 @@ jobs:
       - name: Install Dependencies and Build
         run: |
           pnpm install --frozen-lockfile
+          pnpm run lint:ci
+          pnpm run type-check
+          pnpm test
           pnpm build:prod
 
       - name: Push New Version

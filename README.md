@@ -41,8 +41,9 @@ spicetify apply
 
 ## Usage
 - Right-click on any artist, playlist, album, etc. 
-- Click "play" to hear the first second of the track.
-- Making a guess adds one second of music playback. It will reveal the song when you get it right. 
+- Pick **Intro** to hear progressively longer clips from the beginning, or **Random spot** to use one fixed mystery point later in the song.
+- Click **Play** to hear the current clue. The six clue lengths are 1, 2, 4, 7, 11, and 16 seconds.
+- Guess the title or skip to unlock the next clue. The song is revealed when you get it right or use all six attempts.
 - (If you open the app directly from the header bar, it will just use the song you are currently playing.)
 
 ## Translations
@@ -58,5 +59,4 @@ I've added translations support! If you use Spotify in a non-English language an
 Some languages need more plural forms than English does. Keys like `songWithCount` and `sendingURIs` use i18next's `_one` / `_other` suffixes; if your language also needs `_few` or `_many` (Polish, for instance), add those keys too.
 
 ## Planned Features
-- Possible "random" mode that doesn't use the beginning of the song, but grabs random segments from it
 - Come up with a better name
