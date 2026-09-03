@@ -16,14 +16,16 @@
   text-decoration: none;
   text-transform: none;
   touch-action: manipulation;
-  transition-duration: 33ms;
+  transition-duration: 160ms;
   transition-property: background-color, border-color, color, box-shadow, filter, transform;
   user-select: none;
   vertical-align: middle;
   transform: translate3d(0px, 0px, 0px);
   padding: 0px;
   min-inline-size: 0px;
+  min-block-size: 48px;
   align-self: center;
+  cursor: pointer;
 
   @media screen and (min-width: 768px) {
     font-size: 1rem;
@@ -57,6 +59,11 @@
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--spice-text);
+    outline-offset: 3px;
   }
 }
 
@@ -98,6 +105,7 @@
   font-weight: 600;
   padding-block: 6px;
   padding-inline: 8px;
+  min-block-size: 44px;
   text-decoration: underline;
   text-underline-offset: 3px;
 

@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: 20px;
   box-sizing: border-box;
-  padding-top: 40px;
+  padding: 40px 0 32px;
 }
 
 // The heading and the stats link share a row across the top of the game column,
@@ -50,7 +50,7 @@
   padding: 10px 14px;
   background-color: var(--spice-card);
   color: var(--spice-text);
-  font-size: 14px;
+  font-size: 16px;
   border: 1px solid transparent;
   border-radius: 6px;
   box-sizing: border-box;
@@ -59,6 +59,108 @@
     outline: none;
     border-color: var(--spice-text);
   }
+}
+
+.inputLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--spice-subtext);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.searchStatus {
+  min-height: 18px;
+  margin: 4px 0 8px;
+  color: var(--spice-subtext);
+  font-size: 12px;
+}
+
+.statusCard {
+  display: flex;
+  width: min(420px, 90vw);
+  min-height: 180px;
+  box-sizing: border-box;
+  padding: 28px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 10px;
+  background: var(--spice-card);
+  color: var(--spice-text);
+  text-align: center;
+
+  h2,
+  p {
+    margin: 0;
+  }
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid color-mix(in srgb, var(--spice-text) 22%, transparent);
+  border-top-color: var(--spice-button);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.modePicker {
+  display: grid;
+  width: min(420px, 90vw);
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--spice-text) 14%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--spice-card) 72%, transparent);
+
+  legend {
+    padding: 0 4px;
+    color: var(--spice-subtext);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  button {
+    min-height: 44px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--spice-subtext);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    transition: background-color 160ms ease-out, color 160ms ease-out;
+
+    &:hover:not(:disabled) {
+      color: var(--spice-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--spice-text);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+  }
+}
+
+.activeMode {
+  background: var(--spice-card) !important;
+  color: var(--spice-text) !important;
 }
 
 // The end-of-round reveal: artwork, how it went, and what the song was.
@@ -284,5 +386,11 @@
 .inputContainer {
   position: relative;
   width: 100%;
-  margin-bottom: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+    border-color: var(--spice-button);
+  }
 }

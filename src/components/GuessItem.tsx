@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import styles from '../css/name-that-tune.module.scss';
 
 const GuessItem = (props: {
-  guesses: string[];
+  guesses: (string | null)[];
   won: boolean;
   index: number;
 }) => {

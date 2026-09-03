@@ -43,6 +43,7 @@ body.name-that-tune {
     // panel can still be closed.
     .main-nowPlayingView-headerText {
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
     }
 

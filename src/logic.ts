@@ -1,120 +1,206 @@
-// import FuzzySet from 'fuzzyset';
 import { diceCoefficient } from 'dice-coefficient';
 
 import { fetchAndPlay, shuffle, Queue } from './shuffle+';
 import { getLocalStorageDataFromKey } from './Utils';
 import { STATS_KEY } from './constants';
+import { RoundTrack } from './round';
 
-/**
- * Set "is guessing" body class (controls element visibility/interactivity)
- * @param guessing If we are enabling or disabling the "is guessing" class
- */
+export { stageToTime } from './round';
+
+const SONG_CHANGE_TIMEOUT_MS = 10_000;
+
+/** Set the body class that hides Spotify metadata while a round is active. */
 export const toggleIsGuessing = (guessing: boolean) => {
   document.body.classList.toggle('name-that-tune--guessing', guessing);
 };
 
-// TODO: potentially tweak this
-const normalize = (str: string | undefined) => {
-  if (!str) {
+/**
+ * Normalize titles without restricting them to a hand-maintained collection of
+ * alphabets. NFKD handles full-width forms and accents, while Unicode property
+ * classes preserve letters and numbers from every writing system.
+ */
+export const normalizeTitle = (value: string | undefined) => {
+  if (!value) {
     return '';
   }
 
-  let cleaned = str.trim().toLowerCase();
-
-  // Remove anything within parentheses
-  cleaned = cleaned.replace(/\(.*\)/g, '');
-
-  // Remove anything that comes after a ' - '
-  cleaned = cleaned.replace(/\s-\s.*$/, '');
-
-  // Convert & to 'and'
-  cleaned = cleaned.replace(/&/g, 'and');
-
-  // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript/37511463#37511463
-  cleaned = cleaned.normalize('NFD').replace(/\p{Diacritic}/gu, '');
-
-  // Remove everything (including spaces) that is not a number, letter, or from Cyrylic/Polish/Arabic/Hebrew alphabet
-  // (Github Copilot says Arabic letters range from \u0621 to \u064A and Hebrew letters range from \u05D0 to \u05EA)
-  cleaned = cleaned.replace(/[^\wа-яА-ЯіїІЇ\dąćęłńóśźż\u0621-\u064A\u05D0-\u05EA\d]/g, '');
-
-  // TODO: add any other logic?
-
-  return cleaned;
+  return value
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/&/g, 'and')
+    .normalize('NFKD')
+    .replace(/\p{Mark}/gu, '')
+    .normalize('NFKC')
+    .replace(/[^\p{Letter}\p{Number}]/gu, '');
 };
 
-export const checkGuess = (guess: string) => {
-  console.log({
-    title: Spicetify.Player.data.item?.metadata?.title,
-    guess,
+const titleCandidates = (title: string) => {
+  const withoutBrackets = title
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/\s*\[[^\]]*\]/g, '');
+  const variants = [
+    title,
+    withoutBrackets,
+    title.replace(/\s[-–—]\s.*$/, ''),
+    title.replace(/\s+(?:feat(?:uring)?\.?|ft\.?)\s+.*$/i, ''),
+  ];
+
+  return [...new Set(variants.map(normalizeTitle).filter(Boolean))];
+};
+
+export const checkGuess = (guess: string, title: string | undefined) => {
+  const normalizedGuess = normalizeTitle(guess);
+
+  if (!normalizedGuess || !title) {
+    return false;
+  }
+
+  return titleCandidates(title).some((candidate) => {
+    if (normalizedGuess === candidate) {
+      return true;
+    }
+
+    const shortestLength = Math.min(normalizedGuess.length, candidate.length);
+    if (shortestLength < 4) {
+      return false;
+    }
+
+    const threshold = shortestLength < 7 ? 0.86 : 0.8;
+    return diceCoefficient(normalizedGuess, candidate) >= threshold;
   });
-  // console.log({
-  //   artist_name: Spicetify.Player.data.item.metadata.artist_name,
-  //   album_artist_name: Spicetify.Player.data.item.metadata.album_artist_name,
-  // });
-
-  const normalizedTitle = normalize(
-    Spicetify.Player.data.item?.metadata?.title,
-  );
-  const normalizedGuess = normalize(guess);
-  console.log({ normalizedTitle, normalizedGuess });
-
-  // const set = FuzzySet([normalizedTitle], false);
-  // const result = set.get(normalizedGuess);
-  // if (result) {
-  //   const [similarity, match] = result.flat();
-  //   console.log({ similarity, match });
-  // } else {
-  //   console.log('no match');
-  // }
-
-  const similarity = diceCoefficient(normalizedGuess, normalizedTitle);
-  console.log({ similarity });
-
-  return similarity > 0.8;
 };
 
-export const initialize = (URIs?: string[]) => {
-  // If passed in URIs, use them
-  if (URIs) {
-    if (URIs.length === 1) {
-      fetchAndPlay(URIs[0]);
+const snapshotTrack = (
+  item = Spicetify.Player.data?.item,
+): RoundTrack => {
+  if (
+    !item?.uri
+    || !(item.uri.startsWith('spotify:track:') || item.uri.startsWith('spotify:local:'))
+    || !item.name
+  ) {
+    throw new Error('Spotify did not load a playable song');
+  }
+
+  return {
+    uri: item.uri,
+    title: item.name,
+    artists: (item.artists ?? []).map((artist) => artist.name).join(' · '),
+    artwork:
+      item.metadata?.image_xlarge_url
+      || item.metadata?.image_large_url,
+    durationMs:
+      item.duration?.milliseconds
+      || Spicetify.Player.getDuration()
+      || 0,
+  };
+};
+
+export const getCurrentTrack = () => snapshotTrack();
+
+export const pauseAndRewind = () => {
+  Spicetify.Player.pause();
+  Spicetify.Player.seek(0);
+};
+
+type TrackChangeTrigger = () =>
+  void | boolean | Promise<void | boolean>;
+
+const waitForSongChange = (
+  trigger: TrackChangeTrigger,
+): Promise<RoundTrack> => new Promise((resolve, reject) => {
+  let settled = false;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  const cleanup = () => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    Spicetify.Player.removeEventListener('songchange', listener);
+  };
+
+  const fail = (error: unknown) => {
+    if (settled) {
+      return;
+    }
+    settled = true;
+    cleanup();
+    reject(error instanceof Error ? error : new Error(String(error)));
+  };
+
+  const listener = (event?: Event) => {
+    if (settled) {
       return;
     }
 
-    Queue(shuffle(URIs), null);
-
-    // Spicetify.Player.playUri(URIs[0]);
-    // Because it will start playing automatically
     try {
-      Spicetify.Player.pause();
-    } catch (e) {
-      console.log('Error pausing player:', e);
+      const playerState = (
+        event as Event & { data?: Spicetify.PlayerState }
+      )?.data;
+      const track = snapshotTrack(playerState?.item);
+      settled = true;
+      cleanup();
+      resolve(track);
+    } catch (error) {
+      fail(error);
     }
-    // if (Spicetify.Player.isPlaying()) {
-    // }
-    Spicetify.Player.seek(0);
+  };
+
+  Spicetify.Player.addEventListener('songchange', listener);
+
+  try {
+    Promise.resolve(trigger())
+      .then((started) => {
+        if (started === false) {
+          fail(new Error('No playable songs were found in that source'));
+          return;
+        }
+
+        if (!settled) {
+          timeout = setTimeout(() => {
+            fail(new Error('Spotify did not advance to another song in time'));
+          }, SONG_CHANGE_TIMEOUT_MS);
+        }
+      })
+      .catch(fail);
+  } catch (error) {
+    fail(error);
   }
+});
+
+export const initialize = async (URIs?: string[]) => {
+  toggleIsGuessing(true);
+
+  if (!URIs?.length) {
+    pauseAndRewind();
+    return snapshotTrack();
+  }
+
+  const track = await waitForSongChange(async () => {
+    if (URIs.length === 1) {
+      return fetchAndPlay(URIs[0]);
+    }
+
+    await Queue(shuffle(URIs), null);
+    return true;
+  });
+
+  pauseAndRewind();
+  return track;
 };
 
-/*
-  * Don't just add the same amount of time for each guess
-  * Heardle offsets:
-  * 1s, +1s, +2s, +3s, +4s, +5s
-  * Which is this equation:
-  * s = 1 + 0.5x + 0.5x^2
-  */
-export const stageToTime = (stage: number) => {
-  return (1 + 0.5 * (stage + stage ** 2));
+export const advanceToNextTrack = async () => {
+  const track = await waitForSongChange(() => {
+    Spicetify.Player.next();
+  });
+
+  pauseAndRewind();
+  return track;
 };
 
-/**
- * Saves an object to localStorage with key:value pairs as stage:occurrences
- * @param stage The stage they won at, or -1 if they gave up
- */
+/** Save a win stage, or -1 for a loss, in localStorage. */
 export const saveStats = (stage: number) => {
-  const savedStats = getLocalStorageDataFromKey(STATS_KEY, {});
-  console.debug('Existing stats:', savedStats);
+  const stored = getLocalStorageDataFromKey(STATS_KEY, {});
+  const savedStats = stored && typeof stored === 'object' ? stored : {};
   savedStats[stage] = savedStats[stage] + 1 || 1;
-  console.debug('Saving stats:', savedStats);
   localStorage.setItem(STATS_KEY, JSON.stringify(savedStats));
 };

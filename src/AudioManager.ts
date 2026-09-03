@@ -1,49 +1,50 @@
 export default class AudioManager {
-  end: number;
-  debouncing: number;
-  DEBOUNCE_TIME = 300;
-  listener: (event: Event | undefined) => void;
+  startSeconds = 0;
+  durationSeconds = 1;
+  debouncing = 0;
+  readonly DEBOUNCE_TIME = 150;
 
-  constructor() {
-    this.end = 1;
-    this.debouncing = 0;
-    this.listener = (event: Event | undefined) => {
-      if (!this.end || !event) {
-        return;
-      }
+  listener = (event: Event | undefined) => {
+    if (!this.durationSeconds || !event) {
+      return;
+    }
 
-      if (this.debouncing) {
-        console.debug('debouncing');
-        if (event.timeStamp - this.debouncing > this.DEBOUNCE_TIME) {
-          this.debouncing = 0;
-          console.debug('reset debouncing');
-        }
-        return;
-      }
+    if (
+      this.debouncing
+      && event.timeStamp - this.debouncing < this.DEBOUNCE_TIME
+    ) {
+      return;
+    }
+    this.debouncing = event.timeStamp;
 
-      this.debouncing = event.timeStamp;
+    const songLengthMillis = Spicetify.Player.getDuration();
+    if (!songLengthMillis) {
+      return;
+    }
 
-      // TODO: calculate and update song length etc on song change
-      // Spicetify uses ms
-      const endMillis = this.end * 1000;
-      const songLengthMillis = Spicetify.Player.getDuration();
-      if (endMillis > songLengthMillis) {
-        return;
-      }
+    // Stop just before the track boundary so Spotify cannot automatically
+    // advance and expose the next answer when the requested clue is longer
+    // than a particularly short song.
+    const latestSafeEnd = Math.max(0, songLengthMillis - 250);
+    const requestedEnd = (
+      this.startSeconds + this.durationSeconds
+    ) * 1000;
+    const effectiveEnd = Math.min(requestedEnd, latestSafeEnd);
 
-      const currentProgress =
-        songLengthMillis * Spicetify.Player.getProgressPercent();
-      // console.debug({ currentProgress, endMilliseconds: endMillis });
-      if (currentProgress > endMillis) {
-        Spicetify.Player.pause();
-        Spicetify.Player.skipBack();
-        return;
-      }
-    };
+    if (Spicetify.Player.getProgress() >= effectiveEnd) {
+      Spicetify.Player.pause();
+      Spicetify.Player.seek(this.startSeconds * 1000);
+    }
+  };
+
+  setWindow(startSeconds: number, durationSeconds: number) {
+    this.startSeconds = Math.max(0, startSeconds);
+    this.durationSeconds = Math.max(0, durationSeconds);
   }
 
-  setEnd(end: number) {
-    this.end = end;
+  clearWindow() {
+    this.startSeconds = 0;
+    this.durationSeconds = 0;
   }
 
   listen() {
@@ -55,13 +56,18 @@ export default class AudioManager {
   }
 
   play() {
-    try {
-      Spicetify.Player.pause();
-    } catch (e) {
-      console.error(e);
-    }
-    Spicetify.Player.skipBack();
-    // Spicetify.Player.seek(0);
+    Spicetify.Player.pause();
+    Spicetify.Player.seek(this.startSeconds * 1000);
     Spicetify.Player.play();
+  }
+
+  reveal() {
+    this.clearWindow();
+    Spicetify.Player.seek(0);
+    Spicetify.Player.play();
+  }
+
+  stop() {
+    Spicetify.Player.pause();
   }
 }
