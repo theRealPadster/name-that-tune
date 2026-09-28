@@ -199,6 +199,12 @@ class Game extends React.Component<
     }
   };
 
+  /**
+   * Best effort, not a guarantee. AppTitle only overrides Spotify's idle title:
+   * while a clip plays, Spotify shows "Artist - Song" instead, so the answer is
+   * still briefly visible in the window title (on Windows, when hovering the
+   * taskbar icon). This mostly covers the paused moments between clips.
+   */
   protectWindowTitle = async () => {
     if (!Spicetify.AppTitle?.set) {
       return;
