@@ -47,6 +47,8 @@ type GameComponentState = {
   searchState: SearchState;
   mode: GameMode;
   snippetStart: number;
+  /** The sixth clue was missed; waiting for the player to keep guessing or reveal. */
+  askingToKeepGuessing: boolean;
   track?: RoundTrack;
   error?: string;
 };
@@ -68,6 +70,7 @@ class Game extends React.Component<
     searchState: 'idle',
     mode: localStorage.getItem(MODE_KEY) === 'random' ? 'random' : 'intro',
     snippetStart: 0,
+    askingToKeepGuessing: false,
   };
 
   URIs?: string[];
@@ -78,6 +81,7 @@ class Game extends React.Component<
   titleRequest = 0;
   inputRef = React.createRef<HTMLInputElement>();
   nextButtonRef = React.createRef<HTMLButtonElement>();
+  keepGuessingRef = React.createRef<HTMLButtonElement>();
 
   constructor(props) {
     super(props);
@@ -123,6 +127,7 @@ class Game extends React.Component<
       highlightedIndex: -1,
       searchState: 'idle',
       snippetStart: 0,
+      askingToKeepGuessing: false,
       track: undefined,
       error: undefined,
     });
@@ -362,57 +367,69 @@ class Game extends React.Component<
     }, () => this.nextButtonRef.current?.focus());
   };
 
-  skipGuess = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    if (this.state.gameState !== GameState.Playing) {
-      return;
-    }
+  /**
+   * Record a skip or wrong guess. Moves on to the next clue, except after the
+   * sixth, where the player chooses to keep guessing or reveal the answer.
+   */
+  missAttempt = (guesses: (string | null)[]) => {
+    this.cancelSearch();
+    const cleared = {
+      guesses,
+      guess: '',
+      suggestions: [],
+      highlightedIndex: -1,
+      searchState: 'idle' as const,
+    };
 
-    const guesses = [...this.state.guesses, null];
     if (isFinalStage(this.state.stage)) {
-      this.finishRound(false, guesses);
+      this.setState(
+        { ...cleared, askingToKeepGuessing: true },
+        () => this.keepGuessingRef.current?.focus(),
+      );
       return;
     }
 
     const stage = this.state.stage + 1;
-    this.cancelSearch();
     this.setAudioWindow(stage);
-    this.setState({
-      guesses,
-      guess: '',
-      suggestions: [],
-      highlightedIndex: -1,
-      searchState: 'idle',
-      stage,
-    }, () => this.inputRef.current?.focus());
+    this.setState({ ...cleared, stage }, () => this.inputRef.current?.focus());
+  };
+
+  skipGuess = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (this.state.gameState !== GameState.Playing || this.state.askingToKeepGuessing) {
+      return;
+    }
+
+    this.missAttempt([...this.state.guesses, null]);
   };
 
   submitGuess = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
-    const { gameState, guess, track, stage } = this.state;
-    if (gameState !== GameState.Playing || !track || !guess.trim()) {
+    const { gameState, guess, track, askingToKeepGuessing } = this.state;
+    if (gameState !== GameState.Playing || askingToKeepGuessing || !track || !guess.trim()) {
       return;
     }
 
     const guesses = [...this.state.guesses, guess];
-    const won = checkGuess(guess, track.title);
-
-    if (won || isFinalStage(stage)) {
-      this.finishRound(won, guesses);
+    if (checkGuess(guess, track.title)) {
+      this.finishRound(true, guesses);
       return;
     }
 
-    const nextStage = stage + 1;
-    this.cancelSearch();
-    this.setAudioWindow(nextStage);
-    this.setState({
-      guesses,
-      guess: '',
-      suggestions: [],
-      highlightedIndex: -1,
-      searchState: 'idle',
-      stage: nextStage,
-    }, () => this.inputRef.current?.focus());
+    this.missAttempt(guesses);
+  };
+
+  keepGuessing = () => {
+    if (this.state.gameState !== GameState.Playing || !this.state.askingToKeepGuessing) {
+      return;
+    }
+
+    const stage = this.state.stage + 1;
+    this.setAudioWindow(stage);
+    this.setState(
+      { askingToKeepGuessing: false, stage },
+      () => this.inputRef.current?.focus(),
+    );
   };
 
   giveUp = () => {
@@ -458,14 +475,13 @@ class Game extends React.Component<
       stage,
       suggestions,
       track,
+      askingToKeepGuessing,
     } = this.state;
     const { t } = this.props;
     const gameWon = gameState === GameState.Won;
     const isPlaying = gameState === GameState.Playing;
     const suggestionsOpen = suggestions.length > 0;
-    const skipCost = isFinalStage(stage)
-      ? 0
-      : stageToTime(stage + 1) - stageToTime(stage);
+    const nextClueCost = stageToTime(stage + 1) - stageToTime(stage);
     const activeSuggestionId = highlightedIndex >= 0
       ? `${TRACK_SUGGESTIONS_LISTBOX_ID}-option-${highlightedIndex}`
       : undefined;
@@ -546,61 +562,79 @@ class Game extends React.Component<
               </button>
             </fieldset>
 
-            <form className={styles.guessForm} onSubmit={this.submitGuess}>
-              <div className={styles.inputContainer}>
-                <label className={styles.inputLabel} htmlFor={GUESS_INPUT_ID}>
-                  {t('guessLabel')}
-                </label>
-                <input
-                  ref={this.inputRef}
-                  id={GUESS_INPUT_ID}
-                  type={'text'}
-                  className={styles.input}
-                  placeholder={t('guessPlaceholder') as string}
-                  value={this.state.guess}
-                  onChange={this.guessChange}
-                  onKeyDown={this.guessKeyDown}
-                  onBlur={this.closeSuggestions}
-                  autoComplete="off"
-                  role="combobox"
-                  aria-autocomplete="list"
-                  aria-expanded={suggestionsOpen}
-                  aria-controls={
-                    suggestionsOpen ? TRACK_SUGGESTIONS_LISTBOX_ID : undefined
-                  }
-                  aria-activedescendant={activeSuggestionId}
-                />
+            {askingToKeepGuessing ? (
+              <div className={styles.keepGuessingPrompt} aria-live="polite">
+                <p>{t('outOfClues')}</p>
+                <div className={styles.formButtonContainer}>
+                  <Button
+                    buttonRef={this.keepGuessingRef}
+                    variant={'primary'}
+                    classes={[styles.guessButton]}
+                    onClick={this.keepGuessing}
+                  >
+                    {t('keepGuessing', { count: nextClueCost })}
+                  </Button>
 
-                <TrackSuggestions
-                  listboxId={TRACK_SUGGESTIONS_LISTBOX_ID}
-                  label={t('suggestionsLabel')}
-                  suggestions={suggestions}
-                  highlightedIndex={highlightedIndex}
-                  onSelect={this.selectSuggestion}
-                />
+                  <Button variant={'secondary'} onClick={this.giveUp}>
+                    {t('giveUp')}
+                  </Button>
+                </div>
               </div>
+            ) : (
+              <form className={styles.guessForm} onSubmit={this.submitGuess}>
+                <div className={styles.inputContainer}>
+                  <label className={styles.inputLabel} htmlFor={GUESS_INPUT_ID}>
+                    {t('guessLabel')}
+                  </label>
+                  <input
+                    ref={this.inputRef}
+                    id={GUESS_INPUT_ID}
+                    type={'text'}
+                    className={styles.input}
+                    placeholder={t('guessPlaceholder') as string}
+                    value={this.state.guess}
+                    onChange={this.guessChange}
+                    onKeyDown={this.guessKeyDown}
+                    onBlur={this.closeSuggestions}
+                    autoComplete="off"
+                    role="combobox"
+                    aria-autocomplete="list"
+                    aria-expanded={suggestionsOpen}
+                    aria-controls={
+                      suggestionsOpen ? TRACK_SUGGESTIONS_LISTBOX_ID : undefined
+                    }
+                    aria-activedescendant={activeSuggestionId}
+                  />
 
-              <p className={styles.searchStatus} aria-live="polite">
-                {this.renderSearchStatus()}
-              </p>
+                  <TrackSuggestions
+                    listboxId={TRACK_SUGGESTIONS_LISTBOX_ID}
+                    label={t('suggestionsLabel')}
+                    suggestions={suggestions}
+                    highlightedIndex={highlightedIndex}
+                    onSelect={this.selectSuggestion}
+                  />
+                </div>
 
-              <div className={styles.formButtonContainer}>
-                <Button
-                  htmlType="submit"
-                  variant={'primary'}
-                  classes={[styles.guessButton]}
-                  disabled={!this.state.guess.trim()}
-                >
-                  {t('guessBtn')}
-                </Button>
+                <p className={styles.searchStatus} aria-live="polite">
+                  {this.renderSearchStatus()}
+                </p>
 
-                <Button variant={'secondary'} onClick={this.skipGuess}>
-                  {isFinalStage(stage)
-                    ? t('skipAndReveal')
-                    : t('skipBtn', { count: skipCost })}
-                </Button>
-              </div>
-            </form>
+                <div className={styles.formButtonContainer}>
+                  <Button
+                    htmlType="submit"
+                    variant={'primary'}
+                    classes={[styles.guessButton]}
+                    disabled={!this.state.guess.trim()}
+                  >
+                    {t('guessBtn')}
+                  </Button>
+
+                  <Button variant={'secondary'} onClick={this.skipGuess}>
+                    {t('skipBtn', { count: nextClueCost })}
+                  </Button>
+                </div>
+              </form>
+            )}
 
             <Button onClick={this.playClick}>
               {t('playXSeconds', { count: stageToTime(stage) })}
@@ -608,9 +642,11 @@ class Game extends React.Component<
 
             {guessList}
 
-            <Button variant={'tertiary'} onClick={this.giveUp}>
-              {t('giveUp')}
-            </Button>
+            {askingToKeepGuessing ? null : (
+              <Button variant={'tertiary'} onClick={this.giveUp}>
+                {t('giveUp')}
+              </Button>
+            )}
           </>
         ) : null}
 

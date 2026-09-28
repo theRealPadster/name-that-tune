@@ -10,9 +10,10 @@
     "playXSeconds": "Play {{count}}s",
     "guessBtn": "Guess",
     "skipBtn": "Skip +{{count}}s",
-    "skipAndReveal": "Skip and reveal",
     "skipped": "Skipped",
     "giveUp": "Give up and reveal",
+    "outOfClues": "That was the last clue.",
+    "keepGuessing": "Keep guessing +{{count}}s",
     "nextSong": "Next song",
     "tryAgain": "Try again",
     "mode": {

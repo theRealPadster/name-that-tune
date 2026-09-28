@@ -11,17 +11,24 @@ export type RoundTrack = {
   durationMs: number;
 };
 
+/**
+ * Heardle's curve, 1 + 0.5(stage + stage²). The first MAX_ATTEMPTS values are
+ * ROUND_TIMES; past those, clues keep growing (22s, 29s, ...) for players who
+ * choose to keep guessing.
+ */
 export const stageToTime = (stage: number) => {
-  const safeStage = Math.max(0, Math.min(stage, MAX_ATTEMPTS - 1));
-  return ROUND_TIMES[safeStage];
+  const safeStage = Math.max(0, stage);
+  return 1 + 0.5 * (safeStage + safeStage ** 2);
 };
 
-export const isFinalStage = (stage: number) => stage >= MAX_ATTEMPTS - 1;
+/** The last default clue, after which the player chooses to keep going or reveal. */
+export const isFinalStage = (stage: number) => stage === MAX_ATTEMPTS - 1;
 
 /**
- * Choose one stable offset for a random-mode round. The final 16-second clue
+ * Choose one stable offset for a random-mode round. The sixth, 16-second clue
  * must fit without Spotify advancing to another track, and the intro is
- * avoided whenever the song is long enough to give us room.
+ * avoided whenever the song is long enough to give us room. Clues past the
+ * sixth stop at the end of the song instead.
  */
 export const pickSnippetStart = (
   durationMs: number,

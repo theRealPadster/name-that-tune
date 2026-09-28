@@ -394,3 +394,13 @@
     border-color: var(--spice-button);
   }
 }
+
+.keepGuessingPrompt {
+  width: min(420px, 90vw);
+  text-align: center;
+
+  p {
+    margin: 0 0 12px;
+    color: var(--spice-text);
+  }
+}

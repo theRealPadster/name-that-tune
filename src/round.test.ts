@@ -14,11 +14,19 @@ describe('round timing', () => {
       .toEqual([1, 2, 4, 7, 11, 16]);
   });
 
-  it('caps out-of-range stages safely', () => {
+  it('keeps growing past the sixth clue for players who keep guessing', () => {
+    expect(stageToTime(6)).toBe(22);
+    expect(stageToTime(7)).toBe(29);
+  });
+
+  it('clamps negative stages to the first clue', () => {
     expect(stageToTime(-5)).toBe(1);
-    expect(stageToTime(999)).toBe(16);
+  });
+
+  it('marks only the sixth clue as final', () => {
     expect(isFinalStage(4)).toBe(false);
     expect(isFinalStage(5)).toBe(true);
+    expect(isFinalStage(6)).toBe(false);
   });
 });
 
