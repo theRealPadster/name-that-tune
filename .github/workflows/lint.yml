@@ -1,4 +1,4 @@
-name: Lint
+name: Quality
 
 on:
   # Trigger the workflow on push or pull request,
@@ -11,8 +11,8 @@ on:
       - main
 
 jobs:
-  lint:
-    name: lint
+  quality:
+    name: lint, type-check, and test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,3 +34,9 @@ jobs:
 
       - name: Lint checks
         run: pnpm run lint:ci
+
+      - name: Type checks
+        run: pnpm run type-check
+
+      - name: Unit tests
+        run: pnpm test

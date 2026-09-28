@@ -4,7 +4,7 @@
 
 Name That Tune is [Heardle](https://en.wikipedia.org/wiki/Heardle) made for [Spicetify](https://spicetify.app) — guess the song from progressively longer snippets. Spotify acquired the original and shut it down in 2023; this keeps the game alive inside their own desktop client.
 
-![Preview screenshot](docs/preview-2026-08.png)
+![Preview screenshot](docs/preview-2026-09.png)
 
 ## Table of contents
   - [Installation](#installation)
@@ -40,9 +40,11 @@ spicetify apply
 ```
 
 ## Usage
-- Right-click on any artist, playlist, album, etc. 
-- Click "play" to hear the first second of the track.
-- Making a guess adds one second of music playback. It will reveal the song when you get it right. 
+- Right-click on any artist, playlist, album, folder, or your Liked Songs, and choose **Play Name That Tune**. You can also select several songs and right-click them.
+- Before your first guess, pick **Intro** to hear clips from the beginning of the song, or **Random spot** to hear every clip from the same random point later in it.
+- Click **Play** to hear the current clue. The six clue lengths are 1, 2, 4, 7, 11, and 16 seconds.
+- Guess the title or skip to unlock the next clue. The song is revealed when you get it right.
+- If you miss all six, choose **Keep guessing** for longer clips (22s, 29s, and so on), or **Give up and reveal**.
 - (If you open the app directly from the header bar, it will just use the song you are currently playing.)
 
 ## Translations
@@ -58,5 +60,4 @@ I've added translations support! If you use Spotify in a non-English language an
 Some languages need more plural forms than English does. Keys like `songWithCount` and `sendingURIs` use i18next's `_one` / `_other` suffixes; if your language also needs `_few` or `_many` (Polish, for instance), add those keys too.
 
 ## Planned Features
-- Possible "random" mode that doesn't use the beginning of the song, but grabs random segments from it
 - Come up with a better name

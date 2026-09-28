@@ -17,16 +17,19 @@
 // ship those definitions).
 
 export async function Queue(list, context = null) {
-  const count = list.length;
+  const playable = list.filter(track => track);
+  const count = playable.length;
+
+  if (count === 0) throw 'No playable songs were found';
 
   // Delimits the end of our list, as Spotify may add new context tracks to the queue
-  list.push('spotify:delimiter');
+  const queueList = [...playable, 'spotify:delimiter'];
 
   const { _queue, _client } = Spicetify.Platform.PlayerAPI._queue;
   const { prevTracks, queueRevision } = _queue;
 
   // Format tracks with default values
-  const nextTracks = list.map(uri => ({
+  const nextTracks = queueList.map(uri => ({
     contextTrack: {
       uri,
       uid: '',
@@ -40,7 +43,7 @@ export async function Queue(list, context = null) {
   }));
 
   // Lowest level setQueue method from vendor~xpui.js
-  _client.setQueue({
+  await _client.setQueue({
     nextTracks,
     prevTracks,
     queueRevision,
@@ -57,8 +60,9 @@ export async function Queue(list, context = null) {
 }
 
 export function shuffle(array) {
-  let counter = array.length;
-  if (counter <= 1) return array;
+  const shuffled = array.filter(track => track).slice();
+  let counter = shuffled.length;
+  if (counter <= 1) return shuffled;
 
   // While there are elements in the array
   while (counter > 0) {
@@ -69,11 +73,11 @@ export function shuffle(array) {
     counter--;
 
     // And swap the last element with it
-    const temp = array[counter];
-    array[counter] = array[index];
-    array[index] = temp;
+    const temp = shuffled[counter];
+    shuffled[counter] = shuffled[index];
+    shuffled[index] = temp;
   }
-  return array.filter(track => track);
+  return shuffled;
 }
 
 async function fetchPlaylistTracks(uri) {
@@ -277,7 +281,7 @@ export async function fetchAndPlay(rawUri) {
 
       if (!list?.length) {
         Spicetify.showNotification('Nothing to play', true);
-        return;
+        return false;
       }
 
       context = rawUri;
@@ -287,8 +291,10 @@ export async function fetchAndPlay(rawUri) {
     }
 
     await Queue(shuffle(list), context);
+    return true;
   } catch (error) {
     Spicetify.showNotification(String(error), true);
     console.error(error);
+    return false;
   }
 }

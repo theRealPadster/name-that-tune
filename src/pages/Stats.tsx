@@ -143,40 +143,41 @@ class Stats extends React.Component<{ t: TFunction }> {
     };
 
     const totalGames = Object.values(savedStats).reduce((accum, value) => accum + value, 0);
-    const winPercentage = 1 - (savedStats['-1'] || 0) / totalGames;
-
-    console.log({
-      chartData,
-      totalGames,
-      winPercentage,
-    });
+    const winPercentage = totalGames === 0
+      ? 0
+      : 1 - (savedStats['-1'] || 0) / totalGames;
 
     return (
       <>
         <div className={styles.container}>
           <h1 className={styles.title}>{t('title')}</h1>
           <h2>{t('stats.title')}</h2>
-          <p>{t('stats.winPercentage', { percentage: (winPercentage * 100).toFixed(2) })}</p>
-          <table>
-            <thead>
-              <tr>
-                <th>{t('stats.time')}</th>
-                <th>{t('stats.songs')}</th>
-                <th>%</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(parsedStats).map(([key, value]) => (
-                <tr key={key}>
-                  <td>{key}</td>
-                  <td>{value}</td>
-                  <td>{(value / (totalGames) * 100).toFixed(2)}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {/* TODO: add total games played and games won vs gave up */}
-          <BarChart options={chartOptions} data={chartData} />
+          {totalGames === 0 ? (
+            <p>{t('stats.noGames')}</p>
+          ) : (
+            <>
+              <p>{t('stats.winPercentage', { percentage: (winPercentage * 100).toFixed(2) })}</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>{t('stats.time')}</th>
+                    <th>{t('stats.songs')}</th>
+                    <th>%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(parsedStats).map(([key, value]) => (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>{value}</td>
+                      <td>{(value / (totalGames) * 100).toFixed(2)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <BarChart options={chartOptions} data={chartData} />
+            </>
+          )}
         </div>
       </>
     );
