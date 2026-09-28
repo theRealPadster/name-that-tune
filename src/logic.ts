@@ -4,11 +4,12 @@ import i18n from 'i18next';
 import { fetchAndPlay, shuffle, Queue } from './shuffle+';
 import { getLocalStorageDataFromKey } from './Utils';
 import { STATS_KEY } from './constants';
-import { RoundTrack } from './round';
+import { AudioAnalysis, findAudibleStart, RoundTrack } from './round';
 
 export { stageToTime } from './round';
 
 const SONG_CHANGE_TIMEOUT_MS = 10_000;
+const AUDIO_ANALYSIS_TIMEOUT_MS = 3_000;
 
 /** Set the body class that hides Spotify metadata while a round is active. */
 export const toggleIsGuessing = (guessing: boolean) => {
@@ -94,6 +95,35 @@ const snapshotTrack = (
       || Spicetify.Player.getDuration()
       || 0,
   };
+};
+
+/**
+ * Where a track becomes audible, from Spotify's audio analysis. Falls back to 0
+ * whenever the analysis is unavailable: some tracks and local files have none,
+ * Spicetify's request can fail (a 401 from a stale token, or Spotify 1.3 before
+ * spicetify/cli#3962 is released), and on failure getAudioData resolves with an
+ * error object rather than rejecting.
+ */
+export const fetchAudibleStart = async (uri: string) => {
+  if (!uri.startsWith('spotify:track:') || !Spicetify.getAudioData) {
+    return 0;
+  }
+
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const analysis = await Promise.race([
+      Spicetify.getAudioData(uri) as Promise<AudioAnalysis>,
+      new Promise<undefined>((resolve) => {
+        timeout = setTimeout(resolve, AUDIO_ANALYSIS_TIMEOUT_MS);
+      }),
+    ]);
+    return findAudibleStart(analysis);
+  } catch (error) {
+    console.debug('Audio analysis unavailable, starting Intro clues at 0:', error);
+    return 0;
+  } finally {
+    clearTimeout(timeout);
+  }
 };
 
 export const pauseAndRewind = () => {
