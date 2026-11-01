@@ -49,7 +49,7 @@
     "postcss": "^8.5.26",
     "postcss-modules": "^9.0.1",
     "react-i18next": "^17.1.9",
-    "sass-embedded": "^1.105.0",
+    "sass-embedded": "^1.107.0",
     "typescript": "^6.0.3",
     "vitest": "^5.0.0"
   },
