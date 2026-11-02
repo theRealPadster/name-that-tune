@@ -8,6 +8,7 @@ import Reveal from '../components/Reveal';
 import TrackSuggestions from '../components/TrackSuggestions';
 import {
   advanceToNextTrack,
+  fetchAudibleStart,
   initialize,
   toggleIsGuessing,
   checkGuess,
@@ -106,7 +107,7 @@ class Game extends React.Component<
   }
 
   getSnippetStart = (track: RoundTrack, mode = this.state.mode) => (
-    mode === 'random' ? pickSnippetStart(track.durationMs) : 0
+    mode === 'random' ? pickSnippetStart(track.durationMs) : track.audibleStart ?? 0
   );
 
   setAudioWindow = (stage: number, snippetStart = this.state.snippetStart) => {
@@ -133,7 +134,8 @@ class Game extends React.Component<
     });
 
     try {
-      const track = await loader();
+      const loaded = await loader();
+      const track = { ...loaded, audibleStart: await fetchAudibleStart(loaded.uri) };
       if (!this.mounted) {
         return;
       }
